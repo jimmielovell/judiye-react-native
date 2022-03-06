@@ -10,7 +10,7 @@ const fonts: Judiye.Theme.Fonts = {
   boldFontWeight: bold.weight,
 
   defaultSize: 16,
-  lineHeight: 1.5,
+  lineHeight: 24,
 };
 
 export default fonts;

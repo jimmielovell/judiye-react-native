@@ -13,8 +13,7 @@ interface Font {
     | '600'
     | '700'
     | '800'
-    | '900'
-    | undefined;
+    | '900';
   family: string;
 }
 
@@ -162,14 +161,25 @@ declare global {
         inputLabelMarginLeft: number;
         inputLabelMarginBottom: number;
       }
+
+      interface Fonts {
+        regularFontFamily: string;
+        regularFontWeight: string;
+
+        boldFontFamily: string;
+        boldFontWeight: string;
+
+        defaultSize: number;
+        lineHeight: number;
+      }
     }
 
     interface Theme {
-      colors: Watfoe.Judiye.Theme.Colors;
+      colors: Judiye.Theme.Colors;
       dark: boolean;
-      fonts: Watfoe.Theme.Fonts;
-      spacing: Watfoe.Theme.Spacing;
-      sizing: Watfoe.Judiye.Theme.Sizing;
+      fonts: Judiye.Theme.Fonts;
+      spacing: Judiye.Theme.Spacing;
+      sizing: Judiye.Theme.Sizing;
       animation: ThemeAnimation;
     }
 

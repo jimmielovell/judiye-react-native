@@ -1,7 +1,7 @@
 import colors from './judiye/colors';
 import sizing from './judiye/sizing';
 import spacing from './judiye/spacing';
-import {fonts} from './watfoe/fonts';
+import fonts from './judiye/fonts';
 
 const commonLightDarkTheme = {
   fonts,

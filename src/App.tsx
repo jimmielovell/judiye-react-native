@@ -2,8 +2,9 @@ import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ErrorBoundary from 'hoc/error-boundary';
 import {Frame} from 'components/layout';
+import wrapper from 'hoc/wrapper';
 
-export default function App() {
+const App = wrapper(() => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
@@ -19,4 +20,6 @@ export default function App() {
       </SafeAreaView>
     </GestureHandlerRootView>
   );
-}
+});
+
+export default App;

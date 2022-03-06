@@ -4,8 +4,6 @@ import {CTextProps} from '../types';
 import {useForwardedRef, useStyles, useTheme} from 'hooks';
 import wrapper from 'hoc/wrapper';
 
-// Text.defaultProps = Text.defaultProps || {};
-// Text.defaultProps.maxFontSizeMultiplier = 1;
 function isBold(
   weight:
     | 'bold'
@@ -52,19 +50,22 @@ const PText = wrapper(
         return size! * fontScale;
       }, [size, fontScale]);
 
-      const compStyle = useStyles<TextStyle>({
-        color: color || colors.textPrimary,
-        fontSize,
-        fontFamily: isBold(weight)
-          ? fonts.boldFontFamily
-          : fonts.regularFontFamily,
-        fontWeight: weight,
-        textDecorationLine: decoration,
-        fontStyle: italic ? 'italic' : 'normal',
-        lineHeight,
-      });
+      const compStyle = useStyles<TextStyle>(
+        {
+          color: color || colors.textPrimary,
+          fontSize,
+          fontFamily: isBold(weight)
+            ? fonts.boldFontFamily
+            : fonts.regularFontFamily,
+          fontWeight: weight,
+          textDecorationLine: decoration,
+          fontStyle: italic ? 'italic' : 'normal',
+          lineHeight,
+        },
+        style,
+      );
 
-      return <Text ref={textRef} style={[compStyle, style]} {...rest} />;
+      return <Text ref={textRef} style={compStyle} {...rest} />;
     },
   ),
 );

@@ -19,17 +19,20 @@ const FView = wrapper(
       },
       ref,
     ) => {
-      const compStyles = useStyles<ViewStyle>({
-        flexDirection: direction,
-        alignItems: align,
-        justifyContent: justify,
-        alignSelf: self,
-        alignContent: content,
-        flexWrap: wrap,
-        width: '100%',
-      });
+      const compStyles = useStyles<ViewStyle>(
+        {
+          flexDirection: direction,
+          alignItems: align,
+          justifyContent: justify,
+          alignSelf: self,
+          alignContent: content,
+          flexWrap: wrap,
+          width: '100%',
+        },
+        style,
+      );
 
-      return <View ref={ref} style={[compStyles, style]} {...rest} />;
+      return <View ref={ref} style={compStyles} {...rest} />;
     },
   ),
 );

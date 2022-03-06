@@ -12,6 +12,7 @@ module.exports = {
       {
         root: ['./src'],
         alias: {
+          assets: './src/assets',
           components: './src/components',
           hoc: './src/hoc',
           hooks: './src/hooks',

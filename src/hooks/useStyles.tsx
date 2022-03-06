@@ -1,9 +1,8 @@
-import {StyleProp} from 'react-native';
-import {useDeepCompareMemoize} from './useDeepCompareEffect';
+import {useMemo} from 'react';
+import {StyleProp, StyleSheet} from 'react-native';
 
-export default function useStyles<T>(stylesheet: StyleProp<T>) {
-  // return useMemo(() => {
-  //   return StyleSheet.create(stylesheet);
-  // }, [stylesheet]);
-  return useDeepCompareMemoize(stylesheet);
+export default function useStyles<T>(...stylesheet: StyleProp<T>[]) {
+  return useMemo(() => {
+    return StyleSheet.flatten(stylesheet);
+  }, [stylesheet]);
 }

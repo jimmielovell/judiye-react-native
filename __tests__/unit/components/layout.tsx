@@ -1,7 +1,4 @@
-import React from 'react';
-import Column from '../../../src/components/layout/component/column';
-import Frame from '../../../src/components/layout/component/frame';
-import FView from '../../../src/components/layout/component/fview';
+import {Column, Frame, FView} from '../../../src/components/layout';
 import {render} from '@testing-library/react-native';
 
 it('renders column layout component', () => {

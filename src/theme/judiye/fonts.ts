@@ -10,6 +10,9 @@ const fonts: Judiye.Theme.Fonts = {
   boldFontWeight: bold.weight,
 
   defaultSize: 16,
+  inputErrorSize: 13,
+  inputLabelSize: 14,
+
   lineHeight: 24,
 };
 

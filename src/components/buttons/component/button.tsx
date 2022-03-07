@@ -33,7 +33,7 @@ const Button = wrapper(
         } else if (appearance === 'icon') {
           return [
             {
-              borderRadius: 1000,
+              borderRadius: 0,
               height: sizing.buttonIconSize,
               width: sizing.buttonIconSize,
             },
@@ -62,20 +62,19 @@ const Button = wrapper(
         contStyles,
         style,
       );
-      const textCompStyles = useStyles({color: textColor});
-      const iconCompStyles = useStyles<ViewStyle>(
-        {
-          marginRight: 8,
-        },
+      const textCompStyles = useStyles(
+        {color: textColor, marginLeft: icon ? 8 : 0},
         textStyle,
       );
 
       return (
         <Touchable ref={buttonRef} style={compStyles} {...rest}>
-          {icon && <Icon style={iconCompStyles} {...iconProps!} />}
-          <PText weight="bold" style={textCompStyles}>
-            {children}
-          </PText>
+          {(icon || appearance === 'icon') && <Icon {...iconProps!} />}
+          {appearance !== 'icon' && (
+            <PText weight="bold" style={textCompStyles}>
+              {children}
+            </PText>
+          )}
         </Touchable>
       );
     },

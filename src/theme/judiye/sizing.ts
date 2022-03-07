@@ -8,7 +8,7 @@ const sizing: Judiye.Theme.Sizing = {
 
   inputHeight: watfoeSizing.inputHeight,
   inputWidth: watfoeSizing.inputWidth,
-  inputBorderRadius: watfoeSizing.mdRadius,
+  inputBorderRadius: watfoeSizing.nmRadius,
   inputBorderWidth: watfoeSizing.borderWidth,
 
   buttonHeight: watfoeSizing.buttonHeight,

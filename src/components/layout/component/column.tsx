@@ -1,13 +1,23 @@
-import {cloneElement, useCallback, useMemo} from 'react';
-import {ScrollView, useWindowDimensions, ViewStyle} from 'react-native';
+import {cloneElement, useMemo} from 'react';
+import {useWindowDimensions, ViewStyle} from 'react-native';
 import {ColumnProps} from '../types';
 import {useStyles, useTheme} from 'hooks';
 import wrapper from 'hoc/wrapper';
+import FView from './fview';
 
 const Column = wrapper(
-  ({columns = 1, gutter = 16, children, width, ...rest}: ColumnProps) => {
+  ({
+    columns = 1,
+    gutter = 13,
+    children,
+    width,
+    style,
+    ...rest
+  }: ColumnProps) => {
     const screenWidth = useWindowDimensions().width;
     const {screenPaddingHorizontal} = useTheme().spacing;
+    columns = Number(columns);
+    gutter = Number(gutter);
 
     const columnWidth = useMemo(() => {
       const rowWidth =
@@ -15,20 +25,18 @@ const Column = wrapper(
         Number(screenWidth) - Number(screenPaddingHorizontal) * 2;
       return columns === 1
         ? rowWidth
-        : rowWidth / Number(columns) - Number(gutter / 2);
+        : rowWidth / columns - gutter + gutter / (columns - 1);
     }, [width, screenWidth, screenPaddingHorizontal, columns, gutter]);
 
+    const contCompStyles = useStyles(style, {
+      marginTop: -gutter,
+    });
     const childCompStyles = useStyles<ViewStyle>({
       width: columnWidth,
-      marginBottom: gutter,
-    });
-    const compStyles = useStyles<ViewStyle>({
-      justifyContent: 'space-between',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      marginTop: gutter,
     });
 
-    const cloneChildren = useCallback(() => {
+    children = useMemo(() => {
       if (Array.isArray(children)) {
         return children.map((child: JSX.Element, index: number) =>
           cloneElement(child, {
@@ -40,9 +48,16 @@ const Column = wrapper(
     }, [children, childCompStyles]);
 
     return (
-      <ScrollView contentContainerStyle={compStyles} {...rest}>
-        {cloneChildren()}
-      </ScrollView>
+      <FView>
+        <FView
+          style={contCompStyles}
+          {...rest}
+          direction="row"
+          justify="space-between"
+          wrap="wrap">
+          {children}
+        </FView>
+      </FView>
     );
   },
 );

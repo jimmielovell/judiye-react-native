@@ -1,14 +1,16 @@
+/* eslint-disable mobx/missing-observer */
 import {Component, ErrorInfo, ReactNode} from 'react';
 import {Text} from 'react-native';
 import {Frame, FView} from 'components/layout';
+import {PText} from 'components/typography';
 
 function FallbackUI({error, errorInfo}: {error: Error; errorInfo: ErrorInfo}) {
   return (
     <Frame>
       <Text>Something went wrong</Text>
       <FView>
-        {error.toString()}
-        {errorInfo.componentStack}
+        <PText>{error.toString()}</PText>
+        <PText>{errorInfo.componentStack}</PText>
       </FView>
     </Frame>
   );

@@ -7,7 +7,12 @@ const spacing: Judiye.Theme.Spacing = {
   inputPaddingHorizontalPrePosfix: 39,
   inputMarginBottom: 13,
   inputLabelMarginLeft: 13,
-  inputLabelMarginBottom: 3,
+  inputLabelMarginBottom: 0,
+  inputErrorPaddingHorizontal: 3,
+  inputErrorLeft: 10,
+  inputErrorTop: 30,
+  inputPrefixPadding: 5,
+  inputPostfixPadding: 3,
 };
 
 export default spacing;

@@ -160,6 +160,11 @@ declare global {
         inputMarginBottom: number;
         inputLabelMarginLeft: number;
         inputLabelMarginBottom: number;
+        inputErrorPaddingHorizontal: number;
+        inputErrorLeft: number;
+        inputErrorTop: number;
+        inputPrefixPadding: number;
+        inputPostfixPadding: number;
       }
 
       interface Fonts {
@@ -170,6 +175,8 @@ declare global {
         boldFontWeight: string;
 
         defaultSize: number;
+        inputLabelSize: number;
+        inputErrorSize: number;
         lineHeight: number;
       }
     }

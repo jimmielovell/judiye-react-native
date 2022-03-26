@@ -10,7 +10,7 @@ export const colors: Watfoe.Theme.Colors = {
     green: '#779933',
     blue: '#0092cc',
     yellow: '#dcd427', // sulphur yellow
-    grey: '#f0f0f0',
+    grey: '#f4f4f4',
   },
   base: {
     red: '#cc3333',

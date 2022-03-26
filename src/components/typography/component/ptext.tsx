@@ -43,7 +43,9 @@ const PText = wrapper(
       const textRef = useForwardedRef(ref);
       const {colors, fonts} = useTheme();
       size = Number(size) || fonts.defaultSize;
-      const lineHeight = fonts.lineHeight;
+      // Let's use the default lineHeight for now!
+      // const lineHeight = fonts.lineHeight;
+
       const fontScale = PixelRatio.getFontScale();
 
       const fontSize = React.useMemo(() => {
@@ -60,7 +62,7 @@ const PText = wrapper(
           fontWeight: weight,
           textDecorationLine: decoration,
           fontStyle: italic ? 'italic' : 'normal',
-          lineHeight,
+          // lineHeight,
         },
         style,
       );

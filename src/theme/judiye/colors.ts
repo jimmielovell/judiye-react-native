@@ -51,7 +51,7 @@ const light: Judiye.Theme.Colors = {
   border: watfoeColors.primary.grey,
 
   // The scrim background that appears below modals and expanded navigation menus.
-  scrimContainer: 'rgba(0,0,0,0.3)',
+  scrimContainer: 'rgba(0,0,0,0.55)',
   scrimText: watfoeColors.white,
 };
 

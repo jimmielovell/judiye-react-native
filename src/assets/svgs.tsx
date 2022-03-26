@@ -1,4 +1,6 @@
 /* eslint-disable mobx/missing-observer */
+import {useMemo} from 'react';
+import {PixelRatio} from 'react-native';
 import SVG, {
   Circle,
   G,
@@ -9,7 +11,6 @@ import SVG, {
   Rect,
 } from 'react-native-svg';
 import {useTheme} from 'hooks';
-
 export interface SvgProps {
   size?: number | string;
   color?: string;
@@ -20,10 +21,16 @@ type CSvgProps = SvgProps & {
   children: Element | Element[];
 };
 
-function CSVG({size, color, ...rest}: CSvgProps) {
+function CSVG({size = 24, color, ...rest}: CSvgProps) {
   const {colors} = useTheme();
-  size = size || '24';
+  const fontScale = PixelRatio.getFontScale();
+
+  size = useMemo(() => {
+    return Number(size) * fontScale;
+  }, [size, fontScale]);
+
   color = color || colors.text;
+
   return (
     <SVG
       width={size}

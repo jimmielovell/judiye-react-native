@@ -40,7 +40,7 @@ const Column = wrapper(
       if (Array.isArray(children)) {
         return children.map((child: JSX.Element, index: number) =>
           cloneElement(child, {
-            key: index,
+            key: `cl-${index}`,
             style: childCompStyles,
           }),
         );

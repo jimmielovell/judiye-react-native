@@ -10,6 +10,7 @@ import {
 import {
   LayoutChangeEvent,
   NativeSyntheticEvent,
+  PixelRatio,
   TextInput,
   TextInputEndEditingEventData,
   TextStyle,
@@ -200,7 +201,7 @@ export const Field = wrapper(
             });
           }
         },
-        [inputRef, spacing],
+        [inputRef, spacing.inputPrefixPadding],
       );
       const usePostfixWidth = useCallback(
         (e: LayoutChangeEvent) => {
@@ -213,7 +214,7 @@ export const Field = wrapper(
             });
           }
         },
-        [inputRef, spacing],
+        [inputRef, spacing.inputPostfixPadding],
       );
 
       const contCompStyles = useStyles<ViewStyle>(
@@ -222,6 +223,11 @@ export const Field = wrapper(
         },
         contStyle,
       );
+
+      const fontScale = PixelRatio.getFontScale();
+      const fontSize = useMemo(() => {
+        return fonts.defaultSize * fontScale;
+      }, [fonts, fontScale]);
       const inputCompStyles = useStyles<ViewStyle & TextStyle>(
         {
           alignSelf: 'stretch',
@@ -231,7 +237,7 @@ export const Field = wrapper(
           borderRadius: sizing.inputBorderRadius,
           height: sizing.inputHeight,
           paddingHorizontal: spacing.inputPaddingHorizontal,
-          fontSize: fonts.defaultSize,
+          fontSize: fontSize,
           textAlignVertical: 'center',
           paddingTop: 0,
           paddingBottom: 0,
@@ -460,7 +466,7 @@ export const PasswordField = wrapper(
           {...rest}
           postfix={{
             icon: {
-              name: textEntrySecured ? 'Eye' : 'EyeOff',
+              name: textEntrySecured ? 'EyeOff' : 'Eye',
             },
             onPress: () => setTextEntrySecured(!textEntrySecured),
           }}
@@ -472,11 +478,8 @@ export const PasswordField = wrapper(
 
 export const PhoneField = wrapper(
   forwardRef<TextInput, ValidatableField<FieldWithoutPrePostfixProps>>(
-    ({style, ...rest}, ref) => {
+    (props, ref) => {
       const innerRef = useForwardedRef(ref || createRef<TextInput>());
-      const compStyles = useStyles(style, {
-        paddingTop: 1,
-      });
 
       return (
         <Field
@@ -487,8 +490,7 @@ export const PhoneField = wrapper(
             text: '+254',
             textStyle: {fontWeight: 'normal'},
           }}
-          style={compStyles}
-          {...rest}
+          {...props}
         />
       );
     },
@@ -503,6 +505,7 @@ const SinglePin = wrapper(
           ref={ref}
           name="Pin"
           keyboardType="number-pad"
+          returnKeyType="next"
           textAlign="center"
           secureTextEntry={true}
           masks={{
@@ -650,6 +653,8 @@ export const SearchField = wrapper(
       return (
         <Field
           ref={inputRef}
+          keyboardType="web-search"
+          returnKeyType="search"
           contRef={searchContRef}
           name="search"
           autoCorrect={true}

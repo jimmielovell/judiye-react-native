@@ -68,6 +68,17 @@ declare global {
         buttonHeight: number;
         buttonWidth: string | number;
       }
+
+      interface Spacing {
+        xs: number;
+        sm: number;
+        md: number;
+        nm: number;
+        lg: number;
+        xl: number;
+        xxl: number;
+        xxxl: number;
+      }
     }
   }
 
@@ -130,7 +141,8 @@ declare global {
 
       interface Sizing {
         avatarSize: number;
-        avatarRadius: number;
+
+        borderWidth: number;
 
         headerHeight: number;
         bottomTabHeight: number;
@@ -145,6 +157,8 @@ declare global {
         buttonBorderWidth: number;
         buttonBorderRadius: number;
         buttonIconSize: number;
+
+        tabHeight: number;
 
         surfaceBorderRadius: number;
         borderRadius: number;

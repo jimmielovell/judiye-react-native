@@ -43,6 +43,7 @@ const Label = wrapper(
       color: colors.inputLabelText,
       marginBottom: spacing.inputLabelMarginBottom,
       marginLeft: spacing.inputLabelMarginLeft,
+      lineHeight: fonts.inputLabelSize,
     });
 
     const isErrored = useCallback(
@@ -55,7 +56,7 @@ const Label = wrapper(
           });
         }
       },
-      [textRef, colors],
+      [textRef, colors.inputLabelErrored, colors.inputLabelText],
     );
     useImperativeHandle(innerRef, () => ({isErrored}));
 
@@ -84,8 +85,8 @@ const Error = wrapper(
       position: 'absolute',
       left: spacing.inputErrorLeft,
       top: spacing.inputErrorTop,
-      lineHeight: 16,
       display: 'none',
+      lineHeight: fonts.inputErrorSize,
     });
 
     const addError = useCallback(
@@ -122,14 +123,16 @@ const Input = wrapper(
     hidden,
     label,
     type = 'text',
-    ...rest
+    ...props
   }: PlainInputProps | PasswordInputProps | SearchInputProps) => {
+    // @ts-ignore
+    const {onValid, ...rest} = props;
     const {colors, spacing} = useTheme();
     const inputRef = useRef<TextInput>(null);
     const errorRef = useRef<ErrorRefHandle>(null);
     const labelRef = useRef<LabelRefHandle>(null);
 
-    const onValid = useCallback(
+    const handleOnValid = useCallback(
       (message: string | ValidationError) => {
         const isValid = typeof message === 'string';
         if (inputRef.current) {
@@ -149,10 +152,16 @@ const Input = wrapper(
         if (labelRef.current) {
           labelRef.current.isErrored(!isValid);
         }
-        // @ts-ignore
-        rest.onValid(message);
+        onValid(message);
       },
-      [colors, errorRef, inputRef, labelRef, rest],
+      [
+        colors.inputOutline,
+        colors.inputOutlineErrored,
+        errorRef,
+        inputRef,
+        labelRef,
+        onValid,
+      ],
     );
 
     const compStyles = useStyles<ViewStyle>({
@@ -195,7 +204,7 @@ const Input = wrapper(
             {...rest}
             onValid={
               Object.prototype.hasOwnProperty.call(rest, 'onValid')
-                ? onValid
+                ? handleOnValid
                 : undefined
             }
           />

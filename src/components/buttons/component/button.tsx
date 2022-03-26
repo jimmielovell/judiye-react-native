@@ -1,6 +1,6 @@
 import {forwardRef, createRef, useMemo} from 'react';
 import {View, ViewStyle} from 'react-native';
-import {Icon} from 'components/icons';
+import {Icon} from 'components/datadisplay';
 import {PText} from 'components/typography';
 import {ButtonProps} from '../types';
 import {useForwardedRef, useStyles, useTheme} from 'hooks';
@@ -25,7 +25,7 @@ const Button = wrapper(
           return [
             {
               borderColor: colors.buttonSecondaryOutline,
-              borderWidth: sizing.inputBorderWidth,
+              borderWidth: sizing.borderWidth,
               backgroundColor: colors.buttonSecondaryContainer,
             },
             colors.buttonSecondaryText,

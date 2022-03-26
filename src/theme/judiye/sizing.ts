@@ -2,7 +2,9 @@ import {sizing as watfoeSizing} from '../watfoe/sizing';
 
 const sizing: Judiye.Theme.Sizing = {
   avatarSize: 34,
-  avatarRadius: 15,
+
+  borderWidth: watfoeSizing.borderWidth,
+
   headerHeight: 55,
   bottomTabHeight: 60,
 
@@ -16,6 +18,8 @@ const sizing: Judiye.Theme.Sizing = {
   buttonBorderWidth: watfoeSizing.borderWidth,
   buttonBorderRadius: watfoeSizing.xxlRadius,
   buttonIconSize: 34,
+
+  tabHeight: 30,
 
   surfaceBorderRadius: watfoeSizing.nmRadius,
   borderRadius: watfoeSizing.nmRadius,

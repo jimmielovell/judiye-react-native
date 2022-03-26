@@ -1,5 +1,5 @@
 export const sizing: Watfoe.Theme.Sizing = {
-  borderWidth: 2,
+  borderWidth: 1.44,
 
   xsRadius: 1,
   smRadius: 2,

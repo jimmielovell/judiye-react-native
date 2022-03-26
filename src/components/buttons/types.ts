@@ -1,6 +1,8 @@
+import {RefObject} from 'react';
 import {PressableProps, StyleProp, TextStyle, ViewStyle} from 'react-native';
-import {IconProps} from 'components/icons/types';
 import {FlexProps} from 'components/layout/types';
+import {BackdropHandle} from 'components/feedback/types';
+import {IconProps} from 'components/datadisplay/types';
 
 export interface ButtonAppearance {
   appearance?: 'fill' | 'icon' | 'outline' | 'text';
@@ -15,4 +17,8 @@ export interface ButtonProps extends TouchableProps, ButtonAppearance {
   isFocused?: boolean;
   label?: string;
   icon?: IconProps;
+}
+
+export interface AnchorProps extends ButtonProps {
+  withRef?: RefObject<BackdropHandle>;
 }

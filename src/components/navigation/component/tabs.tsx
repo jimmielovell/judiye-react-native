@@ -160,7 +160,7 @@ export const TabPanels = wrapper(
         ? children.map((child: JSX.Element, index: number) => (
             <AnimatedFView
               key={`tbp-${index}`}
-              entering={SlideInRight.duration(300)}>
+              entering={SlideInRight.duration(200)}>
               {child}
             </AnimatedFView>
           ))

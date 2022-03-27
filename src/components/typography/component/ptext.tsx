@@ -1,5 +1,5 @@
 import React from 'react';
-import {PixelRatio, Text, TextStyle} from 'react-native';
+import {PixelRatio, Platform, Text, TextStyle} from 'react-native';
 import {CTextProps} from '../types';
 import {useForwardedRef, useStyles, useTheme} from 'hooks';
 import wrapper from 'hoc/wrapper';
@@ -62,6 +62,13 @@ const PText = wrapper(
           fontWeight: weight,
           textDecorationLine: decoration,
           fontStyle: italic ? 'italic' : 'normal',
+          includeFontPadding: false,
+          textAlignVertical: 'center',
+          ...Platform.select({
+            ios: {
+              paddingTop: 1,
+            },
+          }),
           // lineHeight,
         },
         style,

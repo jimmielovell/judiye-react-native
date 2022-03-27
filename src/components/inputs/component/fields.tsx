@@ -11,6 +11,7 @@ import {
   LayoutChangeEvent,
   NativeSyntheticEvent,
   PixelRatio,
+  Platform,
   TextInput,
   TextInputEndEditingEventData,
   TextStyle,
@@ -236,7 +237,14 @@ export const Field = wrapper(
           borderWidth: sizing.inputBorderWidth,
           borderRadius: sizing.inputBorderRadius,
           height: sizing.inputHeight,
-          paddingHorizontal: spacing.inputPaddingHorizontal,
+          ...Platform.select({
+            android: {
+              paddingHorizontal: spacing.inputPaddingHorizontal,
+            },
+            ios: {
+              paddingHorizontal: spacing.inputPaddingHorizontal - 1,
+            },
+          }),
           fontSize: fontSize,
           textAlignVertical: 'center',
           paddingTop: 0,

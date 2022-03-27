@@ -1,7 +1,7 @@
 import {sizing as watfoeSizing} from '../watfoe/sizing';
 
 const sizing: Judiye.Theme.Sizing = {
-  avatarSize: 34,
+  avatarSize: 40,
 
   borderWidth: watfoeSizing.borderWidth,
 

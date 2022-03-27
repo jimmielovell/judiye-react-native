@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {StyleProp, TextStyle} from 'react-native';
+import {Platform, StyleProp, TextStyle} from 'react-native';
 import Avatar from './avatar';
 import {FView} from '../../layout';
 import {NameCardProps, TitleProps} from '../types';
@@ -64,7 +64,11 @@ const NameCard = wrapper(
       flex: 1,
     });
     const nameCompStyles = useStyles(name.style, {
-      marginTop: -3,
+      ...Platform.select({
+        android: {
+          marginTop: -3,
+        },
+      }),
     });
     const buttonPostfixStyles = useStyles(
       {

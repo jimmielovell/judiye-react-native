@@ -202,11 +202,7 @@ const Input = wrapper(
           <TextField
             ref={inputRef}
             {...rest}
-            onValid={
-              Object.prototype.hasOwnProperty.call(rest, 'onValid')
-                ? handleOnValid
-                : undefined
-            }
+            onValid={onValid ? handleOnValid : undefined}
           />
           {<Error ref={errorRef} />}
         </FView>

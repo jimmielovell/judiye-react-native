@@ -94,16 +94,16 @@ const Menu = wrapper(
     const menuCompStyles = useStyles<ViewStyle>({
       backgroundColor: colors.surfaceContainer,
       borderRadius: sizing.surfaceBorderRadius,
-      overflow: 'hidden',
+      // overflow: 'hidden',
       padding: 13,
       position: 'absolute',
 
       // Shadow
       ...Platform.select({
         ios: {
-          shadowColor: colors.border,
-          shadowOffset: {width: 0, height: 2},
-          shadowOpacity: 0.14,
+          shadowColor: colors.primary,
+          shadowOffset: {width: 0, height: 1},
+          shadowOpacity: 0.21,
           shadowRadius: 2,
         },
         android: {

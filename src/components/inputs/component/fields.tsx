@@ -10,7 +10,6 @@ import {
 import {
   LayoutChangeEvent,
   NativeSyntheticEvent,
-  PixelRatio,
   Platform,
   TextInput,
   TextInputEndEditingEventData,
@@ -28,7 +27,7 @@ import {
   ValidatableField,
 } from '../types';
 import {ValidationError} from './errors';
-import {useForwardedRef, useStyles, useTheme} from 'hooks';
+import {useFontSize, useForwardedRef, useStyles, useTheme} from 'hooks';
 import wrapper from 'hoc/wrapper';
 import {Button} from 'components/buttons';
 import {Column, FView} from 'components/layout';
@@ -225,10 +224,7 @@ export const Field = wrapper(
         contStyle,
       );
 
-      const fontScale = PixelRatio.getFontScale();
-      const fontSize = useMemo(() => {
-        return fonts.defaultSize * fontScale;
-      }, [fonts, fontScale]);
+      const {fontSize, lineHeight} = useFontSize(fonts.defaultSize);
       const inputCompStyles = useStyles<ViewStyle & TextStyle>(
         {
           alignSelf: 'stretch',
@@ -245,10 +241,19 @@ export const Field = wrapper(
               paddingHorizontal: spacing.inputPaddingHorizontal - 1,
             },
           }),
-          fontSize: fontSize,
+          fontSize,
+          lineHeight,
+          includeFontPadding: false,
           textAlignVertical: 'center',
-          paddingTop: 0,
-          paddingBottom: 0,
+          paddingVertical: 0,
+          ...Platform.select({
+            ios: {
+              paddingTop: 1,
+            },
+            android: {
+              paddingBottom: 1,
+            },
+          }),
         },
         style,
       );

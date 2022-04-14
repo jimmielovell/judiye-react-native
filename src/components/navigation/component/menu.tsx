@@ -8,15 +8,27 @@ import {
 } from 'react-native';
 import wrapper from 'hoc/wrapper';
 import {useForwardedRef, useStyles, useTheme} from 'hooks';
+import {Anchor} from 'components/buttons';
 import {Backdrop} from 'components/feedback';
 import {BackdropHandle} from 'components/feedback/types';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  FadeIn,
-  FadeOut,
+  withTiming,
 } from 'react-native-reanimated';
 import {MenuProps} from '../types';
+
+export const MenuItem = wrapper(props => {
+  const compStyles = useStyles<ViewStyle>({
+    borderRadius: 0,
+    flex: 0,
+    justifyContent: 'flex-start',
+    maxWidth: 180,
+    paddingHorizontal: 13,
+  });
+
+  return <Anchor appearance="text" style={compStyles} {...props} />;
+});
 
 const Menu = wrapper(
   forwardRef<BackdropHandle, MenuProps>(({children}, menuRef) => {
@@ -25,20 +37,15 @@ const Menu = wrapper(
     const backdropRef = useForwardedRef(menuRef);
     const {colors, sizing, spacing} = useTheme();
     const indent = spacing.screenPaddingHorizontal;
-    const position = useSharedValue({
-      left: 0,
-      top: 0,
-    });
-    const dimension = useSharedValue({
-      width: 0,
-      height: 0,
-    });
+    const transformX = useSharedValue(0);
+    const transformY = useSharedValue(0);
     let anchor = useSharedValue({
       x: 0,
       y: 0,
       width: 0,
       height: 0,
     });
+    const opacity = useSharedValue(0);
 
     const onOpen = useCallback(
       anchorMeasurement => {
@@ -46,6 +53,10 @@ const Menu = wrapper(
       },
       [anchor],
     );
+
+    const onClose = () => {
+      opacity.value = 0;
+    };
 
     const handleLayoutChange = useCallback(
       (e: LayoutChangeEvent) => {
@@ -56,7 +67,6 @@ const Menu = wrapper(
           (isRTL && x + anchor.value.width - width > indent) ||
           (!isRTL && x + width > windowDimension.width - indent)
         ) {
-          // x = Math.min(windowDimension.width - indent, x + width);
           x = windowDimension.width - width - indent;
         } else if (x < indent) {
           x = indent;
@@ -65,26 +75,23 @@ const Menu = wrapper(
         // Flip by Y axis if menu hits bottom screen border
         if (y + height > windowDimension.height - indent) {
           y = y - height + anchor.value.height;
-          // y = Math.min(y, y + anchor.value.height);
         } else if (y < indent) {
           y = indent;
         }
 
-        position.value = {
-          left: x,
-          top: y,
-        };
-
-        dimension.value = {width, height};
+        transformX.value = x;
+        transformY.value = y;
+        opacity.value = withTiming(1, {duration: 250});
       },
       [
-        isRTL,
         anchor.value,
+        isRTL,
         indent,
         windowDimension.width,
         windowDimension.height,
-        position,
-        dimension,
+        transformX,
+        transformY,
+        opacity,
       ],
     );
 
@@ -95,8 +102,10 @@ const Menu = wrapper(
       backgroundColor: colors.surfaceContainer,
       borderRadius: sizing.surfaceBorderRadius,
       // overflow: 'hidden',
-      padding: 13,
+      paddingVertical: 5,
       position: 'absolute',
+      top: 0,
+      left: 0,
 
       // Shadow
       ...Platform.select({
@@ -107,14 +116,17 @@ const Menu = wrapper(
           shadowRadius: 2,
         },
         android: {
-          elevation: 3,
+          elevation: 1.9999,
         },
       }),
     });
     const animStyles = useAnimatedStyle(() => {
       return {
-        top: position.value.top,
-        ...(isRTL ? {right: position.value.left} : {left: position.value.left}),
+        opacity: opacity.value,
+        transform: [
+          {translateX: transformX.value},
+          {translateY: transformY.value},
+        ],
       };
     });
 
@@ -123,10 +135,9 @@ const Menu = wrapper(
         ref={backdropRef}
         statusBarTranslucent={false}
         onOpen={onOpen}
+        onClose={onClose}
         style={backdropCompStyles}>
         <Animated.View
-          entering={FadeIn.duration(100).delay(50)}
-          exiting={FadeOut.duration(300)}
           onStartShouldSetResponder={_e => true}
           style={[menuCompStyles, animStyles]}
           onLayout={handleLayoutChange}>

@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {Platform, StyleProp, TextStyle} from 'react-native';
+import {StyleProp, TextStyle} from 'react-native';
 import Avatar from './avatar';
 import {FView} from '../../layout';
 import {NameCardProps, TitleProps} from '../types';
@@ -64,19 +64,11 @@ const NameCard = wrapper(
       flex: 1,
     });
     const nameCompStyles = useStyles(name.style, {
-      ...Platform.select({
-        android: {
-          marginTop: -3,
-        },
-      }),
+      marginBottom: 3,
     });
     const buttonPostfixStyles = useStyles(
       {
-        borderRadius: 0,
         marginLeft: 'auto',
-        paddingHorizontal: 0,
-        width: 'auto',
-        height: '100%',
       },
       button ? button.style : undefined,
     );
@@ -85,7 +77,7 @@ const NameCard = wrapper(
       <FView direction="row" align="center" style={style} {...rest}>
         <Avatar {...avatar} />
         <FView align="flex-start" self="center" style={nameTitleCompStyles}>
-          <PText weight="600" style={nameCompStyles}>
+          <PText weight="700" style={nameCompStyles}>
             {name.value}
           </PText>
           <TitleContainer title={title} />

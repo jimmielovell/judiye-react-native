@@ -8,7 +8,11 @@ export interface MenuProps {
 }
 
 export interface TabPanelHandle {
-  __setActiveTab: (i: number) => void;
+  __setActive: () => void;
+  __setInactive: () => void;
+}
+export interface TabPanelsHandle {
+  __setActiveTab: (index: number) => void;
 }
 
 export interface TabPanelsProps {
@@ -17,7 +21,7 @@ export interface TabPanelsProps {
 }
 
 export interface TabsProps extends FViewProps {
-  withRef: RefObject<TabPanelHandle>;
+  withRef: RefObject<TabPanelsHandle>;
 }
 
 export type TabProps = ButtonProps & {

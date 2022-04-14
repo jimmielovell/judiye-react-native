@@ -1,12 +1,25 @@
 import {forwardRef, useCallback, useImperativeHandle, useState} from 'react';
-import {Modal, Pressable, ViewStyle} from 'react-native';
+import {Modal, ViewStyle} from 'react-native';
 import wrapper from 'hoc/wrapper';
 import {useStyles, useTheme} from 'hooks';
 import {BackdropHandle, BackdropProps, InWindowMeasurement} from '../types';
+import {AnimatedPressable} from 'components/buttons';
 
 const Backdrop = wrapper(
   forwardRef<BackdropHandle, BackdropProps>(
-    ({children, visible = false, style, onClose, onOpen, ...rest}, ref) => {
+    (
+      {
+        entering,
+        exiting,
+        children,
+        visible = false,
+        style,
+        onClose,
+        onOpen,
+        ...rest
+      },
+      ref,
+    ) => {
       const [_visible, setVisible] = useState(visible);
       const {colors, sizing} = useTheme();
 
@@ -52,9 +65,13 @@ const Backdrop = wrapper(
           transparent={true}
           visible={_visible}
           {...rest}>
-          <Pressable style={compStyles} onPress={close}>
+          <AnimatedPressable
+            entering={entering}
+            exiting={exiting}
+            style={compStyles}
+            onPress={close}>
             {children}
-          </Pressable>
+          </AnimatedPressable>
         </Modal>
       );
     },

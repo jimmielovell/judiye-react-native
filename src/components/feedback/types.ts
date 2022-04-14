@@ -1,5 +1,6 @@
 import {ReactNode} from 'react';
 import {ModalProps, StyleProp, ViewStyle} from 'react-native';
+import {EntryExitAnimationFunction, Keyframe} from 'react-native-reanimated';
 
 export interface InWindowMeasurement {
   x?: number;
@@ -18,6 +19,8 @@ export interface BackdropProps extends ModalProps {
   style?: StyleProp<ViewStyle>;
   onOpen?: (measurement?: InWindowMeasurement) => void;
   onClose?: () => void;
+  entering?: EntryExitAnimationFunction | Keyframe;
+  exiting?: EntryExitAnimationFunction | Keyframe;
 }
 
 export interface DialogProps {

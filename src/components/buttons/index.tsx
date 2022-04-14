@@ -1,5 +1,5 @@
 import Anchor from './component/anchor';
 import Button from './component/button';
-import Touchable from './component/touchable';
+import Pressable, {AnimatedPressable} from './component/pressable';
 
-export {Anchor, Button, Touchable};
+export {Anchor, AnimatedPressable, Button, Pressable};

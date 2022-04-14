@@ -10,7 +10,7 @@ const Avatar = wrapper(
   ({source, initials, size, withRef, /*online,*/ style}: AvatarProps) => {
     const {colors, sizing} = useTheme();
     size = Number(size || sizing.avatarSize);
-    const borderWidth = useMemo(() => size! / 2.33, [size]);
+    const borderRadius = useMemo(() => size! / 2.2, [size]);
 
     const compStyles = useStyles<ViewStyle>(
       {
@@ -18,25 +18,28 @@ const Avatar = wrapper(
         borderWidth: source ? 0 : sizing.borderWidth,
         width: size,
         height: size,
-        borderRadius: borderWidth,
+        borderRadius: borderRadius,
       },
       style,
     );
     const imgCompStyles = useStyles<ImageStyle>({
-      borderRadius: borderWidth,
+      borderRadius: borderRadius,
       height: '100%',
       width: '100%',
     });
-    const initialsCompStyles = useStyles({
-      lineHeight: 16,
-    });
 
     return (
-      <Anchor withRef={withRef} style={compStyles}>
+      <Anchor
+        android_ripple={{
+          borderless: true,
+        }}
+        appearance="outline"
+        withRef={withRef}
+        style={compStyles}>
         {source ? (
           <Image source={source} style={imgCompStyles} />
         ) : (
-          <PText style={initialsCompStyles} weight="600" size={14}>
+          <PText weight="600" size={14}>
             {initials ?? '`ye'}
           </PText>
         )}

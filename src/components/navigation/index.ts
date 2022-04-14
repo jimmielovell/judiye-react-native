@@ -1,4 +1,4 @@
-import Menu from './component/menu';
+import Menu, {MenuItem} from './component/menu';
 import {Tab, Tabs, TabPanels} from './component/tabs';
 
-export {Menu, Tab, Tabs, TabPanels};
+export {Menu, MenuItem, Tab, Tabs, TabPanels};

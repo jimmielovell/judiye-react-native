@@ -10,9 +10,9 @@ export const sizing: Watfoe.Theme.Sizing = {
   xxlRadius: 21,
   xxxlRadius: 34,
 
-  inputHeight: 42,
+  inputHeight: 34,
   inputWidth: '100%',
 
-  buttonHeight: 42,
+  buttonHeight: 34,
   buttonWidth: '100%',
 };

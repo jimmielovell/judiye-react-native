@@ -1,9 +1,11 @@
-import {cloneElement, useMemo} from 'react';
+import {useMemo} from 'react';
 import {useWindowDimensions, ViewStyle} from 'react-native';
 import {ColumnProps} from '../types';
 import {useStyles, useTheme} from 'hooks';
 import wrapper from 'hoc/wrapper';
 import FView from './fview';
+import {Pressable} from 'components/buttons';
+import AnimatedFView from './animated-fview';
 
 const Column = wrapper(
   ({
@@ -35,28 +37,38 @@ const Column = wrapper(
       width: columnWidth,
       marginTop: gutter,
     });
+    const pressableChildCompStyles = useStyles<ViewStyle>(
+      {
+        backgroundColor: 'transparent',
+        height: 'auto',
+      },
+      childCompStyles,
+    );
 
     children = useMemo(() => {
       if (Array.isArray(children)) {
-        return children.map((child: JSX.Element, index: number) =>
-          cloneElement(child, {
-            key: `cl-${index}`,
-            style: childCompStyles,
-          }),
-        );
+        return children.map((child: JSX.Element, index: number) => (
+          <Pressable
+            align="flex-start"
+            justify="flex-start"
+            key={`cl-${index}`}
+            style={pressableChildCompStyles}>
+            {child}
+          </Pressable>
+        ));
       }
-    }, [children, childCompStyles]);
+    }, [children, pressableChildCompStyles]);
 
     return (
       <FView>
-        <FView
+        <AnimatedFView
           style={contCompStyles}
           {...rest}
           direction="row"
           justify="space-between"
           wrap="wrap">
           {children}
-        </FView>
+        </AnimatedFView>
       </FView>
     );
   },

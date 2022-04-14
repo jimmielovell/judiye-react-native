@@ -1,6 +1,6 @@
-import {TextProps} from 'react-native';
+import {TextProps as RNTextProps} from 'react-native';
 
-export type CTextProps = TextProps & {
+export interface TextProps extends RNTextProps {
   color?: string;
   size?: number;
   weight?:
@@ -17,4 +17,4 @@ export type CTextProps = TextProps & {
     | '900';
   decoration?: 'line-through' | 'none' | 'underline' | 'underline line-through';
   italic?: boolean;
-};
+}

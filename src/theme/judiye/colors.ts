@@ -50,8 +50,10 @@ const light: Judiye.Theme.Colors = {
   // A color meant to be used in element outlines
   border: watfoeColors.primary.grey,
 
+  ripple: 'rgba(0, 0, 0, 0.144)',
+
   // The scrim background that appears below modals and expanded navigation menus.
-  scrimContainer: 'rgba(0,0,0,0.55)',
+  scrimContainer: 'rgba(0, 0, 0, 0.610)',
   scrimText: watfoeColors.white,
 };
 
@@ -105,8 +107,10 @@ const dark: Judiye.Theme.Colors = {
   // A color meant to be used in element outlines
   border: watfoeColors.primary.grey,
 
+  ripple: 'rgba(0, 0, 0, 0.144)',
+
   // The scrim background that appears below modals and expanded navigation menus.
-  scrimContainer: 'rgba(0,0,0,0.3)',
+  scrimContainer: 'rgba(0, 0, 0, 0.377)',
   scrimText: watfoeColors.white,
 };
 

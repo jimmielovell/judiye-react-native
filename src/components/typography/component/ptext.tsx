@@ -1,7 +1,7 @@
-import React from 'react';
-import {PixelRatio, Platform, Text, TextStyle} from 'react-native';
-import {CTextProps} from '../types';
-import {useForwardedRef, useStyles, useTheme} from 'hooks';
+import {forwardRef} from 'react';
+import {Text, TextStyle} from 'react-native';
+import {TextProps} from '../types';
+import {useFontSize, useForwardedRef, useStyles, useTheme} from 'hooks';
 import wrapper from 'hoc/wrapper';
 
 function isBold(
@@ -27,7 +27,7 @@ function isBold(
 }
 
 const PText = wrapper(
-  React.forwardRef<Text, CTextProps>(
+  forwardRef<Text, TextProps>(
     (
       {
         style,
@@ -37,21 +37,20 @@ const PText = wrapper(
         decoration = 'none',
         italic = false,
         ...rest
-      }: CTextProps,
+      },
       ref,
     ) => {
       const textRef = useForwardedRef(ref);
       const {colors, fonts} = useTheme();
-      size = Number(size) || fonts.defaultSize;
-      // Let's use the default lineHeight for now!
-      // const lineHeight = fonts.lineHeight;
 
-      const fontScale = PixelRatio.getFontScale();
-
-      const fontSize = React.useMemo(() => {
-        return size! * fontScale;
-      }, [size, fontScale]);
-
+      // @ts-ignore
+      if (style && style.fontSize) {
+        // @ts-ignore
+        const {fontSize, ...styleRest} = style;
+        size = fontSize;
+        style = styleRest;
+      }
+      const {fontSize, lineHeight} = useFontSize(size!);
       const compStyle = useStyles<TextStyle>(
         {
           color: color || colors.textPrimary,
@@ -64,12 +63,13 @@ const PText = wrapper(
           fontStyle: italic ? 'italic' : 'normal',
           includeFontPadding: false,
           textAlignVertical: 'center',
-          ...Platform.select({
-            ios: {
-              paddingTop: 1,
-            },
-          }),
-          // lineHeight,
+          paddingTop: 1,
+          // ...Platform.select({
+          //   ios: {
+          //     paddingTop: 1,
+          //   },
+          // }),
+          lineHeight,
         },
         style,
       );

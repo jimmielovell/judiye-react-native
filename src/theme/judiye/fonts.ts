@@ -9,7 +9,7 @@ const fonts: Judiye.Theme.Fonts = {
   boldFontFamily: bold.family,
   boldFontWeight: bold.weight,
 
-  defaultSize: 14,
+  defaultSize: 15,
   inputErrorSize: 11,
   inputLabelSize: 12,
 

@@ -19,16 +19,19 @@ module.exports = Object.assign(jestPreset, {
   setupFiles: [
     ...jestPreset.setupFiles,
     '<rootDir>/node_modules/react-native-gesture-handler/jestSetup.js',
+    // '<rootDir>/node_modules/react-native-reanimated/lib/reanimated2/jestUtils.js',
     '<rootDir>/node_modules/appcenter/test/AppCenterMock.js',
     '<rootDir>/node_modules/appcenter-analytics/test/AppCenterAnalyticsMock.js',
     '<rootDir>/node_modules/appcenter-crashes/test/AppCenterCrashesMock.js',
     // '<rootDir>/node_modules/appcenter-push/test/AppCenterPushMock.js',
   ],
-  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
-  cacheDirectory: '.jest/cache',
+  // setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
+  // cacheDirectory: '.jest/cache',
   moduleNameMapper: {
     '^mobx$': '<rootDir>/node_modules/mobx/dist',
     '^mobx-react-lite$': '<rootDir>/node_modules/mobx-react-lite/lib',
+    '^react-native-reanimated$':
+      '<rootDir>/node_modules/react-native-reanimated/lib',
   },
   moduleDirectories: ['node_modules', '<rootDir>/src'],
 });

@@ -25,9 +25,7 @@ const Anchor = wrapper(
       [withRef, buttonRef, onPress],
     );
 
-    return (
-      <Button appearance="outline" ref={buttonRef} {...rest} onPress={open} />
-    );
+    return <Button ref={buttonRef} {...rest} onPress={open} />;
   }),
 );
 

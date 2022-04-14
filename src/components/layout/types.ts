@@ -27,4 +27,5 @@ export interface ColumnProps extends FViewProps {
   columns?: number;
   gutter?: number;
   width?: string | number;
+  pressable?: boolean;
 }

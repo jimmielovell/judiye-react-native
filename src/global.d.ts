@@ -126,6 +126,8 @@ declare global {
         notificationUnreadText: string;
         notificationUnreadContainer: string;
 
+        ripple: string;
+
         // The color of surfaces such as cards, sheets, menus
         surfaceText: string;
         surfaceContainer: string;

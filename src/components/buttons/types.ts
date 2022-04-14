@@ -1,24 +1,35 @@
 import {RefObject} from 'react';
-import {PressableProps, StyleProp, TextStyle, ViewStyle} from 'react-native';
+import {
+  PressableProps as RNPressableProps,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import {FlexProps} from 'components/layout/types';
 import {BackdropHandle} from 'components/feedback/types';
 import {IconProps} from 'components/datadisplay/types';
 
-export interface ButtonAppearance {
-  appearance?: 'fill' | 'icon' | 'outline' | 'text';
-}
-
-export interface TouchableProps extends PressableProps, FlexProps {
+export interface PressableProps extends RNPressableProps, FlexProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export interface ButtonProps extends TouchableProps, ButtonAppearance {
+export interface FillButtonProps extends PressableProps {
   textStyle?: StyleProp<TextStyle>;
-  isFocused?: boolean;
-  label?: string;
   icon?: IconProps;
 }
 
-export interface AnchorProps extends ButtonProps {
-  withRef?: RefObject<BackdropHandle>;
+export interface IconButtonProps extends PressableProps, IconProps {}
+
+export interface TextButtonProps extends PressableProps {
+  style?: StyleProp<TextStyle>;
 }
+
+export type ButtonProps =
+  | ({appearance: 'fill'} & FillButtonProps)
+  | ({appearance: 'icon'} & IconButtonProps)
+  | ({appearance: 'text'} & TextButtonProps)
+  | ({appearance: 'outline'} & FillButtonProps);
+
+export type AnchorProps = ButtonProps & {
+  withRef?: RefObject<BackdropHandle>;
+};

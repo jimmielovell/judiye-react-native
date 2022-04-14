@@ -13,12 +13,12 @@ export interface IconProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export interface AvatarProps extends AnchorProps {
+export type AvatarProps = AnchorProps & {
   source?: ImageSourcePropType;
   size?: number;
   online?: boolean;
   initials?: string;
-}
+};
 
 export interface OrganizationProp {
   id: string;

@@ -1,4 +1,4 @@
 import Input from './component/input';
-import Slider from './component/slider';
+import {ValidationError} from './component/errors';
 
-export {Input, Slider};
+export {Input, ValidationError};

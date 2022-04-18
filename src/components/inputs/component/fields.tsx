@@ -21,88 +21,75 @@ import {
   FieldProps,
   FieldWithoutPrePostfixProps,
   PasswordFieldProps,
-  PInFieldProps,
-  PrePostfixProps,
+  PhoneFieldProps,
+  PinFieldProps,
   SearchFieldProps,
   ValidatableField,
 } from '../types';
 import {ValidationError} from './errors';
 import {useFontSize, useForwardedRef, useStyles, useTheme} from 'hooks';
 import wrapper from 'hoc/wrapper';
-import {Button} from 'components/buttons';
-import {Column, FView} from 'components/layout';
+import {Anchor} from 'components/buttons';
+import {AnimatedFView, Column, FView} from 'components/layout';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import {AnchorProps} from 'components/buttons/types';
+import {validators} from 'utils';
 
 const Prefix = wrapper(
-  forwardRef<View, PrePostfixProps>(
-    ({appearance, icon, text, style, onLayout, ...rest}, ref) => {
-      const innerRef = useForwardedRef(ref);
-      const {sizing, spacing} = useTheme();
-      const compStyles = useStyles<ViewStyle>(style, {
-        borderRadius: 0,
-        height: sizing.inputHeight,
-        position: 'absolute',
-        paddingRight: 0,
-        paddingLeft: spacing.inputPaddingHorizontal,
-        width: 'auto',
-        left: 0,
-        bottom: 0,
-      });
+  forwardRef<View, AnchorProps>(({style, onLayout, ...rest}, ref) => {
+    const innerRef = useForwardedRef(ref);
+    const {sizing, spacing} = useTheme();
+    const compStyles = useStyles<ViewStyle>(style, {
+      backgroundColor: 'transparent',
+      borderRadius: 0,
+      height: sizing.inputHeight,
+      position: 'absolute',
+      paddingHorizontal: 0,
+      marginLeft: spacing.inputPaddingHorizontal,
+      width: 'auto',
+      left: 0,
+      bottom: 0,
+    });
 
-      return (
-        <Button
-          ref={innerRef}
-          align="center"
-          justify="center"
-          appearance={appearance || 'icon'}
-          icon={icon}
-          style={compStyles}
-          onLayout={onLayout}
-          {...rest}>
-          {text}
-        </Button>
-      );
-    },
-  ),
+    return (
+      <Anchor ref={innerRef} style={compStyles} onLayout={onLayout} {...rest} />
+    );
+  }),
 );
 
 const Postfix = wrapper(
-  forwardRef<View, PrePostfixProps>(
-    ({appearance, icon, text, style, onLayout, ...rest}, ref) => {
-      const innerRef = useForwardedRef(ref);
-      const {sizing, spacing} = useTheme();
-      const compStyles = useStyles<ViewStyle>(style, {
-        borderRadius: 0,
-        height: sizing.inputHeight,
-        position: 'absolute',
-        paddingRight: spacing.inputPaddingHorizontal,
-        paddingLeft: 0,
-        width: 'auto',
-        right: 0,
-        bottom: 0,
-      });
+  forwardRef<View, AnchorProps>(({style, onLayout, ...rest}, ref) => {
+    const innerRef = useForwardedRef(ref);
+    const {sizing, spacing} = useTheme();
+    const compStyles = useStyles<ViewStyle>(style, {
+      backgroundColor: 'transparent',
+      borderRadius: 0,
+      height: sizing.inputHeight,
+      position: 'absolute',
+      marginRight: spacing.inputPaddingHorizontal,
+      paddingHorizontal: 0,
+      width: 'auto',
+      right: 0,
+      bottom: 0,
+    });
 
-      return (
-        <Button
-          ref={innerRef}
-          appearance={appearance || 'icon'}
-          icon={icon}
-          style={compStyles}
-          onLayout={onLayout}
-          {...rest}>
-          {text}
-        </Button>
-      );
-    },
-  ),
+    return (
+      <Anchor ref={innerRef} style={compStyles} onLayout={onLayout} {...rest} />
+    );
+  }),
 );
 
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 export const Field = wrapper(
   forwardRef<TextInput, ValidatableField<FieldProps>>(
     (
       {
         contRef,
         masks,
-        name,
         prefix,
         postfix,
         rules,
@@ -115,42 +102,83 @@ export const Field = wrapper(
       ref,
     ) => {
       const {colors, sizing, spacing, fonts} = useTheme();
-      const inputRef = useForwardedRef(ref || createRef<TextInput>());
+      const inputRef = useForwardedRef(ref);
+      const errorRef = useRef<ValidationError | null>(null);
+
+      // onLayoutChange on Prefix & Postfix buttons is not fired everytime the
+      // input re-renders
+      const prefixPadRef = useRef(
+        Platform.OS === 'ios'
+          ? spacing.inputPaddingHorizontal - 1
+          : spacing.inputPaddingHorizontal,
+      );
+      const postfixPadRef = useRef(spacing.inputPaddingHorizontal);
 
       const validateInput = useCallback(
         (value: string) => {
-          if (rules?.required && value.length === 0) {
-            throw new ValidationError(`Please enter ${name}`);
+          if (rules?.required && rules?.required.value && value.length === 0) {
+            throw new ValidationError(rules?.required.message);
           }
-          if (rules?.min && value.length < Number(rules?.min)) {
-            throw new ValidationError(
-              `${name} cannot be less than ${Number(rules?.min)} chars.`,
-            );
+          if (rules?.minLength && value.length < rules?.minLength.value) {
+            throw new ValidationError(rules?.minLength.message);
           }
-          if (rules?.max && Number(value) > Number(rules?.max)) {
-            value = value.slice(0, value.length - 1);
-            inputRef.current!.setNativeProps({text: value});
+          if (rules?.maxLength && Number(value) > rules?.maxLength.value) {
+            throw new ValidationError(rules?.maxLength.message);
           }
-          if (rules?.lessThan && Number(value) >= Number(rules?.lessThan)) {
-            value = value.slice(0, value.length - 1);
-            inputRef.current!.setNativeProps({text: value});
+          if (rules?.lessThan && Number(value) >= rules?.lessThan.value) {
+            throw new ValidationError(rules?.lessThan.message);
           }
-          if (rules?.moreThan && Number(value) <= Number(rules?.moreThan)) {
-            throw new ValidationError(
-              `${name} cannot be less than ${Number(rules?.moreThan)}`,
-            );
+          if (rules?.moreThan && Number(value) <= rules?.moreThan.value) {
+            throw new ValidationError(rules?.moreThan.message);
           }
-          if (rules?.regex && !rules?.regex.test(value)) {
-            throw new ValidationError(`Please enter a valid ${name}`);
+          if (rules?.regex) {
+            if (Array.isArray(rules?.regex)) {
+              rules.regex.forEach(rule => {
+                if (!rule.value.test(value)) {
+                  throw new ValidationError(rule.message);
+                }
+              });
+            } else {
+              if (!rules.regex.value.test(value)) {
+                throw new ValidationError(rules?.regex.message);
+              }
+            }
           }
 
           return value;
         },
-        [inputRef, rules, name],
+        [rules],
       );
+
+      const addError = useCallback(
+        (e: ValidationError) => {
+          errorRef.current = e as ValidationError;
+          if (inputRef.current) {
+            inputRef.current.setNativeProps({
+              borderColor: colors.inputOutlineErrored,
+            });
+          }
+        },
+        [colors.inputOutlineErrored, inputRef],
+      );
+      const removeError = useCallback(() => {
+        if (errorRef.current !== null) {
+          if (inputRef.current) {
+            inputRef.current.setNativeProps({
+              borderColor: colors.inputOutline,
+            });
+          }
+          errorRef.current = null;
+        }
+      }, [colors.inputOutline, inputRef]);
+      // useImperativeHandle(ref, () => ({
+      //   addError,
+      //   removeError,
+      // }));
+
       const maskInput = useCallback(
         (value: string) => {
-          // Do mind the ordering of the masks as it may result to unexpected
+          // Do mind the ordering of the masks as it may result in unexpected
           // behaviour
           if (masks?.numOnly && /[\D]+/.test(value)) {
             value = value.slice(0, value.length - 1);
@@ -190,101 +218,104 @@ export const Field = wrapper(
         },
         [inputRef, masks],
       );
-      const usePrefixWidth = useCallback(
-        (e: LayoutChangeEvent) => {
-          if (inputRef.current) {
-            inputRef.current.setNativeProps({
-              style: {
-                paddingLeft:
-                  e.nativeEvent.layout.width + spacing.inputPrefixPadding,
-              },
-            });
+      const onInputChangeText = useCallback(
+        (value: string) => {
+          if (masks) {
+            value = maskInput(value);
           }
-        },
-        [inputRef, spacing.inputPrefixPadding],
-      );
-      const usePostfixWidth = useCallback(
-        (e: LayoutChangeEvent) => {
-          if (inputRef.current) {
-            inputRef.current.setNativeProps({
-              style: {
-                paddingRight:
-                  e.nativeEvent.layout.width + spacing.inputPostfixPadding,
-              },
-            });
+          if (rules && onValid) {
+            try {
+              value = validateInput(value);
+              removeError();
+              onValid(value);
+            } catch (e) {
+              addError(e as ValidationError);
+              onValid(e as ValidationError);
+            }
           }
+          onChangeText && onChangeText(value);
         },
-        [inputRef, spacing.inputPostfixPadding],
+        [
+          maskInput,
+          masks,
+          onChangeText,
+          onValid,
+          removeError,
+          rules,
+          addError,
+          validateInput,
+        ],
       );
 
-      const contCompStyles = useStyles<ViewStyle>(
-        {
-          position: 'relative',
-        },
-        contStyle,
-      );
+      function onPrefixLayoutChange(e: LayoutChangeEvent) {
+        if (inputRef.current) {
+          const paddingLeft =
+            e.nativeEvent.layout.width +
+            spacing.inputPrefixPadding +
+            spacing.inputPaddingHorizontal;
+          prefixPadRef.current = paddingLeft;
+          inputRef.current.setNativeProps({
+            style: {
+              paddingLeft,
+            },
+          });
+        }
+      }
+
+      function onPostfixLayoutChange(e: LayoutChangeEvent) {
+        if (inputRef.current) {
+          const paddingRight =
+            e.nativeEvent.layout.width +
+            spacing.inputPostfixPadding +
+            spacing.inputPaddingHorizontal;
+          postfixPadRef.current = paddingRight;
+          inputRef.current.setNativeProps({
+            style: {
+              paddingRight,
+            },
+          });
+        }
+      }
 
       const {fontSize, lineHeight} = useFontSize(fonts.defaultSize);
       const inputCompStyles = useStyles<ViewStyle & TextStyle>(
         {
           alignSelf: 'stretch',
           borderStyle: 'solid',
-          borderColor: colors.inputOutline,
+          borderColor:
+            errorRef.current === null
+              ? colors.inputOutline
+              : colors.inputOutlineErrored,
           borderWidth: sizing.inputBorderWidth,
           borderRadius: sizing.inputBorderRadius,
           height: sizing.inputHeight,
+          paddingVertical: 0,
+          paddingLeft: prefixPadRef.current,
+          paddingRight: postfixPadRef.current,
           ...Platform.select({
             android: {
-              paddingHorizontal: spacing.inputPaddingHorizontal,
-            },
-            ios: {
-              paddingHorizontal: spacing.inputPaddingHorizontal - 1,
+              paddingBottom: 1,
+              lineHeight,
             },
           }),
           fontSize,
-          lineHeight,
           includeFontPadding: false,
           textAlignVertical: 'center',
-          paddingVertical: 0,
-          ...Platform.select({
-            ios: {
-              paddingTop: 1,
-            },
-            android: {
-              paddingBottom: 1,
-            },
-          }),
         },
         style,
       );
 
-      function onInputChangeText(value: string) {
-        if (masks) {
-          value = maskInput(value);
-        }
-        if (rules && onValid) {
-          try {
-            value = validateInput(value);
-            onValid(value);
-          } catch (e) {
-            onValid(e as ValidationError);
-          }
-        }
-
-        onChangeText && onChangeText(value);
-      }
-
       return (
-        <FView ref={contRef} style={contCompStyles}>
-          {prefix && <Prefix {...prefix} onLayout={usePrefixWidth} />}
-          <TextInput
+        <AnimatedFView ref={contRef} self="stretch" style={contStyle}>
+          {prefix && <Prefix {...prefix} onLayout={onPrefixLayoutChange} />}
+          <AnimatedTextInput
             ref={inputRef}
             style={inputCompStyles}
             onChangeText={onInputChangeText}
             {...rest}
           />
-          {postfix && <Postfix {...postfix} onLayout={usePostfixWidth} />}
-        </FView>
+          {postfix && <Postfix {...postfix} onLayout={onPostfixLayoutChange} />}
+        </AnimatedFView>
       );
     },
   ),
@@ -301,10 +332,7 @@ export const EmailField = wrapper(
           autoComplete="email"
           textContentType="emailAddress"
           keyboardType="email-address"
-          rules={{
-            regex: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w\w+)+$/,
-            ...rules,
-          }}
+          rules={{...validators.email, ...rules}}
           {...rest}
         />
       );
@@ -433,29 +461,38 @@ export const MultilineField = wrapper(
     ({onContentSizeChange, style, ...rest}, ref) => {
       const inputRef = useForwardedRef(ref || createRef<TextInput>());
       const {sizing} = useTheme();
-      const compStyles = useStyles(
+      const height = useSharedValue(sizing.inputHeight);
+
+      function onInputContentSizeChange(e: NativeSyntheticEvent<any>) {
+        height.value = withTiming(
+          Math.max(sizing.inputHeight, e.nativeEvent.contentSize.height + 21),
+          {duration: 50},
+        );
+        onContentSizeChange && onContentSizeChange(e);
+      }
+
+      const inputStyles = useStyles(
         {
-          height: sizing.inputHeight,
+          ...Platform.select({
+            ios: {
+              paddingTop: 9,
+            },
+          }),
         },
         style,
       );
-
-      function onInputContentSizeChange(e: NativeSyntheticEvent<any>) {
-        inputRef.current?.setNativeProps({
-          height: Math.max(
-            sizing.inputHeight,
-            e.nativeEvent.contentSize.height + 21,
-          ),
-        });
-        onContentSizeChange && onContentSizeChange(e);
-      }
+      const animatedStyle = useAnimatedStyle(() => {
+        return {
+          height: height.value,
+        };
+      });
 
       return (
         <Field
           ref={inputRef}
           multiline={true}
           onContentSizeChange={onInputContentSizeChange}
-          style={compStyles}
+          style={[animatedStyle, inputStyles]}
           {...rest}
         />
       );
@@ -478,9 +515,8 @@ export const PasswordField = wrapper(
           secureTextEntry={textEntrySecured}
           {...rest}
           postfix={{
-            icon: {
-              name: textEntrySecured ? 'EyeOff' : 'Eye',
-            },
+            appearance: 'icon',
+            name: textEntrySecured ? 'EyeOff' : 'Eye',
             onPress: () => setTextEntrySecured(!textEntrySecured),
           }}
         />
@@ -490,8 +526,8 @@ export const PasswordField = wrapper(
 );
 
 export const PhoneField = wrapper(
-  forwardRef<TextInput, ValidatableField<FieldWithoutPrePostfixProps>>(
-    (props, ref) => {
+  forwardRef<TextInput, ValidatableField<PhoneFieldProps>>(
+    ({prefix, ...rest}, ref) => {
       const innerRef = useForwardedRef(ref || createRef<TextInput>());
 
       return (
@@ -500,10 +536,10 @@ export const PhoneField = wrapper(
           keyboardType="number-pad"
           prefix={{
             appearance: 'text',
-            text: '+254',
-            textStyle: {fontWeight: 'normal'},
+            children: '+254',
+            ...prefix,
           }}
-          {...props}
+          {...rest}
         />
       );
     },
@@ -533,8 +569,8 @@ const SinglePin = wrapper(
   ),
 );
 export const PinField = wrapper(
-  forwardRef<TextInput, ValidatableField<PInFieldProps>>(
-    ({onValid, length = 6, ...rest}: ValidatableField<PInFieldProps>, ref) => {
+  forwardRef<TextInput, ValidatableField<PinFieldProps>>(
+    ({onValid, length = 6, ...rest}: ValidatableField<PinFieldProps>, ref) => {
       const currentIndex = useRef<number>();
       let pins: Record<string, string | undefined> = useMemo(() => {
         return {};
@@ -621,7 +657,7 @@ export const SearchField = wrapper(
       const inputRef = useForwardedRef(ref || createRef<TextInput>());
       const searchValueRef = useRef<string | null>(null);
       const searchContRef = useForwardedRef(contRef || createRef<View>());
-      const postfixRef = useRef<View>(null);
+      const clearBtnScale = useSharedValue(0);
 
       function handleSearchButtonPress() {
         if (minimized === true && searchValueRef.current === null) {
@@ -635,7 +671,7 @@ export const SearchField = wrapper(
         e: NativeSyntheticEvent<TextInputEndEditingEventData>,
       ) {
         if (!searchValueRef.current || searchValueRef.current.length === 0) {
-          postfixRef.current?.setNativeProps({opacity: 0});
+          clearBtnScale.value = withTiming(0, {duration: 300});
           searchValueRef.current = null;
           if (minimized === true) {
             searchContRef.current!.setNativeProps({flex: 0});
@@ -649,8 +685,7 @@ export const SearchField = wrapper(
           value.length === 1 &&
           (searchValueRef.current === null || searchValueRef.current === '')
         ) {
-          // setClearBtnVisible(true);
-          postfixRef.current?.setNativeProps({opacity: 1});
+          clearBtnScale.value = withTiming(1, {duration: 300});
         }
         searchValueRef.current = value;
         onChangeText && onChangeText(value);
@@ -663,6 +698,12 @@ export const SearchField = wrapper(
         }
       }
 
+      const animatedClearBtnStyle = useAnimatedStyle(() => {
+        return {
+          transform: [{scale: clearBtnScale.value}],
+        };
+      });
+
       return (
         <Field
           ref={inputRef}
@@ -674,20 +715,14 @@ export const SearchField = wrapper(
           onEndEditing={handleInputEditing}
           onChangeText={handleChangeText}
           prefix={{
-            icon: {
-              name: 'Search',
-              size: 20,
-            },
+            appearance: 'icon',
+            name: 'Search',
             onPress: handleSearchButtonPress,
           }}
           postfix={{
-            icon: {
-              name: 'Clear',
-            },
-            ref: postfixRef,
-            style: {
-              opacity: 0,
-            },
+            appearance: 'icon',
+            name: 'Clear',
+            style: animatedClearBtnStyle,
             onPress: handleClearButtonPress,
           }}
           {...rest}

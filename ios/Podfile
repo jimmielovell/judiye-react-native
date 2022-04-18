@@ -12,7 +12,6 @@ target 'Judiye' do
     :hermes_enabled => true
   )
 
-  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
   target 'JudiyeTests' do
     inherit! :complete

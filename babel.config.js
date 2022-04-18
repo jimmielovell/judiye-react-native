@@ -22,6 +22,7 @@ module.exports = {
           hoc: './src/hoc',
           hooks: './src/hooks',
           theme: './src/theme',
+          utils: './src/utils',
         },
       },
     ],

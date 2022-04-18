@@ -9,9 +9,9 @@ import {
 import {Text, TextInput, TextStyle, ViewStyle} from 'react-native';
 import {FView} from '../../layout';
 import {
-  ErrorRefHandle,
+  ErrorHandle,
   LabelProps,
-  LabelRefHandle,
+  LabelHandle,
   PasswordInputProps,
   PlainInputProps,
   SearchInputProps,
@@ -34,7 +34,7 @@ import wrapper from 'hoc/wrapper';
 import {PText, TextError} from 'components/typography';
 
 const Label = wrapper(
-  forwardRef<LabelRefHandle, LabelProps>(({label, style}: LabelProps, ref) => {
+  forwardRef<LabelHandle, LabelProps>(({label, style}: LabelProps, ref) => {
     const innerRef = useForwardedRef(ref);
     const textRef = useRef<Text>(null);
 
@@ -72,7 +72,7 @@ const Label = wrapper(
 );
 
 const Error = wrapper(
-  forwardRef<ErrorRefHandle>((_, ref) => {
+  forwardRef<ErrorHandle>((_, ref) => {
     const [value, setValue] = useState<string | null>(null);
     const innerRef = useForwardedRef(ref);
     const textRef = useRef<Text>(null);
@@ -84,7 +84,7 @@ const Error = wrapper(
       paddingHorizontal: spacing.inputErrorPaddingHorizontal,
       position: 'absolute',
       left: spacing.inputErrorLeft,
-      top: spacing.inputErrorTop,
+      bottom: -5,
       display: 'none',
       lineHeight: fonts.inputErrorSize,
     });
@@ -127,21 +127,14 @@ const Input = wrapper(
   }: PlainInputProps | PasswordInputProps | SearchInputProps) => {
     // @ts-ignore
     const {onValid, ...rest} = props;
-    const {colors, spacing} = useTheme();
+    const {spacing} = useTheme();
     const inputRef = useRef<TextInput>(null);
-    const errorRef = useRef<ErrorRefHandle>(null);
-    const labelRef = useRef<LabelRefHandle>(null);
+    const errorRef = useRef<ErrorHandle>(null);
+    const labelRef = useRef<LabelHandle>(null);
 
     const handleOnValid = useCallback(
       (message: string | ValidationError) => {
         const isValid = typeof message === 'string';
-        if (inputRef.current) {
-          inputRef.current.setNativeProps({
-            borderColor: isValid
-              ? colors.inputOutline
-              : colors.inputOutlineErrored,
-          });
-        }
         if (errorRef.current) {
           if (isValid) {
             errorRef.current.removeError();
@@ -154,14 +147,7 @@ const Input = wrapper(
         }
         onValid(message);
       },
-      [
-        colors.inputOutline,
-        colors.inputOutlineErrored,
-        errorRef,
-        inputRef,
-        labelRef,
-        onValid,
-      ],
+      [errorRef, labelRef, onValid],
     );
 
     const compStyles = useStyles<ViewStyle>({

@@ -22,7 +22,6 @@ export const MenuItem = wrapper(props => {
   const compStyles = useStyles<ViewStyle>({
     borderRadius: 0,
     flex: 0,
-    justifyContent: 'flex-start',
     maxWidth: 180,
     paddingHorizontal: 13,
   });

@@ -19,12 +19,12 @@ import {
   TabPanelHandle,
   TabPanelsHandle,
   TabPanelsProps,
-  TabProps,
   TabsProps,
 } from '../types';
+import {FViewProps} from 'components/layout/types';
 
 export const Tab = wrapper(
-  forwardRef<TabHandle, TabProps>(({style, ...rest}, ref) => {
+  forwardRef<TabHandle, FViewProps>(({style, ...rest}, ref) => {
     const tabRef = useRef<View>(null);
     const {colors} = useTheme();
     const setActive = useCallback(() => {
@@ -65,10 +65,10 @@ export const Tab = wrapper(
     return (
       <Button
         ref={tabRef}
-        appearance="outline"
-        textStyle={textCompStyles}
         style={tabCompStyles}
         {...rest}
+        appearance="outline"
+        textStyle={textCompStyles}
       />
     );
   }),
@@ -106,19 +106,18 @@ export const Tabs = wrapper(
     );
 
     children = useMemo(() => {
-      if (Array.isArray(children)) {
-        return children.map((child, index: number) => {
-          const ref: RefObject<TabHandle> = createRef();
-          // Add value using index to overwrite previous refs in the previous
-          // render
-          refs[index] = ref;
-          return cloneElement(child, {
-            ref,
-            key: `tb-${index}`,
-            onPress: () => handleTabPress(index),
-          });
+      const tabs = Array.isArray(children) ? children : [children];
+      return tabs.map((child, index: number) => {
+        const ref: RefObject<TabHandle> = createRef();
+        // Add value using index to overwrite previous refs in the previous
+        // render
+        refs[index] = ref;
+        return cloneElement(child, {
+          ref,
+          key: `tb-${index}`,
+          onPress: () => handleTabPress(index),
         });
-      }
+      });
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [children, handleTabPress]);
 
@@ -127,7 +126,7 @@ export const Tabs = wrapper(
         backgroundColor: colors.backgroundSecondary,
         borderRadius: 1000,
         marginBottom: 13,
-        height: sizing.buttonHeight,
+        height: sizing.tabHeight,
         padding: 3,
       },
       style,
@@ -193,10 +192,13 @@ export const TabPanels = wrapper(
 
     function __setActiveTab(index: number) {
       if (index !== activeTabIndex.current) {
-        if (refs[activeTabIndex.current].current) {
+        if (
+          refs[activeTabIndex.current] &&
+          refs[activeTabIndex.current].current
+        ) {
           refs[activeTabIndex.current].current?.__setInactive();
         }
-        if (refs[index].current) {
+        if (refs[index] && refs[index].current) {
           refs[index].current?.__setActive();
         }
         activeTabIndex.current = index;
@@ -205,19 +207,18 @@ export const TabPanels = wrapper(
     useImperativeHandle(ref, () => ({__setActiveTab}));
 
     children = useMemo(() => {
-      return Array.isArray(children)
-        ? children.map((child: JSX.Element, index: number) => {
-            const tabPanelRef: RefObject<TabPanelHandle> = createRef();
-            // Add value using index to overwrite previous refs in the previous
-            // render
-            refs[index] = tabPanelRef;
-            return (
-              <TabPanel ref={tabPanelRef} key={`tbp-${index}`}>
-                {child}
-              </TabPanel>
-            );
-          })
-        : [children];
+      const tabPanels = Array.isArray(children) ? children : [children];
+      return tabPanels.map((child: JSX.Element, index: number) => {
+        const tabPanelRef: RefObject<TabPanelHandle> = createRef();
+        // Add value using index to overwrite previous refs in the previous
+        // render
+        refs[index] = tabPanelRef;
+        return (
+          <TabPanel ref={tabPanelRef} key={`tbp-${index}`}>
+            {child}
+          </TabPanel>
+        );
+      });
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [children]);
 

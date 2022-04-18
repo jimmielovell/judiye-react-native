@@ -10,7 +10,6 @@ const spacing: Judiye.Theme.Spacing = {
   inputLabelMarginBottom: 0,
   inputErrorPaddingHorizontal: 3,
   inputErrorLeft: 10,
-  inputErrorTop: 35,
   inputPrefixPadding: 5,
   inputPostfixPadding: 3,
 };

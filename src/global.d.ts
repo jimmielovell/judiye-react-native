@@ -178,7 +178,6 @@ declare global {
         inputLabelMarginBottom: number;
         inputErrorPaddingHorizontal: number;
         inputErrorLeft: number;
-        inputErrorTop: number;
         inputPrefixPadding: number;
         inputPostfixPadding: number;
       }

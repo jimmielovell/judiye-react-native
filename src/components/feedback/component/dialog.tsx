@@ -23,7 +23,8 @@ const Dialog = wrapper(
       backgroundColor: colors.surfaceContainer,
       borderRadius: sizing.surfaceBorderRadius,
       overflow: 'hidden',
-      padding: 13,
+      paddingHorizontal: 13,
+      paddingVertical: 8,
       // Shadow
       ...Platform.select({
         ios: {

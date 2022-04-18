@@ -3,7 +3,7 @@ import {Modal, ViewStyle} from 'react-native';
 import wrapper from 'hoc/wrapper';
 import {useStyles, useTheme} from 'hooks';
 import {BackdropHandle, BackdropProps, InWindowMeasurement} from '../types';
-import {AnimatedPressable} from 'components/buttons';
+import {Pressable} from 'components/buttons';
 
 const Backdrop = wrapper(
   forwardRef<BackdropHandle, BackdropProps>(
@@ -65,13 +65,13 @@ const Backdrop = wrapper(
           transparent={true}
           visible={_visible}
           {...rest}>
-          <AnimatedPressable
+          <Pressable
             entering={entering}
             exiting={exiting}
             style={compStyles}
             onPress={close}>
             {children}
-          </AnimatedPressable>
+          </Pressable>
         </Modal>
       );
     },

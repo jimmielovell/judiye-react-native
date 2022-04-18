@@ -79,7 +79,7 @@ const OutlineButton = wrapper(
       return (
         <Pressable ref={ref} style={compStyles} {...rest}>
           {icon && <Icon {...iconProps!} />}
-          <PText numberOfLines={1} weight="600" style={textCompStyles}>
+          <PText numberOfLines={1} style={textCompStyles}>
             {children}
           </PText>
         </Pressable>
@@ -96,12 +96,10 @@ const IconButton = wrapper(
 
       const compStyles = useStyles<ViewStyle>(
         {
-          alignItems: 'center',
           backgroundColor: colors.backgroundSecondary,
           borderRadius: 1000,
           width: sizing.buttonHeight,
           height: sizing.buttonHeight,
-          justifyContent: 'center',
           zIndex: 1000,
         },
         style,
@@ -115,7 +113,7 @@ const IconButton = wrapper(
           ref={ref}
           style={compStyles}
           {...rest}>
-          <Icon name={name} color={color} size={size} />
+          <Icon name={name} color={color} size={size || 20} />
         </Pressable>
       );
     },
@@ -126,20 +124,21 @@ const TextButton = wrapper(
   forwardRef<View, TextButtonProps>(({style, children, ...rest}, ref) => {
     const {colors, sizing} = useTheme();
 
-    const compStyles = useStyles<ViewStyle>({
-      alignItems: 'center',
-      backgroundColor: 'transparent',
-      borderRadius: sizing.buttonBorderRadius,
-      height: sizing.buttonHeight,
-      justifyContent: 'center',
-      paddingHorizontal: 13,
-      zIndex: 1000,
-    });
-    const textCompStyles = useStyles({color: colors.text}, style);
+    const compStyles = useStyles<ViewStyle>(
+      {
+        backgroundColor: 'transparent',
+        borderRadius: sizing.buttonBorderRadius,
+        height: sizing.buttonHeight,
+        paddingHorizontal: 13,
+        zIndex: 1000,
+      },
+      style,
+    );
+    const textCompStyles = useStyles({color: colors.text});
 
     return (
-      <Pressable ref={ref} style={compStyles} {...rest}>
-        <PText numberOfLines={1} weight="600" style={textCompStyles}>
+      <Pressable ref={ref} self="flex-start" style={compStyles} {...rest}>
+        <PText numberOfLines={1} style={textCompStyles}>
           {children}
         </PText>
       </Pressable>
@@ -148,7 +147,7 @@ const TextButton = wrapper(
 );
 
 const Button = wrapper(
-  forwardRef<View, ButtonProps>(({appearance, ...rest}, ref) => {
+  forwardRef<View, ButtonProps>(({appearance = 'fill', ...rest}, ref) => {
     const buttonComponent = useMemo(() => {
       switch (appearance) {
         case 'outline':

@@ -17,9 +17,9 @@ const sizing: Judiye.Theme.Sizing = {
   buttonWidth: watfoeSizing.buttonWidth,
   buttonBorderWidth: watfoeSizing.borderWidth,
   buttonBorderRadius: watfoeSizing.xxlRadius,
-  buttonIconSize: 34,
+  buttonIconSize: 40,
 
-  tabHeight: 30,
+  tabHeight: 34,
 
   surfaceBorderRadius: watfoeSizing.nmRadius,
   borderRadius: watfoeSizing.nmRadius,

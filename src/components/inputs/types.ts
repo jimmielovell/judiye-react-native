@@ -1,49 +1,32 @@
+import {RefObject} from 'react';
 import {
-  LayoutChangeEvent,
-  NativeSyntheticEvent,
-  NativeTouchEvent,
   StyleProp,
+  TextInput,
   TextInputProps,
   TextStyle,
   View,
   ViewStyle,
 } from 'react-native';
 import {ValidationError} from './component/errors';
-import {ButtonProps} from 'components/buttons/types';
+import {AnchorProps} from 'components/buttons/types';
 
-export interface LabelRefHandle {
-  isErrored: (errored: boolean) => void;
+export interface LabelHandle {
+  isErrored(errored: boolean): void;
 }
 export interface LabelProps {
   label: string;
   style?: StyleProp<TextStyle>;
 }
 
-export interface ErrorRefHandle {
-  addError: (error: ValidationError) => void;
-  removeError: () => void;
+export interface ErrorHandle {
+  addError(error: ValidationError): void;
+  removeError(): void;
 }
 export interface ErrorProps {
   message: string;
 }
 
-export interface PrePostfixProps extends ButtonProps {
-  ref?: React.RefObject<View>;
-  text?: string;
-  onPress?: (e?: NativeSyntheticEvent<NativeTouchEvent>) => void;
-  onLayout?: (e: LayoutChangeEvent) => void;
-}
-
-interface FieldRules {
-  numeric?: boolean;
-  alpha?: boolean;
-  required?: boolean;
-  min?: string | number;
-  max?: string | number;
-  lessThan?: string | number;
-  moreThan?: string | number;
-  regex?: RegExp;
-}
+export type TextInputHandle = TextInput & ErrorHandle;
 
 interface FieldMasks {
   cast?: 'string' | 'number';
@@ -55,7 +38,7 @@ interface FieldMasks {
 export interface FieldWithoutPrePostfixProps extends TextInputProps {
   label?: string;
   name?: string;
-  contRef?: React.ForwardedRef<View>;
+  contRef?: RefObject<View>;
   contStyle?: StyleProp<ViewStyle>;
   masks?: FieldMasks;
 }
@@ -63,16 +46,20 @@ export interface FieldWithoutPrePostfixProps extends TextInputProps {
 export interface FieldProps
   extends TextInputProps,
     FieldWithoutPrePostfixProps {
-  postfix?: PrePostfixProps;
-  prefix?: PrePostfixProps;
+  postfix?: AnchorProps;
+  prefix?: AnchorProps;
 }
 
 export interface PasswordFieldProps extends FieldWithoutPrePostfixProps {
   newPassword?: boolean;
 }
 
-export interface PInFieldProps extends FieldWithoutPrePostfixProps {
+export interface PinFieldProps extends FieldWithoutPrePostfixProps {
   length?: number;
+}
+
+export interface PhoneFieldProps extends FieldWithoutPrePostfixProps {
+  prefix?: AnchorProps;
 }
 
 export interface SearchFieldProps extends FieldWithoutPrePostfixProps {
@@ -80,8 +67,36 @@ export interface SearchFieldProps extends FieldWithoutPrePostfixProps {
   onSearch?: (value: string) => void;
 }
 
+interface RegexInputRule {
+  value: RegExp;
+  message: string;
+}
+export interface InputRules {
+  required?: {
+    value: boolean;
+    message: string;
+  };
+  minLength?: {
+    value: number;
+    message: string;
+  };
+  maxLength?: {
+    value: number;
+    message: string;
+  };
+  lessThan?: {
+    value: number;
+    message: string;
+  };
+  moreThan?: {
+    value: number;
+    message: string;
+  };
+  regex?: RegexInputRule | RegexInputRule[];
+}
+
 export type ValidatableField<T> = T & {
-  rules?: FieldRules;
+  rules?: InputRules;
   onValid?: (value: string | ValidationError) => void;
 };
 

@@ -1,5 +1,5 @@
 import {forwardRef} from 'react';
-import {Text, TextStyle} from 'react-native';
+import {Platform, Text, TextStyle} from 'react-native';
 import {TextProps} from '../types';
 import {useFontSize, useForwardedRef, useStyles, useTheme} from 'hooks';
 import wrapper from 'hoc/wrapper';
@@ -64,12 +64,11 @@ const PText = wrapper(
           includeFontPadding: false,
           textAlignVertical: 'center',
           paddingTop: 1,
-          // ...Platform.select({
-          //   ios: {
-          //     paddingTop: 1,
-          //   },
-          // }),
-          lineHeight,
+          ...Platform.select({
+            android: {
+              lineHeight,
+            },
+          }),
         },
         style,
       );

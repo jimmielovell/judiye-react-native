@@ -5,9 +5,7 @@ import {useStyles, useTheme} from 'hooks';
 import wrapper from 'hoc/wrapper';
 import Animated from 'react-native-reanimated';
 
-export const AnimatedPressable = Animated.createAnimatedComponent(Touchable);
-
-const Pressable = wrapper(
+const UnAnanimatedPressable = wrapper(
   forwardRef<View, PressableProps>(
     (
       {
@@ -37,7 +35,7 @@ const Pressable = wrapper(
       );
 
       return (
-        <AnimatedPressable
+        <Touchable
           android_ripple={{
             color: colors.ripple,
             foreground: false,
@@ -51,5 +49,7 @@ const Pressable = wrapper(
     },
   ),
 );
+
+const Pressable = Animated.createAnimatedComponent(UnAnanimatedPressable);
 
 export default Pressable;

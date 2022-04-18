@@ -20,15 +20,12 @@ export interface FillButtonProps extends PressableProps {
 
 export interface IconButtonProps extends PressableProps, IconProps {}
 
-export interface TextButtonProps extends PressableProps {
-  style?: StyleProp<TextStyle>;
-}
+export interface TextButtonProps extends PressableProps {}
 
 export type ButtonProps =
-  | ({appearance: 'fill'} & FillButtonProps)
   | ({appearance: 'icon'} & IconButtonProps)
   | ({appearance: 'text'} & TextButtonProps)
-  | ({appearance: 'outline'} & FillButtonProps);
+  | ({appearance: 'fill' | 'outline'} & FillButtonProps);
 
 export type AnchorProps = ButtonProps & {
   withRef?: RefObject<BackdropHandle>;

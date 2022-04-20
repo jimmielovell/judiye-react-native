@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {ValidationError} from './component/errors';
 import {AnchorProps} from 'components/buttons/types';
+import {FViewProps} from 'components/layout/types';
 
 export interface LabelHandle {
   isErrored(errored: boolean): void;
@@ -131,3 +132,11 @@ export type SearchInputProps = InputProps<
     type: 'search';
   }
 >;
+
+export interface ToggleButtonHandle {
+  __setActive: () => void;
+  __setInactive: () => void;
+}
+export interface ToggleButtonsProps extends FViewProps {
+  onValueChange(index: number): void;
+}

@@ -48,15 +48,23 @@ const Prefix = wrapper(
       borderRadius: 0,
       height: sizing.inputHeight,
       position: 'absolute',
-      paddingHorizontal: 0,
-      marginLeft: spacing.inputPaddingHorizontal,
+      paddingLeft: spacing.inputPaddingHorizontal,
+      paddingRight: spacing.inputPrefixPadding,
       width: 'auto',
       left: 0,
       bottom: 0,
     });
 
     return (
-      <Anchor ref={innerRef} style={compStyles} onLayout={onLayout} {...rest} />
+      <Anchor
+        ref={innerRef}
+        android_ripple={{
+          borderless: false,
+        }}
+        style={compStyles}
+        onLayout={onLayout}
+        {...rest}
+      />
     );
   }),
 );
@@ -70,15 +78,23 @@ const Postfix = wrapper(
       borderRadius: 0,
       height: sizing.inputHeight,
       position: 'absolute',
-      marginRight: spacing.inputPaddingHorizontal,
-      paddingHorizontal: 0,
+      paddingLeft: spacing.inputPrefixPadding,
+      paddingRight: spacing.inputPaddingHorizontal,
       width: 'auto',
       right: 0,
       bottom: 0,
     });
 
     return (
-      <Anchor ref={innerRef} style={compStyles} onLayout={onLayout} {...rest} />
+      <Anchor
+        ref={innerRef}
+        android_ripple={{
+          borderless: false,
+        }}
+        style={compStyles}
+        onLayout={onLayout}
+        {...rest}
+      />
     );
   }),
 );
@@ -249,10 +265,7 @@ export const Field = wrapper(
 
       function onPrefixLayoutChange(e: LayoutChangeEvent) {
         if (inputRef.current) {
-          const paddingLeft =
-            e.nativeEvent.layout.width +
-            spacing.inputPrefixPadding +
-            spacing.inputPaddingHorizontal;
+          const paddingLeft = e.nativeEvent.layout.width;
           prefixPadRef.current = paddingLeft;
           inputRef.current.setNativeProps({
             style: {
@@ -264,10 +277,7 @@ export const Field = wrapper(
 
       function onPostfixLayoutChange(e: LayoutChangeEvent) {
         if (inputRef.current) {
-          const paddingRight =
-            e.nativeEvent.layout.width +
-            spacing.inputPostfixPadding +
-            spacing.inputPaddingHorizontal;
+          const paddingRight = e.nativeEvent.layout.width;
           postfixPadRef.current = paddingRight;
           inputRef.current.setNativeProps({
             style: {
@@ -277,7 +287,7 @@ export const Field = wrapper(
         }
       }
 
-      const {fontSize, lineHeight} = useFontSize(fonts.defaultSize);
+      const {fontSize} = useFontSize(fonts.defaultSize);
       const inputCompStyles = useStyles<ViewStyle & TextStyle>(
         {
           alignSelf: 'stretch',
@@ -292,12 +302,6 @@ export const Field = wrapper(
           paddingVertical: 0,
           paddingLeft: prefixPadRef.current,
           paddingRight: postfixPadRef.current,
-          ...Platform.select({
-            android: {
-              paddingBottom: 1,
-              lineHeight,
-            },
-          }),
           fontSize,
           includeFontPadding: false,
           textAlignVertical: 'center',

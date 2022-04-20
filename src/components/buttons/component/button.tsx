@@ -121,29 +121,31 @@ const IconButton = wrapper(
 );
 
 const TextButton = wrapper(
-  forwardRef<View, TextButtonProps>(({style, children, ...rest}, ref) => {
-    const {colors, sizing} = useTheme();
+  forwardRef<View, TextButtonProps>(
+    ({style, textStyle, children, ...rest}, ref) => {
+      const {colors, sizing} = useTheme();
 
-    const compStyles = useStyles<ViewStyle>(
-      {
-        backgroundColor: 'transparent',
-        borderRadius: sizing.buttonBorderRadius,
-        height: sizing.buttonHeight,
-        paddingHorizontal: 13,
-        zIndex: 1000,
-      },
-      style,
-    );
-    const textCompStyles = useStyles({color: colors.text});
+      const compStyles = useStyles<ViewStyle>(
+        {
+          backgroundColor: 'transparent',
+          borderRadius: sizing.buttonBorderRadius,
+          height: sizing.buttonHeight,
+          paddingHorizontal: 13,
+          zIndex: 1000,
+        },
+        style,
+      );
+      const textCompStyles = useStyles({color: colors.text}, textStyle);
 
-    return (
-      <Pressable ref={ref} self="flex-start" style={compStyles} {...rest}>
-        <PText numberOfLines={1} style={textCompStyles}>
-          {children}
-        </PText>
-      </Pressable>
-    );
-  }),
+      return (
+        <Pressable ref={ref} self="flex-start" style={compStyles} {...rest}>
+          <PText numberOfLines={1} style={textCompStyles}>
+            {children}
+          </PText>
+        </Pressable>
+      );
+    },
+  ),
 );
 
 const Button = wrapper(

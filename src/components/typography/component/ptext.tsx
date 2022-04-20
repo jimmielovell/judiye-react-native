@@ -1,8 +1,9 @@
 import {forwardRef} from 'react';
 import {Platform, Text, TextStyle} from 'react-native';
 import {TextProps} from '../types';
-import {useFontSize, useForwardedRef, useStyles, useTheme} from 'hooks';
+import {useFontSize, useStyles, useTheme} from 'hooks';
 import wrapper from 'hoc/wrapper';
+import Animated from 'react-native-reanimated';
 
 function isBold(
   weight:
@@ -40,7 +41,6 @@ const PText = wrapper(
       },
       ref,
     ) => {
-      const textRef = useForwardedRef(ref);
       const {colors, fonts} = useTheme();
 
       // @ts-ignore
@@ -50,7 +50,7 @@ const PText = wrapper(
         size = fontSize;
         style = styleRest;
       }
-      const {fontSize, lineHeight} = useFontSize(size!);
+      const {fontSize} = useFontSize(size!);
       const compStyle = useStyles<TextStyle>(
         {
           color: color || colors.textPrimary,
@@ -63,19 +63,16 @@ const PText = wrapper(
           fontStyle: italic ? 'italic' : 'normal',
           includeFontPadding: false,
           textAlignVertical: 'center',
-          paddingTop: 1,
-          ...Platform.select({
-            android: {
-              lineHeight,
-            },
-          }),
+          paddingTop: Platform.OS === 'android' ? 0 : 1,
         },
         style,
       );
 
-      return <Text ref={textRef} style={compStyle} {...rest} />;
+      return <Text ref={ref} style={compStyle} {...rest} />;
     },
   ),
 );
+
+export const AnimatedPText = Animated.createAnimatedComponent(PText);
 
 export default PText;

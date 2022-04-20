@@ -1,144 +1,41 @@
 import {
-  cloneElement,
   createRef,
   forwardRef,
   RefObject,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
 } from 'react';
-import {TextStyle, View, ViewStyle} from 'react-native';
-import {Button} from 'components/buttons';
+import {View, ViewStyle} from 'react-native';
 import {FView} from 'components/layout';
 import wrapper from 'hoc/wrapper';
-import {useStyles, useTheme} from 'hooks';
+import {useStyles} from 'hooks';
 import {
-  TabHandle,
   TabPanelHandle,
   TabPanelsHandle,
   TabPanelsProps,
   TabsProps,
 } from '../types';
 import {FViewProps} from 'components/layout/types';
+import {ToggleButton, ToggleButtons} from 'components/inputs';
+import {ToggleButtonHandle} from 'components/inputs/types';
 
 export const Tab = wrapper(
-  forwardRef<TabHandle, FViewProps>(({style, ...rest}, ref) => {
-    const tabRef = useRef<View>(null);
-    const {colors} = useTheme();
-    const setActive = useCallback(() => {
-      if (tabRef.current) {
-        tabRef.current.setNativeProps({
-          borderColor: colors.buttonSecondaryOutline,
-          backgroundColor: colors.surfaceContainer,
-        });
-      }
-    }, [colors.buttonSecondaryOutline, colors.surfaceContainer]);
-    const setInactive = useCallback(() => {
-      if (tabRef.current) {
-        tabRef.current.setNativeProps({
-          backgroundColor: 'transparent',
-          borderColor: 'transparent',
-        });
-      }
-    }, []);
-
-    useImperativeHandle(ref, () => ({
-      setActive,
-      setInactive,
-    }));
-
-    const tabCompStyles = useStyles(
-      {
-        borderColor: 'transparent',
-        height: '100%',
-        flex: 1,
-      },
-      style,
-    );
-    const textCompStyles = useStyles<TextStyle>({
-      fontWeight: 'normal',
-      fontSize: 14,
-    });
-
-    return (
-      <Button
-        ref={tabRef}
-        style={tabCompStyles}
-        {...rest}
-        appearance="outline"
-        textStyle={textCompStyles}
-      />
-    );
+  forwardRef<ToggleButtonHandle, FViewProps>((props, ref) => {
+    return <ToggleButton ref={ref} {...props} />;
   }),
 );
 
-export const Tabs = wrapper(
-  ({style, children, withRef, ...rest}: TabsProps) => {
-    const {colors, sizing} = useTheme();
-    const activeTabIndex = useRef(0);
-    let refs: RefObject<TabHandle>[] = useMemo(() => [], []);
+export const Tabs = wrapper(({withRef, ...rest}: TabsProps) => {
+  function handleOnValueChange(index: number) {
+    if (withRef.current) {
+      withRef.current.__setActiveTab(index);
+    }
+  }
 
-    useEffect(() => {
-      if (
-        refs[activeTabIndex.current] &&
-        refs[activeTabIndex.current].current
-      ) {
-        refs[activeTabIndex.current].current?.setActive();
-      }
-    });
-
-    const handleTabPress = useCallback(
-      (index: number) => {
-        if (withRef.current && index !== activeTabIndex.current) {
-          if (refs[activeTabIndex.current].current) {
-            refs[activeTabIndex.current].current?.setInactive();
-          }
-          if (refs[index].current) {
-            refs[index].current?.setActive();
-          }
-          withRef.current.__setActiveTab(index);
-          activeTabIndex.current = index;
-        }
-      },
-      [refs, withRef],
-    );
-
-    children = useMemo(() => {
-      const tabs = Array.isArray(children) ? children : [children];
-      return tabs.map((child, index: number) => {
-        const ref: RefObject<TabHandle> = createRef();
-        // Add value using index to overwrite previous refs in the previous
-        // render
-        refs[index] = ref;
-        return cloneElement(child, {
-          ref,
-          key: `tb-${index}`,
-          onPress: () => handleTabPress(index),
-        });
-      });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [children, handleTabPress]);
-
-    const compStyles = useStyles(
-      {
-        backgroundColor: colors.backgroundSecondary,
-        borderRadius: 1000,
-        marginBottom: 13,
-        height: sizing.tabHeight,
-        padding: 3,
-      },
-      style,
-    );
-
-    return (
-      <FView direction="row" style={compStyles} {...rest}>
-        {children}
-      </FView>
-    );
-  },
-);
+  return <ToggleButtons onValueChange={handleOnValueChange} {...rest} />;
+});
 
 const TabPanel = wrapper(
   forwardRef<TabPanelHandle, TabPanelsProps>((props, ref) => {

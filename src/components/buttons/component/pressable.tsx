@@ -36,11 +36,11 @@ const UnAnanimatedPressable = wrapper(
 
       return (
         <Touchable
-          android_ripple={{
-            color: colors.ripple,
-            foreground: false,
-            ...android_ripple,
-          }}
+          // android_ripple={{
+          //   color: colors.ripple,
+          //   foreground: false,
+          //   ...android_ripple,
+          // }}
           ref={ref}
           style={compStyles}
           {...rest}

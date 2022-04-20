@@ -20,7 +20,9 @@ export interface FillButtonProps extends PressableProps {
 
 export interface IconButtonProps extends PressableProps, IconProps {}
 
-export interface TextButtonProps extends PressableProps {}
+export interface TextButtonProps extends PressableProps {
+  textStyle?: StyleProp<TextStyle>;
+}
 
 export type ButtonProps =
   | ({appearance: 'icon'} & IconButtonProps)

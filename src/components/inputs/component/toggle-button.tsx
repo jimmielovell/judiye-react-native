@@ -23,6 +23,8 @@ import {
 } from 'react-native-reanimated';
 import {AnimatedPText} from 'components/typography';
 
+const ANIMATION_DURATION = 244;
+
 export const ToggleButton = wrapper(
   forwardRef<ToggleButtonHandle, FViewProps>(
     ({style, children, ...rest}, ref) => {
@@ -33,7 +35,7 @@ export const ToggleButton = wrapper(
       const __setActive = useCallback(() => {
         // @ts-expect-error
         color.value = withTiming(colors.buttonPrimaryText, {
-          duration: 150,
+          duration: ANIMATION_DURATION,
         });
       }, [color, colors.buttonPrimaryText]);
       const __setInactive = useCallback(() => {
@@ -121,11 +123,10 @@ export const ToggleButtons = wrapper(
             if (index === 0) {
               position += 3;
             } else if (index === noOfTbs.current - 1) {
-              position -= 3;
+              position -= 2;
             }
             indicatorPosition.value = withTiming(position, {
-              duration: 150,
-              // easing: Easing.bezier(0.5, 0.01, 0, 1),
+              duration: ANIMATION_DURATION,
             });
 
             if (onValueChange) {

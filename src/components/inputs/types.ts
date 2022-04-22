@@ -138,5 +138,5 @@ export interface ToggleButtonHandle {
   __setInactive: () => void;
 }
 export interface ToggleButtonsProps extends FViewProps {
-  onValueChange(index: number): void;
+  onValueChange?(index: number): void;
 }

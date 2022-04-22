@@ -7,10 +7,8 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import {View, ViewStyle} from 'react-native';
-import {FView} from 'components/layout';
+import {AnimatedFView, FView} from 'components/layout';
 import wrapper from 'hoc/wrapper';
-import {useStyles} from 'hooks';
 import {
   TabPanelHandle,
   TabPanelsHandle,
@@ -20,6 +18,9 @@ import {
 import {FViewProps} from 'components/layout/types';
 import {ToggleButton, ToggleButtons} from 'components/inputs';
 import {ToggleButtonHandle} from 'components/inputs/types';
+import {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
+import {LayoutChangeEvent, ViewStyle} from 'react-native';
+import {useStyles} from 'hooks';
 
 export const Tab = wrapper(
   forwardRef<ToggleButtonHandle, FViewProps>((props, ref) => {
@@ -39,37 +40,40 @@ export const Tabs = wrapper(({withRef, ...rest}: TabsProps) => {
 
 const TabPanel = wrapper(
   forwardRef<TabPanelHandle, TabPanelsProps>((props, ref) => {
-    const tabPanelRef = useRef<View>(null);
+    const display = useSharedValue('none');
+    // const translateX = useSharedValue(0);
+    const panelWidth = useRef(0);
 
-    const __setActive = () => {
-      if (tabPanelRef.current) {
-        tabPanelRef.current.setNativeProps({
-          transform: [{scale: 1}],
-          display: 'flex',
-        });
-      }
+    const __setActive = (_thisIndex: number, _prevIndex?: number) => {
+      display.value = 'flex';
     };
-    const __setInactive = () => {
-      if (tabPanelRef.current) {
-        tabPanelRef.current.setNativeProps({
-          display: 'none',
-          transform: [{scale: 0}],
-        });
-      }
+    const __setInactive = (_thisIndex: number, _nextIndex: number) => {
+      display.value = 'none';
     };
-
     useImperativeHandle(ref, () => ({
       __setActive,
       __setInactive,
     }));
 
-    const compStyle = useStyles<ViewStyle>({
-      display: 'none',
-      // There's some sort of a bug that display: none introduces
-      transform: [{scale: 0}],
+    function setPanelWidth(e: LayoutChangeEvent) {
+      panelWidth.current = e.nativeEvent.layout.width;
+    }
+
+    const animCompStyle = useAnimatedStyle(() => {
+      return {
+        display: display.value as 'flex' | 'none',
+        // transform: [{translateX: translateX.value}],
+      };
     });
 
-    return <FView {...props} ref={tabPanelRef} style={compStyle} />;
+    return (
+      // @ts-expect-error
+      <AnimatedFView
+        {...props}
+        onLayout={setPanelWidth}
+        style={animCompStyle}
+      />
+    );
   }),
 );
 
@@ -83,7 +87,9 @@ export const TabPanels = wrapper(
         refs[activeTabIndex.current] &&
         refs[activeTabIndex.current].current
       ) {
-        refs[activeTabIndex.current].current?.__setActive();
+        refs[activeTabIndex.current].current?.__setActive(
+          activeTabIndex.current,
+        );
       }
     });
 
@@ -93,10 +99,13 @@ export const TabPanels = wrapper(
           refs[activeTabIndex.current] &&
           refs[activeTabIndex.current].current
         ) {
-          refs[activeTabIndex.current].current?.__setInactive();
+          refs[activeTabIndex.current].current?.__setInactive(
+            index,
+            activeTabIndex.current,
+          );
         }
         if (refs[index] && refs[index].current) {
-          refs[index].current?.__setActive();
+          refs[index].current?.__setActive(activeTabIndex.current, index);
         }
         activeTabIndex.current = index;
       }
@@ -119,6 +128,14 @@ export const TabPanels = wrapper(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [children]);
 
-    return <FView>{children}</FView>;
+    const compStyle = useStyles<ViewStyle>({
+      overflow: 'hidden',
+    });
+
+    return (
+      <FView direction="row" style={compStyle}>
+        {children}
+      </FView>
+    );
   }),
 );

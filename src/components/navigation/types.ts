@@ -7,7 +7,6 @@ export interface MenuProps {
 
 export interface TabPanelHandle {
   __setActive: (thisIndex: number, prevIndex?: number) => void;
-  __setInactive: (thisIndex: number, nextIndex: number) => void;
 }
 export interface TabPanelsHandle {
   __setActiveTab: (index: number) => void;

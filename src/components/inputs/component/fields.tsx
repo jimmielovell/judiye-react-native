@@ -349,12 +349,10 @@ export const NameField = wrapper(
     return (
       <Field
         ref={ref}
-        name="name"
         autoComplete="name"
         autoCorrect={false}
         autoCapitalize="words"
         textContentType="name"
-        placeholder="Name"
         {...props}
       />
     );

@@ -1,12 +1,16 @@
 import {
-  createRef,
   forwardRef,
-  RefObject,
   useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
 } from 'react';
+import {LayoutChangeEvent, ViewProps, ViewStyle} from 'react-native';
+import {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import {AnimatedFView, FView} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import {
@@ -18,8 +22,6 @@ import {
 import {FViewProps} from 'components/layout/types';
 import {ToggleButton, ToggleButtons} from 'components/inputs';
 import {ToggleButtonHandle} from 'components/inputs/types';
-import {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
-import {LayoutChangeEvent, ViewStyle} from 'react-native';
 import {useStyles} from 'hooks';
 
 export const Tab = wrapper(
@@ -30,7 +32,7 @@ export const Tab = wrapper(
 
 export const Tabs = wrapper(({withRef, ...rest}: TabsProps) => {
   function handleOnValueChange(index: number) {
-    if (withRef.current) {
+    if (withRef && withRef.current) {
       withRef.current.__setActiveTab(index);
     }
   }
@@ -39,20 +41,16 @@ export const Tabs = wrapper(({withRef, ...rest}: TabsProps) => {
 });
 
 const TabPanel = wrapper(
-  forwardRef<TabPanelHandle, TabPanelsProps>((props, ref) => {
-    const display = useSharedValue('none');
-    // const translateX = useSharedValue(0);
+  forwardRef<TabPanelHandle, ViewProps>((props, ref) => {
+    const translateX = useSharedValue(0);
     const panelWidth = useRef(0);
 
-    const __setActive = (_thisIndex: number, _prevIndex?: number) => {
-      display.value = 'flex';
-    };
-    const __setInactive = (_thisIndex: number, _nextIndex: number) => {
-      display.value = 'none';
+    const __setActive = (steps: number) => {
+      const spanX = steps * -1 * panelWidth.current + translateX.value;
+      translateX.value = withTiming(spanX, {duration: 244});
     };
     useImperativeHandle(ref, () => ({
       __setActive,
-      __setInactive,
     }));
 
     function setPanelWidth(e: LayoutChangeEvent) {
@@ -61,13 +59,11 @@ const TabPanel = wrapper(
 
     const animCompStyle = useAnimatedStyle(() => {
       return {
-        display: display.value as 'flex' | 'none',
-        // transform: [{translateX: translateX.value}],
+        marginLeft: translateX.value,
       };
     });
 
     return (
-      // @ts-expect-error
       <AnimatedFView
         {...props}
         onLayout={setPanelWidth}
@@ -80,33 +76,17 @@ const TabPanel = wrapper(
 export const TabPanels = wrapper(
   forwardRef<TabPanelsHandle, TabPanelsProps>(({children}, ref) => {
     const activeTabIndex = useRef(0);
-    let refs: RefObject<TabPanelHandle>[] = useMemo(() => [], []);
+    const animatableTabRef = useRef<TabPanelHandle>(null);
 
     useEffect(() => {
-      if (
-        refs[activeTabIndex.current] &&
-        refs[activeTabIndex.current].current
-      ) {
-        refs[activeTabIndex.current].current?.__setActive(
-          activeTabIndex.current,
-        );
+      if (activeTabIndex.current !== 0) {
+        animatableTabRef.current?.__setActive(activeTabIndex.current);
       }
     });
 
     function __setActiveTab(index: number) {
       if (index !== activeTabIndex.current) {
-        if (
-          refs[activeTabIndex.current] &&
-          refs[activeTabIndex.current].current
-        ) {
-          refs[activeTabIndex.current].current?.__setInactive(
-            index,
-            activeTabIndex.current,
-          );
-        }
-        if (refs[index] && refs[index].current) {
-          refs[index].current?.__setActive(activeTabIndex.current, index);
-        }
+        animatableTabRef.current?.__setActive(index - activeTabIndex.current);
         activeTabIndex.current = index;
       }
     }
@@ -115,17 +95,14 @@ export const TabPanels = wrapper(
     children = useMemo(() => {
       const tabPanels = Array.isArray(children) ? children : [children];
       return tabPanels.map((child: JSX.Element, index: number) => {
-        const tabPanelRef: RefObject<TabPanelHandle> = createRef();
-        // Add value using index to overwrite previous refs in the previous
-        // render
-        refs[index] = tabPanelRef;
         return (
-          <TabPanel ref={tabPanelRef} key={`tbp-${index}`}>
+          <TabPanel
+            ref={index === 0 ? animatableTabRef : undefined}
+            key={`tbp-${index}`}>
             {child}
           </TabPanel>
         );
       });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [children]);
 
     const compStyle = useStyles<ViewStyle>({

@@ -15,7 +15,7 @@ const App = wrapper(() => {
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         />
         <ErrorBoundary>
-          <Frame />
+          <Frame></Frame>
         </ErrorBoundary>
       </SafeAreaView>
     </GestureHandlerRootView>

@@ -21,6 +21,8 @@ module.exports = {
           components: './src/components',
           hoc: './src/hoc',
           hooks: './src/hooks',
+          navigators: './src/navigators',
+          screens: './src/screens',
           theme: './src/theme',
           utils: './src/utils',
         },

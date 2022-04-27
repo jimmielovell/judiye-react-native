@@ -1,5 +1,4 @@
-import Anchor from '../buttons/component/anchor';
-import Backdrop from './component/backdrop';
-import Dialog from './component/dialog';
+import Backdrop from './backdrop';
+import Dialog from './dialog';
 
-export {Anchor, Backdrop, Dialog};
+export {Backdrop, Dialog};

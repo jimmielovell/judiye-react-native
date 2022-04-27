@@ -1,6 +1,6 @@
-import AnimatedFView from './component/animated-fview';
-import Column from './component/column';
-import Frame from './component/frame';
-import FView from './component/fview';
+import AnimatedFView from './animated-fview';
+import Column from './column';
+import Frame from './frame';
+import FView from './fview';
 
 export {AnimatedFView, Column, Frame, FView};

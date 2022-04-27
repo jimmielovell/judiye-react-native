@@ -1,5 +1,5 @@
-import Input from './component/input';
-import {ValidationError} from './component/errors';
-import {ToggleButton, ToggleButtons} from './component/toggle-button';
+import Input from './input';
+import {ValidationError} from './errors';
+import {ToggleButton, ToggleButtons} from './toggle-button';
 
 export {Input, ValidationError, ToggleButton, ToggleButtons};

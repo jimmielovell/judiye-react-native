@@ -27,7 +27,7 @@ export interface TextButtonProps extends PressableProps {
 export type ButtonProps =
   | ({appearance: 'icon'} & IconButtonProps)
   | ({appearance: 'text'} & TextButtonProps)
-  | ({appearance: 'fill' | 'outline'} & FillButtonProps);
+  | ({appearance?: 'fill' | 'outline'} & FillButtonProps);
 
 export type AnchorProps = ButtonProps & {
   withRef?: RefObject<BackdropHandle>;

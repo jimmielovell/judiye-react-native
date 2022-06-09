@@ -1,10 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import wrapper from 'hoc/wrapper';
 import {DiscoverHeader, DiscoverScreen} from '../../../screens/main/discover';
 
 const Stack = createNativeStackNavigator();
 
-const HighlightNavigator = wrapper(() => {
+export default function DiscoverNavigator() {
   return (
     <Stack.Navigator
       initialRouteName="Hightlight"
@@ -22,6 +21,4 @@ const HighlightNavigator = wrapper(() => {
       />
     </Stack.Navigator>
   );
-});
-
-export default HighlightNavigator;
+}

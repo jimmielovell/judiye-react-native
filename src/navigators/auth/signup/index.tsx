@@ -1,10 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SignupScreen, OnboardScreen} from 'screens/auth/signup';
-import wrapper from 'hoc/wrapper';
 
 const Stack = createNativeStackNavigator();
 
-const SignupNavigator = wrapper(() => {
+export default function SignupNavigator() {
   return (
     <Stack.Navigator
       initialRouteName="Signup"
@@ -13,6 +12,4 @@ const SignupNavigator = wrapper(() => {
       <Stack.Screen name="Onboard" component={OnboardScreen} />
     </Stack.Navigator>
   );
-});
-
-export default SignupNavigator;
+}

@@ -1,3 +1,4 @@
+import {ValidationError} from 'components/inputs';
 import {InputRules} from 'components/inputs/types';
 
 export const email: InputRules = {
@@ -28,4 +29,16 @@ export const email: InputRules = {
   ],
 };
 
-export const phone = [];
+const phoneMinLength = 10;
+export const phone: InputRules = {
+  required: {
+    value: true,
+    message: 'Please enter phone',
+  },
+  rule: (value: string) => {
+    const diff = phoneMinLength - value.length;
+    if (diff > 0) {
+      throw new ValidationError(`Phone is missing ${diff} digits`);
+    }
+  },
+};

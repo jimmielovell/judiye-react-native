@@ -11,7 +11,7 @@ const fonts: Judiye.Theme.Fonts = {
 
   defaultSize: 15,
   inputErrorSize: 11,
-  inputLabelSize: 12,
+  inputLabelSize: 13,
 
   lineHeight: 16,
 };

@@ -1,25 +1,23 @@
-import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {StatusBar, useColorScheme} from 'react-native';
+// import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import ErrorBoundary from 'hoc/error-boundary';
-import {Frame} from 'components/layout';
-import wrapper from 'hoc/wrapper';
+import Navigator from 'navigators';
 
-const App = wrapper(() => {
+export default function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <GestureHandlerRootView>
-      <SafeAreaView>
-        <StatusBar
-          backgroundColor="#fff"
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        />
+    <>
+      <StatusBar
+        backgroundColor="#fff"
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+      />
+      <SafeAreaProvider>
         <ErrorBoundary>
-          <Frame />
+          <Navigator />
         </ErrorBoundary>
-      </SafeAreaView>
-    </GestureHandlerRootView>
+      </SafeAreaProvider>
+    </>
   );
-});
-
-export default App;
+}

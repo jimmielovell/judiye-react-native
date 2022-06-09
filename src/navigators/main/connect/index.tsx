@@ -1,5 +1,4 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import wrapper from 'hoc/wrapper';
 import {
   ConnectHeader,
   ConnectScreen,
@@ -9,7 +8,7 @@ import {
 
 const Stack = createNativeStackNavigator();
 
-const ConnectNavigator = wrapper(() => {
+export default function ConnectNavigator() {
   return (
     <Stack.Navigator
       initialRouteName="Connect"
@@ -35,6 +34,4 @@ const ConnectNavigator = wrapper(() => {
       />
     </Stack.Navigator>
   );
-});
-
-export default ConnectNavigator;
+}

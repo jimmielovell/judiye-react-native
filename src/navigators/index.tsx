@@ -1,18 +1,22 @@
+import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
+import {useColorScheme} from 'react-native';
+import {DarkTheme, DefaultTheme} from 'theme';
 import AuthNavigator from './auth';
 import MainNavigator from './main';
-import wrapper from 'hoc/wrapper';
 
 const Stack = createNativeStackNavigator();
 
-const Navigator = wrapper(() => {
+export default function Navigator() {
+  const isDarkMode = useColorScheme() === 'dark';
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Auth" component={AuthNavigator} />
-      <Stack.Screen name="Main" component={MainNavigator} />
-    </Stack.Navigator>
+    <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
+      <Stack.Navigator
+        initialRouteName="Auth"
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Auth" component={AuthNavigator} />
+        <Stack.Screen name="Main" component={MainNavigator} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-});
-
-export default Navigator;
+}

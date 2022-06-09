@@ -11,16 +11,21 @@ import {IconProps} from 'components/datadisplay/types';
 
 export interface PressableProps extends RNPressableProps, FlexProps {
   style?: StyleProp<ViewStyle>;
+  hideRipple?: boolean;
 }
 
-export interface FillButtonProps extends PressableProps {
+interface BaseButtonProps extends PressableProps {
+  type?: 'button' | 'submit';
+}
+
+export interface FillButtonProps extends BaseButtonProps {
   textStyle?: StyleProp<TextStyle>;
   icon?: IconProps;
 }
 
-export interface IconButtonProps extends PressableProps, IconProps {}
+export interface IconButtonProps extends BaseButtonProps, IconProps {}
 
-export interface TextButtonProps extends PressableProps {
+export interface TextButtonProps extends BaseButtonProps {
   textStyle?: StyleProp<TextStyle>;
 }
 

@@ -12,7 +12,6 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import {AnimatedFView, FView} from 'components/layout';
-import wrapper from 'hoc/wrapper';
 import {
   TabPanelHandle,
   TabPanelsHandle,
@@ -24,13 +23,14 @@ import {ToggleButton, ToggleButtons} from 'components/inputs';
 import {ToggleButtonHandle} from 'components/inputs/types';
 import {useStyles} from 'hooks';
 
-export const Tab = wrapper(
-  forwardRef<ToggleButtonHandle, FViewProps>((props, ref) => {
-    return <ToggleButton ref={ref} {...props} />;
-  }),
-);
+export const Tab = forwardRef<ToggleButtonHandle, FViewProps>(function Tab(
+  props,
+  ref,
+) {
+  return <ToggleButton ref={ref} {...props} />;
+});
 
-export const Tabs = wrapper(({withRef, ...rest}: TabsProps) => {
+export const Tabs = function Tabs({withRef, ...rest}: TabsProps) {
   function handleOnValueChange(index: number) {
     if (withRef && withRef.current) {
       withRef.current.__setActiveTab(index);
@@ -38,43 +38,37 @@ export const Tabs = wrapper(({withRef, ...rest}: TabsProps) => {
   }
 
   return <ToggleButtons onValueChange={handleOnValueChange} {...rest} />;
+};
+
+const TabPanel = forwardRef<TabPanelHandle, ViewProps>((props, ref) => {
+  const translateX = useSharedValue(0);
+  const panelWidth = useRef(0);
+
+  const __setActive = (steps: number) => {
+    const spanX = steps * -1 * panelWidth.current + translateX.value;
+    translateX.value = withTiming(spanX, {duration: 244});
+  };
+  useImperativeHandle(ref, () => ({
+    __setActive,
+  }));
+
+  function setPanelWidth(e: LayoutChangeEvent) {
+    panelWidth.current = e.nativeEvent.layout.width;
+  }
+
+  const animCompStyle = useAnimatedStyle(() => {
+    return {
+      marginLeft: translateX.value,
+    };
+  });
+
+  return (
+    <AnimatedFView {...props} onLayout={setPanelWidth} style={animCompStyle} />
+  );
 });
 
-const TabPanel = wrapper(
-  forwardRef<TabPanelHandle, ViewProps>((props, ref) => {
-    const translateX = useSharedValue(0);
-    const panelWidth = useRef(0);
-
-    const __setActive = (steps: number) => {
-      const spanX = steps * -1 * panelWidth.current + translateX.value;
-      translateX.value = withTiming(spanX, {duration: 244});
-    };
-    useImperativeHandle(ref, () => ({
-      __setActive,
-    }));
-
-    function setPanelWidth(e: LayoutChangeEvent) {
-      panelWidth.current = e.nativeEvent.layout.width;
-    }
-
-    const animCompStyle = useAnimatedStyle(() => {
-      return {
-        marginLeft: translateX.value,
-      };
-    });
-
-    return (
-      <AnimatedFView
-        {...props}
-        onLayout={setPanelWidth}
-        style={animCompStyle}
-      />
-    );
-  }),
-);
-
-export const TabPanels = wrapper(
-  forwardRef<TabPanelsHandle, TabPanelsProps>(({children}, ref) => {
+export const TabPanels = forwardRef<TabPanelsHandle, TabPanelsProps>(
+  function TabPanels({children}, ref) {
     const activeTabIndex = useRef(0);
     const animatableTabRef = useRef<TabPanelHandle>(null);
 
@@ -114,5 +108,5 @@ export const TabPanels = wrapper(
         {children}
       </FView>
     );
-  }),
+  },
 );

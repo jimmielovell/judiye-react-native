@@ -4,7 +4,7 @@ import {useStyles, useTheme} from 'hooks';
 import {FView} from 'components/layout';
 import {FViewProps} from '../types';
 
-const Frame = wrapper(({style, ...rest}: FViewProps) => {
+const Frame = wrapper(function Frame({style, ...rest}: FViewProps) {
   const {width, height} = useWindowDimensions();
   const {colors, spacing} = useTheme();
   const compStyles = useStyles(

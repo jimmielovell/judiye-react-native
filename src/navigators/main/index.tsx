@@ -4,11 +4,10 @@ import HomeNavigator from './home';
 import ConnectNavigator from './connect';
 import ChatNavigator from './chat';
 import DiscoverNavigator from './discover';
-import wrapper from 'hoc/wrapper';
 
 const Tab = createBottomTabNavigator();
 
-const MainNavigator = wrapper(() => {
+export default function MainNavigator() {
   return (
     <Tab.Navigator tabBar={props => <BottomTabBar {...props} />}>
       <Tab.Screen name="Home" component={HomeNavigator} />
@@ -17,6 +16,4 @@ const MainNavigator = wrapper(() => {
       <Tab.Screen name="Chat" component={ChatNavigator} />
     </Tab.Navigator>
   );
-});
-
-export default MainNavigator;
+}

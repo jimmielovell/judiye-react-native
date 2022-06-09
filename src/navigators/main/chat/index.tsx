@@ -1,5 +1,4 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import wrapper from 'hoc/wrapper';
 import {
   ChatsHeader,
   ChatsScreen,
@@ -11,7 +10,7 @@ import {
 
 const Stack = createNativeStackNavigator();
 
-const ChatNavigator = wrapper(() => {
+export default function ChatNavigator() {
   return (
     <Stack.Navigator
       initialRouteName="Chats"
@@ -45,6 +44,4 @@ const ChatNavigator = wrapper(() => {
       />
     </Stack.Navigator>
   );
-});
-
-export default ChatNavigator;
+}

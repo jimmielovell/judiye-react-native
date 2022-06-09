@@ -1,10 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import wrapper from 'hoc/wrapper';
 import {HomeHeader, HomeScreen} from 'screens/main/home';
 
 const Stack = createNativeStackNavigator();
 
-const HomeNavigator = wrapper(() => {
+export default function HomeNavigator() {
   return (
     <Stack.Navigator
       initialRouteName="Home"
@@ -22,6 +21,4 @@ const HomeNavigator = wrapper(() => {
       />
     </Stack.Navigator>
   );
-});
-
-export default HomeNavigator;
+}

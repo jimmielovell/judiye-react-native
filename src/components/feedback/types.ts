@@ -24,5 +24,8 @@ export interface BackdropProps extends ModalProps {
 }
 
 export interface DialogProps {
-  children: ReactNode;
+  children?: ReactNode;
+  title?: ReactNode | string;
+  onOpen?: () => void;
+  onClose?: () => void;
 }

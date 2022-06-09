@@ -7,7 +7,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {ValidationError} from './component/errors';
+import {ValidationError} from './errors';
 import {AnchorProps} from 'components/buttons/types';
 import {FViewProps} from 'components/layout/types';
 
@@ -36,36 +36,28 @@ interface FieldMasks {
   max?: string | number;
 }
 
-export interface FieldWithoutPrePostfixProps extends TextInputProps {
-  label?: string;
-  name?: string;
+export interface FieldProps extends TextInputProps {
+  postfix?: AnchorProps;
+  prefix?: AnchorProps;
   contRef?: RefObject<View>;
   contStyle?: StyleProp<ViewStyle>;
   masks?: FieldMasks;
 }
 
-export interface FieldProps
-  extends TextInputProps,
-    FieldWithoutPrePostfixProps {
-  postfix?: AnchorProps;
-  prefix?: AnchorProps;
-}
-
-export interface PasswordFieldProps extends FieldWithoutPrePostfixProps {
+export interface PasswordFieldProps extends FieldProps {
   newPassword?: boolean;
 }
 
-export interface PinFieldProps extends FieldWithoutPrePostfixProps {
+export interface PinFieldProps extends FieldProps {
   length?: number;
 }
 
-export interface PhoneFieldProps extends FieldWithoutPrePostfixProps {
+export interface PhoneFieldProps extends FieldProps {
   prefix?: AnchorProps;
 }
 
-export interface SearchFieldProps extends FieldWithoutPrePostfixProps {
+export interface SearchFieldProps extends FieldProps {
   minimized?: boolean;
-  onSearch?: (value: string) => void;
 }
 
 interface RegexInputRule {
@@ -94,14 +86,17 @@ export interface InputRules {
     message: string;
   };
   regex?: RegexInputRule | RegexInputRule[];
+  rule?(value: string): void;
 }
 
 export type ValidatableField<T> = T & {
   rules?: InputRules;
-  onValid?: (value: string | ValidationError) => void;
+  onValid?(value: string | ValidationError): void;
 };
 
 export type InputProps<T> = T & {
+  label?: string;
+  name?: string;
   contStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
   hidden?: boolean;
@@ -128,14 +123,14 @@ export type PasswordInputProps = InputProps<
 >;
 
 export type SearchInputProps = InputProps<
-  FieldWithoutPrePostfixProps & {
+  SearchFieldProps & {
     type: 'search';
   }
 >;
 
 export interface ToggleButtonHandle {
-  __setActive: () => void;
-  __setInactive: () => void;
+  __setActive(): void;
+  __setInactive(): void;
 }
 export interface ToggleButtonsProps extends FViewProps {
   onValueChange?(index: number): void;

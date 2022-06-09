@@ -19,6 +19,7 @@ export interface FlexProps {
     | 'space-around';
   wrap?: 'wrap' | 'nowrap' | 'wrap-reverse';
   self?: 'auto' | 'baseline' | 'center' | 'flex-end' | 'flex-start' | 'stretch';
+  flex?: number;
 }
 
 export interface FViewProps extends FlexProps, ViewProps {}

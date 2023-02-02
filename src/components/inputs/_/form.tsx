@@ -1,4 +1,3 @@
-import {ValidationError} from 'domains';
 import {FlexProps} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import {
@@ -26,19 +25,18 @@ const Form = wrapper(function Form(props: FormProps) {
   const theme = useTheme();
   const _style = createStyle(theme);
   const inputRefsHash = useRef<Record<string, RefObject<InputHandle>>>({});
-  const errors = useRef<Record<string, ValidationError | null>>({});
 
-  const validateFields = useCallback(() => {
-    errors.current = {};
+  const _onSubmit = useCallback(() => {
+    const errors = [];
     const values: Record<string, any> = {};
 
     for (const name in inputRefsHash.current) {
       const ref = inputRefsHash.current[name];
       if (ref.current) {
         ref.current.validate();
-        const error = ref.current.getError();
-        if (error !== null) {
-          errors.current[name] = ref.current.getError();
+        const _error = ref.current.getError();
+        if (_error !== null) {
+          errors.push(_error);
           values[name] = undefined;
         } else {
           values[name] = ref.current.getValue();
@@ -46,9 +44,11 @@ const Form = wrapper(function Form(props: FormProps) {
       }
     }
 
-    if (Object.keys(errors.current).length === 0) {
-      onSubmit && onSubmit(values);
+    if (errors.length > 0) {
+      throw errors[0];
     }
+
+    onSubmit?.(values);
   }, [onSubmit]);
 
   const _children = useMemo(() => {
@@ -60,11 +60,10 @@ const Form = wrapper(function Form(props: FormProps) {
     inputRefsHash.current = {};
 
     return __children.map((child, index: number) => {
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      const {props} = child;
+      const _props = child.props;
 
       if (
-        props.name &&
+        _props.name &&
         [
           'text',
           'phone',
@@ -75,27 +74,21 @@ const Form = wrapper(function Form(props: FormProps) {
           'date',
           'pin',
           'multiline',
-        ].includes(props.type)
+        ].includes(_props.type)
       ) {
         // @ts-ignore
         const ref = child.ref ? child.ref : createRef<InputHandle>();
         hasInputFields = true;
         child = cloneElement(child, {
-          key: props.name + index,
+          key: _props.name + index,
           ref,
         });
 
-        inputRefsHash.current[props.name] = ref;
-      } else if (props.type === 'submit' && hasInputFields) {
+        inputRefsHash.current[_props.name] = ref;
+      } else if (_props.type === 'submit' && hasInputFields) {
         // @ts-ignore
         let buttonRef = child.ref ? child.ref : createRef<View>();
-        const _onSubmit = () => {
-          validateFields();
-          // Prevent button from executing onPress if there are errors
-          if (Object.keys(errors.current).length > 0) {
-            throw new ValidationError('');
-          }
-        };
+
         child = cloneElement(child, {
           key: 'submit-btn' + index,
           onPress: _onSubmit,
@@ -105,7 +98,7 @@ const Form = wrapper(function Form(props: FormProps) {
 
       return child;
     });
-  }, [children, validateFields]);
+  }, [children, _onSubmit]);
 
   return (
     <KeyboardAvoidingView

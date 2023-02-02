@@ -85,6 +85,7 @@ export type InputHandle = {
   setValue(value: string): void;
   validate(): void;
   focus(): void;
+  isFocused(): boolean;
   blur(): void;
   clear(): void;
 };
@@ -142,7 +143,7 @@ const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
         if (inputRef.current) {
           setErrored(true);
         }
-        onValidate && onValidate(e as ValidationError);
+        onValidate?.(e as ValidationError);
       },
       [inputRef, onValidate],
     );
@@ -161,7 +162,7 @@ const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
         try {
           validateField(_value, rules!);
           clearError();
-          onValidate && onValidate(_value);
+          onValidate?.(_value);
         } catch (e) {
           setError(e as ValidationError);
         }
@@ -174,11 +175,10 @@ const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
       clearError: clearError,
       getError: () => errorRef.current,
       getValue: () => inputValue,
-      setValue: (_value: string) => {
-        setInputValue(_value);
-      },
+      setValue: (_value: string) => setInputValue(_value),
       validate: () => _validateField(inputValue),
       focus: () => inputRef.current?.focus(),
+      isFocused: () => focused,
       blur: () => inputRef.current?.blur(),
       clear: () => setInputValue(''),
     }));
@@ -194,9 +194,8 @@ const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
         if (rules && validateOn === 'change-text') {
           _validateField(_value);
         }
-        if (onChangeText) {
-          onChangeText(_value);
-        }
+
+        onChangeText?.(_value);
       },
       [masks, rules, validateOn, onChangeText, _validateField],
     );
@@ -209,9 +208,7 @@ const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
           _validateField(e.nativeEvent.text);
         }
 
-        if (onBlur) {
-          onBlur(e);
-        }
+        onBlur?.(e);
       },
       [_validateField, onBlur, rules, validateOn],
     );
@@ -222,18 +219,14 @@ const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
           _validateField(e.nativeEvent.text);
         }
 
-        if (onEndEditing) {
-          onEndEditing(e);
-        }
+        onEndEditing?.(e);
       },
       [_validateField, onEndEditing, rules, validateOn],
     );
     const onInputFocus = useCallback(
       (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
         setFocused(true);
-        if (onFocus) {
-          onFocus(e);
-        }
+        onFocus?.(e);
       },
       [onFocus],
     );

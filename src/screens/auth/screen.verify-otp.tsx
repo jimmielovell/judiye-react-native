@@ -46,7 +46,16 @@ const VerifyOtpScreen = wrapper(function VerifyOtp(
       </ScreenTitle>
 
       <Form onSubmit={onSubmit}>
-        <Input type="pin" style={style.input} />
+        <Input
+          type="pin"
+          name="otp"
+          style={style.input}
+          rules={{
+            required: {
+              message: 'Please enter the code',
+            },
+          }}
+        />
 
         <Button
           appearance="text"
@@ -63,10 +72,10 @@ const VerifyOtpScreen = wrapper(function VerifyOtp(
             onPress={navigation.goBack}>
             Back
           </Button>
-          <Button type="submit" appearance="fill" flex={1} onPress={onSubmit}>
-            Continue
-          </Button>
         </Flex>
+        <Button type="submit" appearance="fill">
+          Continue
+        </Button>
       </Form>
 
       <Icon name="Watfoe" size={70} />

@@ -5,10 +5,10 @@ import {
   useRef,
   useState,
 } from 'react';
-import {TextStyle, Text as RNText} from 'react-native';
-import {useForwardedRef, useStyles, useTheme} from 'hooks';
+import {StyleSheet, Text as RNText} from 'react-native';
+import {useTheme} from 'hooks';
 import {Text} from 'components/typography';
-import {ValidationError} from 'utils/validators';
+import {ValidationError} from 'domains';
 
 export interface ErrorHandle {
   addError(error: ValidationError): void;
@@ -19,22 +19,11 @@ export interface ErrorProps {
 }
 
 const Error = forwardRef<ErrorHandle>(function Error(_, ref) {
-  const [value, setValue] = useState<string | null>(null);
-  const innerRef = useForwardedRef(ref);
   const textRef = useRef<RNText>(null);
+  const [value, setValue] = useState<string | null>(null);
   const [errored, setErrored] = useState(false);
-
-  const {fonts, colors, spacing} = useTheme();
-  const compStyles = {
-    backgroundColor: colors.background,
-    paddingHorizontal: spacing.xs,
-    position: 'absolute',
-    left: spacing.nm - spacing.xs,
-    bottom: -8,
-    display: errored ? 'flex' : 'none',
-    lineHeight: fonts.size.description,
-    zIndex: 1000,
-  };
+  const theme = useTheme();
+  const _style = createStyle(theme);
 
   const addError = useCallback(
     (error: ValidationError) => {
@@ -51,13 +40,32 @@ const Error = forwardRef<ErrorHandle>(function Error(_, ref) {
       setValue(null);
     }
   }, [value]);
-  useImperativeHandle(innerRef, () => ({addError, removeError}));
+  useImperativeHandle(ref, () => ({addError, removeError}));
 
   return (
-    <Text color="error" ref={textRef} size="description" style={compStyles}>
+    <Text
+      color="error"
+      ref={textRef}
+      size="description"
+      // eslint-disable-next-line react-native/no-inline-styles
+      style={[_style.container, {display: errored ? 'flex' : 'none'}]}>
       {value}
     </Text>
   );
 });
+
+function createStyle(theme: Judiye.Theme) {
+  const {spacing, colors} = theme;
+  return StyleSheet.create({
+    container: {
+      backgroundColor: colors.background,
+      paddingHorizontal: spacing.xxs,
+      position: 'absolute',
+      left: spacing.nm - spacing.xxs,
+      bottom: -8,
+      zIndex: 1000,
+    },
+  });
+}
 
 export default Error;

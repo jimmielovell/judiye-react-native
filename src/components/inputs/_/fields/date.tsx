@@ -126,6 +126,7 @@ const DateField = forwardRef<InputHandle, ValidatableField<FieldProps>>(
           rules={rules}
           maxLength={2}
           onChangeText={dateOnValid}
+          onValidate={onValidate}
           returnKeyType="next"
         />
         <NumberField
@@ -138,6 +139,7 @@ const DateField = forwardRef<InputHandle, ValidatableField<FieldProps>>(
           rules={rules}
           maxLength={2}
           onChangeText={monthOnValid}
+          onValidate={onValidate}
           returnKeyType="next"
         />
         <NumberField
@@ -148,6 +150,7 @@ const DateField = forwardRef<InputHandle, ValidatableField<FieldProps>>(
           placeholder="YYYY"
           rules={rules}
           maxLength={4}
+          onValidate={onValidate}
           returnKeyType={returnKeyType || 'done'}
         />
       </Flex>

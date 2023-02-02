@@ -64,7 +64,7 @@ const Input = forwardRef<
   const errorRef = useRef<ErrorHandle>(null);
   const labelRef = useRef<LabelHandle>(null);
 
-  const handleOnValidate = useCallback(
+  const _onValidate = useCallback(
     (message: string | ValidationError) => {
       const isValid = typeof message === 'string';
       if (errorRef.current) {
@@ -77,7 +77,7 @@ const Input = forwardRef<
       if (labelRef.current) {
         labelRef.current.isErrored(!isValid);
       }
-      onValidate && onValidate(message);
+      onValidate?.(message);
     },
     [errorRef, labelRef, onValidate],
   );
@@ -119,7 +119,7 @@ const Input = forwardRef<
         <Label ref={labelRef} label={label} description={description} />
       )}
       <Flex>
-        <TextField ref={ref} {...rest} onValidate={handleOnValidate} />
+        <TextField ref={ref} {...rest} onValidate={_onValidate} />
         {<Error ref={errorRef} />}
       </Flex>
     </Flex>

@@ -1,34 +1,33 @@
 import {
   createRef,
   forwardRef,
-  useCallback,
   useMemo,
   useRef,
   RefObject,
   useImperativeHandle,
+  useCallback,
 } from 'react';
 import {Column} from 'components/layout';
-import Field, {FieldProps, InputHandle, ValidatableField} from './base';
-// import {ValidationError} from 'components/domains';
+import {FieldProps, InputHandle, ValidatableField} from './base';
+import {ValidationError} from 'domains';
+import NumberField from './number';
+import {useTheme} from 'hooks';
 
 export interface PinFieldProps extends FieldProps {
   length?: number;
 }
 
 const Pin = forwardRef<InputHandle, ValidatableField<FieldProps>>(
-  function SinglePin({style, ...rest}, ref) {
+  function SinglePin(props, ref) {
+    const {style, ...rest} = props;
+    const {fonts} = useTheme();
+
     return (
-      <Field
+      <NumberField
         ref={ref}
-        keyboardType="number-pad"
-        returnKeyType="next"
         textAlign="center"
-        secureTextEntry={false}
-        masks={{
-          numOnly: true,
-        }}
         maxLength={1}
-        contStyle={style}
+        style={[style, {fontSize: fonts.size.subtitle}]}
         {...rest}
       />
     );
@@ -36,39 +35,109 @@ const Pin = forwardRef<InputHandle, ValidatableField<FieldProps>>(
 );
 
 const PinField = forwardRef<InputHandle, ValidatableField<PinFieldProps>>(
-  function PinField(
-    {length = 6, ...rest}: ValidatableField<PinFieldProps>,
-    ref,
-  ) {
+  function PinField(props: ValidatableField<PinFieldProps>, ref) {
+    const {
+      length = 6,
+      onValidate,
+      autoFocus,
+      rules,
+      returnKeyType,
+      secureTextEntry,
+      style,
+      contStyle,
+      ...rest
+    } = props;
     const inputRefs = useRef<RefObject<InputHandle>[]>([]);
 
-    const setPin = useCallback((index: number, value?: string) => {
-      if (value) {
-        if (inputRefs.current[index]) {
-          console.log(inputRefs.current[index].current?.getValue());
-          console.log(inputRefs.current[index].current?.blur);
-        }
-        // if (index < length - 1) {
-        //   inputRefs.current[index + 1].current?.focus();
-        // } else {
-        //   inputRefs.current[index].current?.blur();
-        // }
-      }
-    }, []);
-
     useImperativeHandle(ref, () => ({
-      // setError: setError,
-      // clearError: clearError,
-      // getError: () => errorRef.current,
-      // getValue: () => inputValue,
-      // setValue: (_value: string) => {
-      //   setInputValue(_value);
-      // },
-      // validate: () => _validateField(inputValue),
-      // focus: () => inputRef.current?.focus(),
-      // blur: () => inputRef.current?.blur(),
-      // clear: () => setInputValue(''),
+      setError: (error: ValidationError) => {
+        inputRefs.current.forEach(_ref => {
+          _ref.current?.setError(error);
+        });
+        onValidate?.(error);
+      },
+      clearError: () => {
+        inputRefs.current.forEach(_ref => {
+          _ref.current?.clearError();
+        });
+      },
+      getError: () => {
+        const _errors = [];
+        for (const _ref of inputRefs.current) {
+          const _error = _ref.current?.getError();
+          if (_error) {
+            _errors.push(_error);
+          }
+        }
+
+        if (_errors.length > 0) {
+          return _errors[0];
+        }
+
+        return null;
+      },
+      getValue: () => {
+        let _value = '';
+
+        inputRefs.current.forEach(_ref => {
+          _value += _ref.current?.getValue();
+        });
+
+        if (_value.length === length) {
+          return _value;
+        }
+
+        return '';
+      },
+      setValue: (_pin: string) => {
+        const pins = _pin.split('');
+
+        inputRefs.current.forEach((_ref, i) => {
+          _ref.current?.setValue(pins[i]);
+        });
+      },
+      validate: () => {
+        inputRefs.current.forEach(_ref => {
+          _ref.current?.validate();
+        });
+      },
+      focus: () => inputRefs.current[0].current?.focus(),
+      isFocused: () => inputRefs.current[0].current?.isFocused()!,
+      blur: () => {
+        const _index = inputRefs.current.findIndex(_ref =>
+          _ref.current?.isFocused(),
+        );
+        inputRefs.current[_index - 1].current?.focus();
+      },
+      clear: () => {
+        inputRefs.current.forEach(_ref => {
+          _ref.current?.clear();
+        });
+      },
     }));
+
+    const onPinKeyPress = useCallback(
+      (event: any, index: number) => {
+        const {key} = event.nativeEvent;
+        const prevValue = inputRefs.current[index].current?.getValue();
+
+        if (key === 'Backspace' && index > 0 && !prevValue) {
+          inputRefs.current[index - 1].current?.focus();
+        }
+        // else if key is number, replace current value
+        else if (key >= '0' && key <= '9') {
+          if (prevValue) {
+            inputRefs.current[index].current?.setValue(key);
+          }
+          if (index < length - 1) {
+            inputRefs.current[index + 1].current?.focus();
+          } else {
+            inputRefs.current[index].current?.blur();
+          }
+        }
+      },
+      [length],
+    );
 
     const children = useMemo(() => {
       let _children = [];
@@ -77,17 +146,35 @@ const PinField = forwardRef<InputHandle, ValidatableField<PinFieldProps>>(
         const _ref = createRef<InputHandle>();
         _children.push(
           <Pin
-            key={'pin' + i}
+            key={'pin-' + i}
             ref={_ref}
-            onChangeText={(value?: string) => setPin(i, value)}
-            autoFocus={i === 0}
+            autoFocus={autoFocus && i === 0}
+            rules={rules}
+            onValidate={onValidate}
+            onKeyPress={e => onPinKeyPress(e, i)}
+            returnKeyType={
+              i === length - 1 && returnKeyType ? returnKeyType : 'next'
+            }
+            secureTextEntry={secureTextEntry}
+            style={style}
+            contStyle={contStyle}
           />,
         );
         inputRefs.current.push(_ref);
       }
 
       return _children;
-    }, [length, setPin]);
+    }, [
+      autoFocus,
+      contStyle,
+      length,
+      onPinKeyPress,
+      onValidate,
+      returnKeyType,
+      rules,
+      secureTextEntry,
+      style,
+    ]);
 
     return (
       <Column columns={6} direction="row" justify="flex-start" {...rest}>

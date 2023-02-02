@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Judiye",
+  "_version": "2.0.3",
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "types": ["react-native", "jest"],
+    "lib": [
+      "es2019"
+    ],
+    "allowJs": true,
+    "jsx": "react-native",
+    "noEmit": true,
+    "isolatedModules": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    /* Additional Checks */
+    "noUnusedLocals": true,                   /* Report errors on unused locals. */
+    "noUnusedParameters": true,               /* Report errors on unused parameters. */
+
+    /* Module Resolution Options */
+    "baseUrl": "src"                         /* Base directory to resolve non-absolute module names. */
+  },
+  "exclude": [
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js"
+  ],
+  "files":[
+    "./src/types/globals.d.ts"
+  ],
+  "include": [
+    "jest",
+    "__tests__",
+    "src",
+    "src/types/globals.d.ts"
+  ]
+}

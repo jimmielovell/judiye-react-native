@@ -1,5 +1,5 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {DiscoverHeader, DiscoverScreen} from '../../../screens/main/discover';
+import {DiscoverHeader, DiscoverScreen} from '../../screens/main/discover';
 
 const Stack = createNativeStackNavigator();
 

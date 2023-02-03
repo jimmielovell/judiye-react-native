@@ -13,7 +13,7 @@ export default function Navigator() {
     // @ts-ignore
     <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
       <Stack.Navigator
-        initialRouteName="AuthNavigator"
+        initialRouteName="MainNavigator"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="AuthNavigator" component={AuthNavigator} />
         <Stack.Screen name="MainNavigator" component={MainNavigator} />

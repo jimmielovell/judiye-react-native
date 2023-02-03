@@ -1,23 +1,23 @@
+import {StyleSheet} from 'react-native';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import {useTheme} from '@react-navigation/native';
 import {Flex} from 'components/layout';
 import {Button} from 'components/buttons';
-import {useStyles} from 'hooks';
 
 export default function BottomTabBar({
   state,
   descriptors,
   navigation,
 }: BottomTabBarProps) {
-  const {colors} = useTheme();
-
-  const contStyles = useStyles({height: 60});
-  const tabStyles = useStyles({
-    backgroundColor: 'transparent',
-  });
+  const theme = useTheme();
+  const _styles = createStyle(theme);
 
   return (
-    <Flex direction="row" justify="space-around" style={contStyles}>
+    <Flex
+      direction="row"
+      justify="space-between"
+      align="center"
+      style={_styles.cont}>
       {state.routes.map((route, index) => {
         const {options} = descriptors[route.key];
         const label =
@@ -60,11 +60,26 @@ export default function BottomTabBar({
             onPress={onPress}
             onLongPress={onLongPress}
             name={isFocused ? `${label}Filled` : label}
-            color={colors.text}
-            style={tabStyles}
+            color={theme.colors.text.primary}
+            size={28}
+            style={_styles.tab}
           />
         );
       })}
     </Flex>
   );
+}
+
+function createStyle(theme: Judiye.Theme) {
+  const {spacing} = theme;
+  return StyleSheet.create({
+    cont: {
+      paddingTop: spacing.sm,
+      paddingBottom: spacing.sm,
+      paddingHorizontal: spacing.nm,
+    },
+    tab: {
+      backgroundColor: 'transparent',
+    },
+  });
 }

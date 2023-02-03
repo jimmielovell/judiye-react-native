@@ -49,7 +49,6 @@ const VerifyOtpScreen = wrapper(function VerifyOtp(
         <Input
           type="pin"
           name="otp"
-          style={style.input}
           rules={{
             required: {
               message: 'Please enter the code',
@@ -72,10 +71,11 @@ const VerifyOtpScreen = wrapper(function VerifyOtp(
             onPress={navigation.goBack}>
             Back
           </Button>
+
+          <Button type="submit" appearance="fill" flex={1} onPress={onSubmit}>
+            Continue
+          </Button>
         </Flex>
-        <Button type="submit" appearance="fill">
-          Continue
-        </Button>
       </Form>
 
       <Icon name="Watfoe" size={70} />
@@ -86,14 +86,6 @@ const VerifyOtpScreen = wrapper(function VerifyOtp(
 function createStyle(theme: Judiye.Theme) {
   const {spacing, colors} = theme;
   return StyleSheet.create({
-    input: {
-      marginBottom: spacing.sm,
-    },
-
-    cancelBtn: {
-      marginTop: spacing.md,
-    },
-
     resendButton: {
       alignSelf: 'flex-start',
       borderRadius: 0,

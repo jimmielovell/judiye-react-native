@@ -90,14 +90,8 @@ function createStyle(theme: Judiye.Theme) {
   const {spacing} = theme;
 
   return StyleSheet.create({
-    createAccountButton: {
-      alignSelf: 'flex-start',
-      borderRadius: 0,
-      marginBottom: spacing.xlg,
-    },
-
     continueButton: {
-      marginTop: spacing.md,
+      marginTop: spacing.nm,
     },
 
     continueWithGoogleButton: {

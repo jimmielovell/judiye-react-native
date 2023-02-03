@@ -52,7 +52,7 @@ function FillButton(
     return null;
   }, [children, colors.text.primary, icon]);
 
-  const computedStyles: ViewStyle = {
+  const _styles: ViewStyle = {
     backgroundColor: colors.primary,
     borderRadius: 1000,
     height: sizing.height.lg,
@@ -80,7 +80,7 @@ function FillButton(
     <Pressable
       ref={forwardedRef}
       direction="row"
-      style={[computedStyles, style]}
+      style={[_styles, style]}
       {...rest}>
       {iconElement}
       <>{element}</>
@@ -99,7 +99,7 @@ function OutlineButton(
     rest.icon.color = rest.icon.color || colors.text.primary;
   }
 
-  const computedStyle: ViewStyle = {
+  const _style: ViewStyle = {
     backgroundColor: 'transparent',
     borderColor: colors.primary,
     borderWidth: sizing.border.width,
@@ -111,7 +111,7 @@ function OutlineButton(
 
   return (
     <FillButton
-      style={[computedStyle, style]}
+      style={[_style, style]}
       textStyle={[computedTextStyle, textStyle]}
       {...rest}
     />
@@ -124,17 +124,12 @@ function TextButton(
   },
 ) {
   const {style, ...rest} = props;
-  const computedStyles: ViewStyle = {
+  const _styles: ViewStyle = {
     borderWidth: 0,
+    height: 'auto',
   };
 
-  return (
-    <OutlineButton
-      self="flex-start"
-      style={[computedStyles, style]}
-      {...rest}
-    />
-  );
+  return <OutlineButton self="flex-start" style={[_styles, style]} {...rest} />;
 }
 
 function IconButton(
@@ -146,7 +141,7 @@ function IconButton(
   const {name, size, color, android_ripple, style, children, ...rest} = props;
   const {colors, sizing} = useTheme();
 
-  const computedStyles: ViewStyle = {
+  const _styles: ViewStyle = {
     backgroundColor: colors.surface.secondary,
     width: sizing.height.nm,
     height: sizing.height.nm,
@@ -158,7 +153,7 @@ function IconButton(
         ...android_ripple,
         borderless: true,
       }}
-      style={[computedStyles, style]}
+      style={[_styles, style]}
       icon={{
         name,
         size: size || 20,

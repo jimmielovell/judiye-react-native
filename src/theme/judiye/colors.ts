@@ -38,8 +38,8 @@ const light: Judiye.Theme.Colors = {
     link: 'rgba(64, 173, 217, 0.13)',
     success: 'rgba(153, 179, 102, 0.13)',
     warning: 'rgba(229, 223, 93, 0.13)',
-    error: 'rgba(255, 102, 102, 0.13)'
-  }
+    error: 'rgba(255, 102, 102, 0.13)',
+  },
 };
 
 const dark: Judiye.Theme.Colors = {
@@ -80,8 +80,8 @@ const dark: Judiye.Theme.Colors = {
     link: 'rgba(64, 173, 217, 0.13)',
     success: 'rgba(153, 179, 102, 0.13)',
     warning: 'rgba(229, 223, 93, 0.13)',
-    error: 'rgba(255, 102, 102, 0.13)'
-  }
+    error: 'rgba(255, 102, 102, 0.13)',
+  },
 };
 
 export default {light, dark};

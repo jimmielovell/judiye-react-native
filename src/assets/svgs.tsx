@@ -46,7 +46,6 @@ function CSVG({size = 24, color, viewBox, ...rest}: CSvgProps) {
     />
   );
 }
-
 export function Watfoe(props: SvgProps) {
   return (
     <CSVG {...props} color="none" viewBox="0 0 705 233">
@@ -65,7 +64,6 @@ export function Watfoe(props: SvgProps) {
     </CSVG>
   );
 }
-
 export function Google(props: SvgProps) {
   return (
     <CSVG {...props} color="none">
@@ -89,82 +87,71 @@ export function Google(props: SvgProps) {
   );
 }
 
-export function Clear(props: SvgProps) {
+export function ArrowLeft(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <Line x1="18" y1="6" x2="6" y2="18" />
-      <Line x1="6" y1="6" x2="18" y2="18" />
+      <Line x1="19" y1="12" x2="5" y2="12" />
+      <Polyline points="12 19 5 12 12 5" />
     </CSVG>
   );
 }
-export function Sliders(props: SvgProps) {
+export function At(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <Line x1="4" y1="21" x2="4" y2="14" />
-      <Line x1="4" y1="10" x2="4" y2="3" />
-      <Line x1="12" y1="21" x2="12" y2="12" />
-      <Line x1="12" y1="8" x2="12" y2="3" />
-      <Line x1="20" y1="21" x2="20" y2="16" />
-      <Line x1="20" y1="12" x2="20" y2="3" />
-      <Line x1="1" y1="14" x2="7" y2="14" />
-      <Line x1="9" y1="8" x2="15" y2="8" />
-      <Line x1="17" y1="16" x2="23" y2="16" />
+      <Circle cx="12" cy="12" r="4" />
+      <Path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94" />
     </CSVG>
   );
 }
-export function Eye(props: SvgProps) {
+export function Bell(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <Path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-      <Circle cx="12" cy="12" r="3" />
+      <Path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <Path d="M13.73 21a2 2 0 0 1-3.46 0" />
     </CSVG>
   );
 }
-export function EyeOff(props: SvgProps) {
+export function Bookmark(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <Path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-      <Line x1="1" y1="1" x2="23" y2="23" />
+      <Path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
     </CSVG>
   );
 }
-export function Highlight(props: SvgProps) {
+export function Briefcase(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <Polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      <Rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+      <Path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
     </CSVG>
   );
 }
-export function HighlightFilled(props: SvgProps) {
+export function Calendar(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Rect x="3" y="4" width="20" height="18" rx="2" ry="2" />
+      <Line x1="18" y1="2" x2="18" y2="6" />
+      <Line x1="8" y1="2" x2="8" y2="6" />
+      <Line x1="3" y1="10" x2="23" y2="10" />
+    </CSVG>
+  );
+}
+export function CalendarFilled(props: SvgProps) {
   const {colors} = useTheme();
   return (
     <CSVG {...props}>
-      <Polygon
-        points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"
-        stroke={colors.primary}
+      <Rect
+        x="3"
+        y="4"
+        width="20"
+        height="18"
+        rx="2"
+        ry="2"
         fill={colors.primary}
       />
-    </CSVG>
-  );
-}
-export function Discover(props: SvgProps) {
-  return (
-    <CSVG {...props}>
-      <Path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-      <Polyline points="22,6 12,13 2,6" />
-    </CSVG>
-  );
-}
-export function DiscoverFilled(props: SvgProps) {
-  const {colors} = useTheme();
-  return (
-    <CSVG {...props}>
-      <Path
-        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
-        stroke={colors.primary}
-        fill={colors.primary}
-      />
-      <Polyline points="22,6 12,13 2,6" stroke={colors.background} />
+      <Line x1="18" y1="2" x2="18" y2="6" />
+      <Line x1="8" y1="2" x2="8" y2="6" />
+      <Line x1="3" y1="10" x2="23" y2="10" stroke={colors.background} />
     </CSVG>
   );
 }
@@ -196,24 +183,15 @@ export function ChatAdd(props: SvgProps) {
     </CSVG>
   );
 }
-export function Send(props: SvgProps) {
+export function Clear(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <G transform="matrix(1.7142857142857142,0,0,1.7142857142857142,0,0)">
-        <Path d="M5.818,10.992,8,13.171a1.124,1.124,0,0,0,1.861-.439L13.442,1.979A1.123,1.123,0,0,0,12.021.558L1.268,4.142A1.124,1.124,0,0,0,.829,6L3.57,8.744l-.093,3.465Z" />
-        <Path d="M13.121 0.782L3.57 8.744" />
-      </G>
+      <Line x1="18" y1="6" x2="6" y2="18" />
+      <Line x1="6" y1="6" x2="18" y2="18" />
     </CSVG>
   );
 }
-export function MessageSquare(props: SvgProps) {
-  return (
-    <CSVG {...props}>
-      <Path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-    </CSVG>
-  );
-}
-export function Connect(props: SvgProps) {
+export function Users(props: SvgProps) {
   return (
     <CSVG {...props}>
       <Path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -223,33 +201,65 @@ export function Connect(props: SvgProps) {
     </CSVG>
   );
 }
-export function ConnectFilled(props: SvgProps) {
+export function Discover(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Circle cx="12" cy="12" r="10" />
+      <Polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+    </CSVG>
+  );
+}
+export function DiscoverFilled(props: SvgProps) {
   const {colors} = useTheme();
   return (
-    <CSVG stroke={colors.primary} {...props}>
-      <Path
-        d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+    <CSVG {...props}>
+      <Circle cx="12" cy="12" r="10" fill={colors.primary} />
+      <Polygon
+        points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"
         fill={colors.primary}
+        stroke={colors.background}
       />
-      <Circle cx="9" cy="7" r="4" fill={colors.primary} />
-      <Path d="M23 21v-2a4 4 0 0 0-3-3.87" fill={colors.primary} />
-      <Path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </CSVG>
   );
 }
-export function Search(props: SvgProps) {
+export function Edit(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <Circle cx="11" cy="11" r="8" />
-      <Line x1="21" y1="21" x2="16.65" y2="16.65" />
+      <Path d="M12 20h9" />
+      <Path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
     </CSVG>
   );
 }
-export function Learn(props: SvgProps) {
+export function EmojiSmile(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <Path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1" />
-      <Polygon points="12 15 17 21 7 21 12 15" />
+      <Circle cx="12" cy="12" r="10" />
+      <Path d="M8 14s1.5 2 4 2 4-2 4-2" />
+      <Line x1="9" y1="9" x2="9.01" y2="9" />
+      <Line x1="15" y1="9" x2="15.01" y2="9" />
+    </CSVG>
+  );
+}
+export function Eye(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+      <Circle cx="12" cy="12" r="3" />
+    </CSVG>
+  );
+}
+export function EyeOff(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+      <Line x1="1" y1="1" x2="23" y2="23" />
+    </CSVG>
+  );
+}
+export function Filter(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
     </CSVG>
   );
 }
@@ -263,11 +273,13 @@ export function Grid(props: SvgProps) {
     </CSVG>
   );
 }
-export function Bell(props: SvgProps) {
+export function Hash(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <Path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-      <Path d="M13.73 21a2 2 0 0 1-3.46 0" />
+      <Line x1="4" y1="9" x2="20" y2="9" />
+      <Line x1="4" y1="15" x2="20" y2="15" />
+      <Line x1="10" y1="3" x2="8" y2="21" />
+      <Line x1="16" y1="3" x2="14" y2="21" />
     </CSVG>
   );
 }
@@ -290,79 +302,30 @@ export function HomeFilled(props: SvgProps) {
     </CSVG>
   );
 }
-export function MoreHorizontal(props: SvgProps) {
+export function Highlight(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <Circle cx="12" cy="12" r="1" />
-      <Circle cx="19" cy="12" r="1" />
-      <Circle cx="5" cy="12" r="1" />
+      <Polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
     </CSVG>
   );
 }
-export function MoreVertical(props: SvgProps) {
+export function HighlightFilled(props: SvgProps) {
+  const {colors} = useTheme();
   return (
     <CSVG {...props}>
-      <Circle cx="12" cy="12" r="1" />
-      <Circle cx="12" cy="5" r="1" />
-      <Circle cx="12" cy="19" r="1" />
+      <Polygon
+        points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"
+        stroke={colors.primary}
+        fill={colors.primary}
+      />
     </CSVG>
   );
 }
-export function ThumbsUp(props: SvgProps) {
+export function Learn(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <Path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
-    </CSVG>
-  );
-}
-export function ThumbsDown(props: SvgProps) {
-  return (
-    <CSVG {...props}>
-      <Path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-    </CSVG>
-  );
-}
-export function Share(props: SvgProps) {
-  return (
-    <CSVG {...props}>
-      <Circle cx="18" cy="5" r="3" />
-      <Circle cx="6" cy="12" r="3" />
-      <Circle cx="18" cy="19" r="3" />
-      <Line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-      <Line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-    </CSVG>
-  );
-}
-export function Bookmark(props: SvgProps) {
-  return (
-    <CSVG {...props}>
-      <Path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-    </CSVG>
-  );
-}
-export function Briefcase(props: SvgProps) {
-  return (
-    <CSVG {...props}>
-      <Rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-      <Path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-    </CSVG>
-  );
-}
-export function Hash(props: SvgProps) {
-  return (
-    <CSVG {...props}>
-      <Line x1="4" y1="9" x2="20" y2="9" />
-      <Line x1="4" y1="15" x2="20" y2="15" />
-      <Line x1="10" y1="3" x2="8" y2="21" />
-      <Line x1="16" y1="3" x2="14" y2="21" />
-    </CSVG>
-  );
-}
-export function At(props: SvgProps) {
-  return (
-    <CSVG {...props}>
-      <Circle cx="12" cy="12" r="4" />
-      <Path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94" />
+      <Path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1" />
+      <Polygon points="12 15 17 21 7 21 12 15" />
     </CSVG>
   );
 }
@@ -378,47 +341,10 @@ export function List(props: SvgProps) {
     </CSVG>
   );
 }
-export function UserPlus(props: SvgProps) {
+export function MessageSquare(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <Path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-      <Circle cx="8.5" cy="7" r="4" />
-      <Line x1="20" y1="8" x2="20" y2="14" />
-      <Line x1="23" y1="11" x2="17" y2="11" />
-    </CSVG>
-  );
-}
-export function Remove(props: SvgProps) {
-  return (
-    <CSVG {...props}>
-      <Line x1="18" y1="6" x2="6" y2="18" />
-      <Line x1="6" y1="6" x2="18" y2="18" />
-    </CSVG>
-  );
-}
-export function Edit(props: SvgProps) {
-  return (
-    <CSVG {...props}>
-      <Path d="M12 20h9" />
-      <Path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-    </CSVG>
-  );
-}
-export function ArrowLeft(props: SvgProps) {
-  return (
-    <CSVG {...props}>
-      <Line x1="19" y1="12" x2="5" y2="12" />
-      <Polyline points="12 19 5 12 12 5" />
-    </CSVG>
-  );
-}
-export function EmojiSmile(props: SvgProps) {
-  return (
-    <CSVG {...props}>
-      <Circle cx="12" cy="12" r="10" />
-      <Path d="M8 14s1.5 2 4 2 4-2 4-2" />
-      <Line x1="9" y1="9" x2="9.01" y2="9" />
-      <Line x1="15" y1="9" x2="15.01" y2="9" />
+      <Path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
     </CSVG>
   );
 }
@@ -443,6 +369,24 @@ export function MicOff(props: SvgProps) {
     </CSVG>
   );
 }
+export function MoreHorizontal(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Circle cx="12" cy="12" r="1" />
+      <Circle cx="19" cy="12" r="1" />
+      <Circle cx="5" cy="12" r="1" />
+    </CSVG>
+  );
+}
+export function MoreVertical(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Circle cx="12" cy="12" r="1" />
+      <Circle cx="12" cy="5" r="1" />
+      <Circle cx="12" cy="19" r="1" />
+    </CSVG>
+  );
+}
 export function PaperClip(props: SvgProps) {
   return (
     <CSVG {...props}>
@@ -450,10 +394,94 @@ export function PaperClip(props: SvgProps) {
     </CSVG>
   );
 }
-export function Filter(props: SvgProps) {
+export function Phone(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <Polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+      <Path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+    </CSVG>
+  );
+}
+export function Plus(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Line x1="12" y1="5" x2="12" y2="19" />
+      <Line x1="5" y1="12" x2="19" y2="12" />
+    </CSVG>
+  );
+}
+export function Remove(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Line x1="18" y1="6" x2="6" y2="18" />
+      <Line x1="6" y1="6" x2="18" y2="18" />
+    </CSVG>
+  );
+}
+export function Send(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <G transform="matrix(1.7142857142857142,0,0,1.7142857142857142,0,0)">
+        <Path d="M5.818,10.992,8,13.171a1.124,1.124,0,0,0,1.861-.439L13.442,1.979A1.123,1.123,0,0,0,12.021.558L1.268,4.142A1.124,1.124,0,0,0,.829,6L3.57,8.744l-.093,3.465Z" />
+        <Path d="M13.121 0.782L3.57 8.744" />
+      </G>
+    </CSVG>
+  );
+}
+export function Search(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Circle cx="11" cy="11" r="8" />
+      <Line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </CSVG>
+  );
+}
+export function Share(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Circle cx="18" cy="5" r="3" />
+      <Circle cx="6" cy="12" r="3" />
+      <Circle cx="18" cy="19" r="3" />
+      <Line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+      <Line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+    </CSVG>
+  );
+}
+export function Sliders(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Line x1="4" y1="21" x2="4" y2="14" />
+      <Line x1="4" y1="10" x2="4" y2="3" />
+      <Line x1="12" y1="21" x2="12" y2="12" />
+      <Line x1="12" y1="8" x2="12" y2="3" />
+      <Line x1="20" y1="21" x2="20" y2="16" />
+      <Line x1="20" y1="12" x2="20" y2="3" />
+      <Line x1="1" y1="14" x2="7" y2="14" />
+      <Line x1="9" y1="8" x2="15" y2="8" />
+      <Line x1="17" y1="16" x2="23" y2="16" />
+    </CSVG>
+  );
+}
+export function ThumbsUp(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
+    </CSVG>
+  );
+}
+export function ThumbsDown(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+    </CSVG>
+  );
+}
+export function UserPlus(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <Circle cx="8.5" cy="7" r="4" />
+      <Line x1="20" y1="8" x2="20" y2="14" />
+      <Line x1="23" y1="11" x2="17" y2="11" />
     </CSVG>
   );
 }

@@ -5,7 +5,7 @@ const colors: Watfoe.Theme.Colors = {
   },
   white: {
     primary: '#FFFFFF',
-    secondary: '#FAFAFA',
+    secondary: '#EFEFEF',
   },
   red: {
     light: '#FF6666',

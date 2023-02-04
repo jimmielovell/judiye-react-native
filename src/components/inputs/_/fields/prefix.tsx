@@ -1,17 +1,26 @@
 import {Anchor, AnchorProps} from 'components/buttons';
 import {useForwardedRef, useTheme} from 'hooks';
-import {forwardRef} from 'react';
+import {forwardRef, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
+import Animated from 'react-native-reanimated';
 
-const Prefix = forwardRef<View, AnchorProps>(function Prefix(
-  {style, ...rest},
-  ref,
-) {
+export type PrefixProps = AnchorProps & {
+  animated?: boolean;
+};
+
+const AnimatedAnchor = Animated.createAnimatedComponent<PrefixProps>(Anchor);
+
+const Prefix = forwardRef<View, PrefixProps>(function Prefix(props, ref) {
+  const {animated, style, ...rest} = props;
   const innerRef = useForwardedRef(ref);
   const theme = useTheme();
   const _style = createStyle(theme);
 
-  return <Anchor ref={innerRef} style={[_style.cont, style]} {...rest} />;
+  const _Prefix = useMemo(() => {
+    return animated ? AnimatedAnchor : Anchor;
+  }, [animated]);
+
+  return <_Prefix ref={innerRef} style={[_style.cont, style]} {...rest} />;
 });
 
 function createStyle(theme: Judiye.Theme) {

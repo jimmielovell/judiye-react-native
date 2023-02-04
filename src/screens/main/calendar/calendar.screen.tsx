@@ -1,8 +1,8 @@
 import {Flex} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 
-const DiscoverHeader = wrapper(function DiscoverHeader() {
+const CalendarScreen = wrapper(function CalendarScreen() {
   return <Flex />;
 });
 
-export default DiscoverHeader;
+export default CalendarScreen;

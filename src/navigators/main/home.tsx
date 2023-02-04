@@ -1,22 +1,30 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  NativeStackHeaderProps,
+} from '@react-navigation/native-stack';
+import {useCallback} from 'react';
 import {HomeHeader, HomeScreen} from 'screens/main/home';
+import '@react-navigation/elements';
 
 const Stack = createNativeStackNavigator();
 
 export default function HomeNavigator() {
+  const _HomeHeader = useCallback(
+    (props: NativeStackHeaderProps) => <HomeHeader {...props} />,
+    [],
+  );
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="HomeScreen"
       screenOptions={{
-        animation: 'slide_from_right',
-        headerShown: false,
+        gestureEnabled: true,
       }}>
       <Stack.Screen
-        name="Home"
+        name="HomeScreen"
         component={HomeScreen}
         options={{
+          header: _HomeHeader,
           headerShown: true,
-          header: props => <HomeHeader {...props} />,
         }}
       />
     </Stack.Navigator>

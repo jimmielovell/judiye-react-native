@@ -5,24 +5,26 @@ import {ForwardedRef, forwardRef, useMemo} from 'react';
 import {StyleProp, TextStyle, View, ViewStyle} from 'react-native';
 import {Pressable, PressableProps} from 'components/buttons';
 
-interface FillButtonProps extends PressableProps {
+export interface FillButtonProps extends PressableProps {
   type?: 'button' | 'submit' | 'reset';
   appearance?: 'fill';
   textStyle?: StyleProp<TextStyle>;
   icon?: IconProps;
 }
 
-interface OutlineButtonProps extends Omit<FillButtonProps, 'appearance'> {
+export interface OutlineButtonProps
+  extends Omit<FillButtonProps, 'appearance'> {
   appearance: 'outline';
 }
 
-interface IconButtonProps
+export interface IconButtonProps
   extends Omit<PressableProps, 'appearance' | 'icon' | 'textStyle'>,
     IconProps {
   appearance: 'icon';
 }
 
-interface TextButtonProps extends Omit<FillButtonProps, 'appearance' | 'icon'> {
+export interface TextButtonProps
+  extends Omit<FillButtonProps, 'appearance' | 'icon'> {
   appearance: 'text';
   textStyle?: StyleProp<TextStyle>;
 }

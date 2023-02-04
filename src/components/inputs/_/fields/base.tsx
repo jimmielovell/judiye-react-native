@@ -5,7 +5,6 @@ import {
   useRef,
   memo,
   useImperativeHandle,
-  RefObject,
   useMemo,
 } from 'react';
 import {
@@ -18,14 +17,12 @@ import {
   TextInputFocusEventData,
   TextInputProps,
   TextStyle,
-  View,
   ViewStyle,
 } from 'react-native';
 import {useFontColor, useFontFamily, useFontSize, useTheme} from 'hooks';
 import {Flex} from 'components/layout';
-import Prefix from './prefix';
-import Postfix from './postfix';
-import {AnchorProps} from 'components/buttons';
+import Prefix, {PrefixProps} from './prefix';
+import Postfix, {PostfixProps} from './postfix';
 import {ValidationError} from 'domains';
 
 export interface FieldMasks {
@@ -36,9 +33,8 @@ export interface FieldMasks {
 }
 
 export interface FieldProps extends TextInputProps {
-  postfix?: AnchorProps;
-  prefix?: AnchorProps;
-  contRef?: RefObject<View>;
+  postfix?: PostfixProps;
+  prefix?: PrefixProps;
   contStyle?: StyleProp<ViewStyle>;
   masks?: FieldMasks;
   validateOn?: 'change-text' | 'blur';
@@ -93,7 +89,6 @@ export type InputHandle = {
 const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
   function Field(
     {
-      contRef,
       masks,
       prefix,
       postfix,
@@ -112,7 +107,6 @@ const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
     },
     ref,
   ) {
-    const platform = Platform.OS as 'android' | 'ios';
     const {colors, sizing, spacing, shape} = useTheme();
     const inputRef = useRef<TextInput>(null);
     const errorRef = useRef<ValidationError | null>(null);
@@ -121,9 +115,7 @@ const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
     const [focused, setFocused] = useState(false);
     // onLayoutChange on Prefix & Postfix buttons is not fired everytime the
     // input re-renders
-    const prefixPadRef = useRef(
-      platform === 'ios' ? spacing.nm - 1 : spacing.nm,
-    );
+    const prefixPadRef = useRef(spacing.nm);
     const postfixPadRef = useRef(spacing.nm);
     const [paddingLeft, setPaddingLeft] = useState(prefixPadRef.current);
     const [paddingRight, setPaddingRight] = useState(postfixPadRef.current);
@@ -199,20 +191,6 @@ const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
       },
       [masks, rules, validateOn, onChangeText, _validateField],
     );
-
-    const onInputBlur = useCallback(
-      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-        setFocused(false);
-
-        if (validateOn === 'blur' && rules) {
-          _validateField(e.nativeEvent.text);
-        }
-
-        onBlur?.(e);
-      },
-      [_validateField, onBlur, rules, validateOn],
-    );
-
     const onInputEndEditing = useCallback(
       (e: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
         if (validateOn === 'blur' && rules) {
@@ -230,34 +208,44 @@ const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
       },
       [onFocus],
     );
+    const onInputBlur = useCallback(
+      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        setFocused(false);
+
+        if (validateOn === 'blur' && rules) {
+          _validateField(e.nativeEvent.text);
+        }
+
+        onBlur?.(e);
+      },
+      [_validateField, onBlur, rules, validateOn],
+    );
 
     const _Prefix = useMemo(() => {
-      const onPrefixLayoutChange = (e: LayoutChangeEvent) => {
-        if (inputRef.current) {
+      if (prefix) {
+        const onPrefixLayoutChange = (e: LayoutChangeEvent) => {
           const _paddingLeft = e.nativeEvent.layout.width;
           prefixPadRef.current = _paddingLeft;
           setPaddingLeft(_paddingLeft + spacing.xs);
-        }
-      };
+        };
 
-      if (prefix) {
         return <Prefix {...prefix} onLayout={onPrefixLayoutChange} />;
       }
+
       return null;
     }, [prefix, spacing.xs]);
 
     const _Postfix = useMemo(() => {
-      const onPostfixLayoutChange = (e: LayoutChangeEvent) => {
-        if (inputRef.current) {
+      if (postfix) {
+        const onPostfixLayoutChange = (e: LayoutChangeEvent) => {
           const _paddingRight = e.nativeEvent.layout.width;
           postfixPadRef.current = _paddingRight;
           setPaddingRight(_paddingRight);
-        }
-      };
+        };
 
-      if (postfix) {
         return <Postfix {...postfix} onLayout={onPostfixLayoutChange} />;
       }
+
       return null;
     }, [postfix]);
 
@@ -288,7 +276,7 @@ const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
     };
 
     return (
-      <Flex ref={contRef} self="stretch" style={[contStyle]}>
+      <Flex style={[contStyle]}>
         {_Prefix}
         <TextInput
           ref={inputRef}

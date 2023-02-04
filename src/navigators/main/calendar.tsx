@@ -1,22 +1,22 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {DiscoverHeader, DiscoverScreen} from '../../screens/main/discover';
+import {CalendarHeader, CalendarScreen} from 'screens/main/calendar';
 
 const Stack = createNativeStackNavigator();
 
-export default function DiscoverNavigator() {
+export default function CalendarNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="DiscoverScreen"
+      initialRouteName="CalendarScreen"
       screenOptions={{
         animation: 'slide_from_right',
         headerShown: false,
       }}>
       <Stack.Screen
-        name="DiscoverScreen"
-        component={DiscoverScreen}
+        name="CalendarScreen"
+        component={CalendarScreen}
         options={{
           headerShown: true,
-          header: props => <DiscoverHeader {...props} />,
+          header: props => <CalendarHeader {...props} />,
         }}
       />
     </Stack.Navigator>

@@ -1,9 +1,8 @@
-import {createRef, forwardRef, useState, useRef} from 'react';
+import {forwardRef, useState, useRef} from 'react';
 import {
   NativeSyntheticEvent,
+  StyleSheet,
   TextInputEndEditingEventData,
-  View,
-  ViewStyle,
 } from 'react-native';
 import {useForwardedRef, useTheme} from 'hooks';
 import {
@@ -20,7 +19,6 @@ export interface SearchFieldProps extends FieldProps {
 const SearchField = forwardRef<InputHandle, SearchFieldProps>(
   function SearchField(props: SearchFieldProps, ref) {
     const {
-      contRef,
       minimized = false,
       prefix,
       postfix,
@@ -31,12 +29,12 @@ const SearchField = forwardRef<InputHandle, SearchFieldProps>(
     } = props;
     const inputRef = useForwardedRef(ref);
     const searchValueRef = useRef<string>('');
-    const searchContRef = useForwardedRef(contRef || createRef<View>());
     const clearBtnScale = useSharedValue(0);
     const [shouldMinimize, setShouldMinimize] = useState(
       minimized && searchValueRef.current === '',
     );
-    const {sizing} = useTheme();
+    const theme = useTheme();
+    const _style = createStyle(theme);
 
     const _onSearchButtonPress = () => {
       if (minimized === true && searchValueRef.current === '') {
@@ -81,14 +79,9 @@ const SearchField = forwardRef<InputHandle, SearchFieldProps>(
         transform: [{scale: clearBtnScale.value}],
       };
     });
-    const computedClearBtnStyle: ViewStyle = {
-      borderRadius: 1000,
-      width: sizing.height.nm - 2,
-      paddingRight: 0,
-      paddingLeft: 0,
-    };
     const computedContainerStyle = {
-      flex: shouldMinimize ? 1 : 0,
+      width: shouldMinimize ? 0 : '100%',
+      flex: 0,
     };
 
     return (
@@ -97,8 +90,8 @@ const SearchField = forwardRef<InputHandle, SearchFieldProps>(
         defaultValue={searchValueRef.current}
         keyboardType="web-search"
         returnKeyType="search"
-        contRef={searchContRef}
-        contStyle={[contStyle, computedContainerStyle]}
+        contStyle={[contStyle]}
+        style={computedContainerStyle}
         autoCorrect={true}
         onEndEditing={_onEndEditing}
         onChangeText={_onChangeText}
@@ -111,10 +104,11 @@ const SearchField = forwardRef<InputHandle, SearchFieldProps>(
         }}
         postfix={{
           ...postfix,
+          animated: true,
           appearance: 'icon',
           name: 'Clear',
           // hideRipple: false,
-          style: [animatedClearBtnStyle, computedClearBtnStyle, postfix?.style],
+          style: [animatedClearBtnStyle, _style.clearButton, postfix?.style],
           onPress: _onClearButtonPress,
         }}
         {...rest}
@@ -122,5 +116,18 @@ const SearchField = forwardRef<InputHandle, SearchFieldProps>(
     );
   },
 );
+
+function createStyle(theme: Judiye.Theme) {
+  const {sizing} = theme;
+
+  return StyleSheet.create({
+    clearButton: {
+      borderRadius: 1000,
+      width: sizing.height.nm - 2,
+      paddingRight: 0,
+      paddingLeft: 0,
+    },
+  });
+}
 
 export default SearchField;

@@ -1,48 +1,49 @@
-import React, {useMemo} from 'react';
-import {StyleProp, TextStyle, ViewStyle} from 'react-native';
+import React from 'react';
+import {FlatList, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import {Flex} from '../../layout';
 import {Text} from 'components/typography';
-import {useStyles} from 'hooks';
 import {Anchor, AnchorProps} from 'components/buttons';
-import Avatar, { AvatarProps } from './avatar';
+import Avatar, {AvatarProps} from './avatar';
+import wrapper from 'hoc/wrapper';
+import {useTheme} from 'hooks';
+import Chip from './chip';
 
 export interface OrganizationProp {
   id: string;
   name: string;
 }
 
-export interface TitleProps {
+export interface RoleProps {
   organization?: OrganizationProp;
-  role: string | string[];
-  // This is a bad design, find a way to pass style instead of defining it here
-  style?: StyleProp<TextStyle>;
+  title: string | string[];
+}
+
+interface SkillProps {
+  id: string;
+  name: string;
+  avatar?: AvatarProps;
 }
 
 export interface CardProps {
   avatar: AvatarProps;
-  name: {
-    value: string;
-    // This is a bad design, find a way to pass style instead of defining it here
-    style?: StyleProp<TextStyle>;
-  };
-  title: TitleProps | TitleProps[];
+  name: string;
+  roles?: RoleProps[];
+  skills?: SkillProps[];
+  tagline?: string;
   button?: AnchorProps;
   style?: StyleProp<ViewStyle>;
 }
 
-const Title = function Title({organization, role, style}: TitleProps) {
-  const roleText = useMemo(() => {
-    return Array.isArray(role) ? role.join(' | ') : role;
-  }, [role]);
-  const compStyles = useStyles(style, {
-    lineHeight: 16,
-  });
+const Role = function Role({organization, title}: RoleProps) {
+  const theme = useTheme();
+  const _style = createStyle(theme);
 
   return (
-    <Text color='secondary' style={compStyles} size={12}>
-      {roleText}
+    <Text color="secondary" size="description" style={_style.title}>
+      {Array.isArray(title) ? title.join(' | ') : title}
       {organization && (
-        <Text color='link' style={compStyles} size={12}>
+        <Text color="link" size="description">
+          {' '}
           @{organization.name}
         </Text>
       )}
@@ -50,65 +51,98 @@ const Title = function Title({organization, role, style}: TitleProps) {
   );
 };
 
-const TitleContainer = function TitleCont({
-  title,
-  style,
-}: {
-  title: TitleProps | TitleProps[];
-  style?: StyleProp<TextStyle>;
-}) {
-  const children = useMemo(() => {
-    return Array.isArray(title) ? (
-      <Text color='secondary' numberOfLines={1} style={style}>
-        <>
-          <Title organization={title[0].organization} role={title[0].role} />
-          {title.length > 1 && <Text size={12}> ...</Text>}
-        </>
-      </Text>
-    ) : (
-      <Title
-        organization={title.organization}
-        role={title.role}
-        style={style}
-      />
-    );
-  }, [title, style]);
+const Roles = wrapper(function Roles({data}: {data: RoleProps[]}) {
+  const theme = useTheme();
+  const _style = createStyle(theme);
 
-  return children;
-};
-
-export default function Card({
-  avatar,
-  name,
-  title,
-  style,
-  button,
-  ...rest
-}: CardProps) {
-  const nameTitleCompStyles = useStyles({
-    marginLeft: 13,
-    flex: 1,
-  });
-  const nameCompStyles = useStyles(name.style, {
-    marginBottom: 3,
-  });
-  const buttonPostfixStyles = useStyles(
-    {
-      marginLeft: 'auto',
-    },
-    button ? button.style : undefined,
+  return (
+    <FlatList
+      data={data}
+      keyExtractor={item =>
+        Array.isArray(item.title) ? item.title[0] : item.title
+      }
+      renderItem={({item}) => <Role {...item} />}
+      showsHorizontalScrollIndicator={false}
+      horizontal
+      style={_style.titles}
+    />
   );
+});
+
+const Skills = wrapper(function Skills(props: {data: SkillProps[]}) {
+  const {data} = props;
+  const theme = useTheme();
+  const _style = createStyle(theme);
+
+  return (
+    <FlatList
+      data={data}
+      keyExtractor={item => item.id}
+      renderItem={({item}) => (
+        <Chip avatar={item.avatar} style={_style.skill}>
+          {item.name}
+        </Chip>
+      )}
+      showsHorizontalScrollIndicator={false}
+      horizontal
+      style={_style.skills}
+    />
+  );
+});
+
+const Card = wrapper(function Card(props: CardProps) {
+  const {avatar, name, roles, skills, tagline, style, button, ...rest} = props;
+  const theme = useTheme();
+  const _style = createStyle(theme);
 
   return (
     <Flex direction="row" align="center" style={style} {...rest}>
       <Avatar {...avatar} />
-      <Flex align="flex-start" self="center" style={nameTitleCompStyles}>
-        <Text weight="700" style={nameCompStyles}>
-          {name.value}
-        </Text>
-        <TitleContainer title={title} />
+      <Flex align="flex-start" self="center" style={_style.nameTitle}>
+        <Text size="subtitle">{name}</Text>
+        <Roles data={roles!} />
+        <Skills data={skills!} />
+        {tagline && (
+          <Text size="body" style={_style.tagline}>
+            {tagline}
+          </Text>
+        )}
       </Flex>
-      {button && <Anchor {...button} style={buttonPostfixStyles} />}
+      {button && (
+        <Anchor {...button} style={[_style.postfixButton, button.style]} />
+      )}
     </Flex>
   );
-};
+});
+
+function createStyle(theme: Judiye.Theme) {
+  const {spacing} = theme;
+
+  return StyleSheet.create({
+    nameTitle: {
+      marginLeft: spacing.nm,
+      flex: 1,
+      height: 'auto',
+    },
+    titles: {
+      paddingBottom: 0,
+    },
+    title: {
+      height: 14,
+    },
+    skills: {
+      marginTop: spacing.xs,
+    },
+    skill: {
+      marginRight: spacing.xs,
+    },
+    tagline: {
+      marginTop: spacing.xs,
+    },
+    postfixButton: {
+      marginLeft: 'auto',
+    },
+  });
+}
+
+export default Card;

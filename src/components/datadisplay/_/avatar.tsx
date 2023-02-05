@@ -1,61 +1,72 @@
 import {Anchor, AnchorProps} from 'components/buttons';
 import {useTheme} from 'hooks';
 import {useMemo} from 'react';
-import {Image, ImageStyle, ImageURISource, ViewStyle} from 'react-native';
+import {ViewStyle} from 'react-native';
+import FastImage, {ImageStyle, Source} from 'react-native-fast-image';
 
 export type AvatarProps = AnchorProps & {
   size?: number | string;
-  source?: ImageURISource;
+  source?: Source;
   imageStyle?: ImageStyle;
+  style?: ViewStyle;
 };
 
 export default function Avatar(props: AvatarProps) {
   // @ts-ignore
-  const {imageStyle, source, size, style, ...rest} = props;
-  const _style = (style || {}) as ViewStyle;
+  let {imageStyle, source, size, style, ...rest} = props;
   const {sizing} = useTheme();
 
   // Prevent setting width/height in style prop from affecting dimension of the avatar
   let [dimension, __style] = useMemo(() => {
-    if (_style.width || _style.height) {
-      const {width, height, ...rest} = _style;
-      return [Number(size || width || height), rest];
+    if (style?.width || style?.height) {
+      // @ts-ignore
+      const {width, height, ..._rest} = style;
+      return [Number(size || width || height), _rest];
     }
 
-    return [Number(size || sizing.height.nm), _style];
-  }, [_style.width, _style.height, size]);
+    return [Number(size || sizing.height.nm), style];
+  }, [style, size, sizing.height.nm]);
 
   const borderRadius = useMemo(() => {
-    return _style.borderRadius ? _style.borderRadius : 1000;
-  }, [_style.borderRadius]);
+    return style?.borderRadius ? style.borderRadius : 1000;
+  }, [style?.borderRadius]);
 
-  const computedStyles: ViewStyle = {
+  const onFetchError = () => {
+    console.log('Avatar fetch error');
+  };
+
+  const onLoadEnd = () => {
+    console.log('Avatar load end');
+  };
+
+  const _bgStyle: ViewStyle = {
+    backgroundColor: 'transparent',
+  };
+
+  const _style: ViewStyle = {
     borderRadius,
     height: dimension,
     width: dimension,
   };
-  const computedImageStyle: ImageStyle = {
+  const _imageStyle: ImageStyle = {
     borderRadius,
     height: dimension,
     width: dimension,
-  }
+  };
 
-  return (
-    source
-      ? <Anchor
-          style={[computedStyles, _style]} {...rest}>
-            <Image
-              source={source}
-              // accessible={accessible}
-              accessibilityLabel="Avatar"
-              // capInsets={capInsets}
-              // defaultSource={defaultSource}
-              // loadingIndicatorSource={loadingIndicatorSource}
-              progressiveRenderingEnabled={true}
-              resizeMethod="auto"
-              resizeMode="contain"
-              style={[computedImageStyle, imageStyle]} />
-          </Anchor>
-      : <Anchor style={[computedStyles, _style]} {...rest} />
-    );
-};
+  return source ? (
+    <Anchor style={[_style, _bgStyle, style]} {...rest}>
+      <FastImage
+        source={source}
+        accessible
+        accessibilityLabel="Avatar"
+        resizeMode={FastImage.resizeMode.contain}
+        style={[_imageStyle, imageStyle]}
+        onError={onFetchError}
+        onLoadEnd={onLoadEnd}
+      />
+    </Anchor>
+  ) : (
+    <Anchor style={[_style, style]} {...rest} />
+  );
+}

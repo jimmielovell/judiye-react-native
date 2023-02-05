@@ -1,4 +1,3 @@
-import HomeHeader from './home.header';
-import HomeScreen from './home.screen';
+import HomeScreen, {HomeHeader} from './screen.home';
 
 export {HomeHeader, HomeScreen};

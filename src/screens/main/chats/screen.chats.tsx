@@ -1,7 +1,8 @@
+import {Flex} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import AppBar from '../app-bar';
 
-const ChatsHeader = wrapper(function ChatsHeader() {
+export const ChatsHeader = wrapper(function ChatsHeader() {
   return (
     <AppBar
       showAvatar
@@ -12,4 +13,8 @@ const ChatsHeader = wrapper(function ChatsHeader() {
   );
 });
 
-export default ChatsHeader;
+const ChatsScreen = wrapper(function ChatsScreen() {
+  return <Flex />;
+});
+
+export default ChatsScreen;

@@ -1,4 +1,3 @@
-import ChatsScreen from './chats.screen';
-import ChatsHeader from './chats.header';
+import ChatsScreen, {ChatsHeader} from './screen.chats';
 
 export {ChatsScreen, ChatsHeader};

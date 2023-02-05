@@ -191,16 +191,6 @@ export function Clear(props: SvgProps) {
     </CSVG>
   );
 }
-export function Users(props: SvgProps) {
-  return (
-    <CSVG {...props}>
-      <Path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-      <Circle cx="9" cy="7" r="4" />
-      <Path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-      <Path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </CSVG>
-  );
-}
 export function Discover(props: SvgProps) {
   return (
     <CSVG {...props}>
@@ -260,6 +250,49 @@ export function Filter(props: SvgProps) {
   return (
     <CSVG {...props}>
       <Polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+    </CSVG>
+  );
+}
+export function Flag(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+      <Line x1="4" y1="22" x2="4" y2="15" />
+    </CSVG>
+  );
+}
+export function Folder(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+    </CSVG>
+  );
+}
+export function FolderFilled(props: SvgProps) {
+  const {colors} = useTheme();
+  return (
+    <CSVG {...props}>
+      <Path
+        fill={colors.primary}
+        d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+      />
+    </CSVG>
+  );
+}
+export function FolderMinus(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+      <Line x1="9" y1="14" x2="15" y2="14" />
+    </CSVG>
+  );
+}
+export function FolderPlus(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+      <Line x1="12" y1="11" x2="12" y2="17" />
+      <Line x1="9" y1="14" x2="15" y2="14" />
     </CSVG>
   );
 }
@@ -472,6 +505,16 @@ export function ThumbsDown(props: SvgProps) {
   return (
     <CSVG {...props}>
       <Path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+    </CSVG>
+  );
+}
+export function Users(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <Circle cx="9" cy="7" r="4" />
+      <Path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <Path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </CSVG>
   );
 }

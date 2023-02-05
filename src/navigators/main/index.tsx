@@ -20,6 +20,7 @@ export default function MainNavigator() {
     <Tab.Navigator tabBar={_TabBar} screenOptions={{headerShown: false}}>
       <Tab.Screen name="Home" component={HomeNavigator} />
       <Tab.Screen name="Calendar" component={CalendarNavigator} />
+      <Tab.Screen name="Folder" component={CalendarNavigator} />
       <Tab.Screen name="Discover" component={DiscoverNavigator} />
       <Tab.Screen name="Chat" component={ChatNavigator} />
     </Tab.Navigator>

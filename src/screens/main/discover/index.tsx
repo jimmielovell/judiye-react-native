@@ -1,4 +1,3 @@
-import DiscoverHeader from './discover.header';
-import DiscoverScreen from './discover.screen';
+import DiscoverScreen, {DiscoverHeader} from './screen.discover';
 
 export {DiscoverHeader, DiscoverScreen};

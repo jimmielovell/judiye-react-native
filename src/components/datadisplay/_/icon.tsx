@@ -1,5 +1,5 @@
 import * as svgs from 'assets/svgs';
-import { StyleProp, ViewStyle } from 'react-native';
+import {StyleProp, ViewStyle} from 'react-native';
 
 export interface IconProps {
   name: string;
@@ -12,4 +12,4 @@ export default function Icon({name, ...rest}: IconProps) {
   // @ts-ignore
   const SVGIcon = svgs[name];
   return <SVGIcon {...rest} />;
-};
+}

@@ -1,4 +1,6 @@
+import {useCallback} from 'react';
 import {StyleSheet} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {Flex} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import {useTheme} from 'hooks';
@@ -16,7 +18,7 @@ export interface AppBarProps {
   secondPostfixButton?: Omit<IconButtonProps, 'appearance'>;
 }
 
-const AppBar = wrapper(function HomeScreen(props: AppBarProps) {
+const AppBar = wrapper(function AppBar(props: AppBarProps) {
   const {
     title,
     showBackButton,
@@ -27,6 +29,11 @@ const AppBar = wrapper(function HomeScreen(props: AppBarProps) {
   } = props;
   const theme = useTheme();
   const _style = createStyle(theme);
+  const navigation = useNavigation();
+
+  const goBack = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
 
   return (
     <Flex direction="row" align="center" style={_style.cont}>
@@ -37,6 +44,7 @@ const AppBar = wrapper(function HomeScreen(props: AppBarProps) {
           size={34}
           self="center"
           style={_style.backButton}
+          onPress={goBack}
         />
       )}
       {showAvatar && (

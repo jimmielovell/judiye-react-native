@@ -19,7 +19,7 @@ const fonts: Watfoe.Theme.Fonts = {
     body: 16,
     description: 14,
     label: 14,
-    chip: 10,
+    chip: 12,
   },
   weight: {
     title: '700',

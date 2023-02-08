@@ -98,9 +98,16 @@ const Card = wrapper(function Card(props: CardProps) {
   return (
     <Flex direction="row" align="center" style={style} {...rest}>
       <Avatar {...avatar} />
-      <Flex align="flex-start" self="center" style={_style.nameTitle}>
-        <Text size="subtitle">{name}</Text>
-        <Roles data={roles!} />
+      <Flex align="flex-start" self="center" style={_style.info}>
+        <Flex direction="row" justify="space-between">
+          <Flex align="flex-start" justify="center" style={_style.nameCont}>
+            <Text size="subtitle">{name}</Text>
+            <Roles data={roles!} />
+          </Flex>
+          {button && (
+            <Anchor {...button} style={[_style.postfixButton, button.style]} />
+          )}
+        </Flex>
         <Skills data={skills!} />
         {tagline && (
           <Text size="body" style={_style.tagline}>
@@ -108,30 +115,32 @@ const Card = wrapper(function Card(props: CardProps) {
           </Text>
         )}
       </Flex>
-      {button && (
-        <Anchor {...button} style={[_style.postfixButton, button.style]} />
-      )}
     </Flex>
   );
 });
 
 function createStyle(theme: Judiye.Theme) {
-  const {spacing} = theme;
+  const {spacing, sizing} = theme;
 
   return StyleSheet.create({
-    nameTitle: {
+    info: {
       marginLeft: spacing.nm,
       flex: 1,
       height: 'auto',
     },
+    nameCont: {
+      height: sizing.height.nm,
+    },
     titles: {
-      paddingBottom: 0,
+      flexGrow: 0,
+      marginTop: spacing.xxs,
     },
     title: {
       height: 14,
     },
     skills: {
-      marginTop: spacing.xs,
+      flexGrow: 0,
+      marginTop: spacing.xxs,
     },
     skill: {
       marginRight: spacing.xs,

@@ -31,13 +31,9 @@ export default function Avatar(props: AvatarProps) {
     return style?.borderRadius ? style.borderRadius : 1000;
   }, [style?.borderRadius]);
 
-  const onFetchError = () => {
-    console.log('Avatar fetch error');
-  };
+  const onFetchError = () => {};
 
-  const onLoadEnd = () => {
-    console.log('Avatar load end');
-  };
+  const onLoadEnd = () => {};
 
   const _bgStyle: ViewStyle = {
     backgroundColor: 'transparent',

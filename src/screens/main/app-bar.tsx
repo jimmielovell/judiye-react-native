@@ -101,10 +101,11 @@ function createStyle(theme: Judiye.Theme) {
     cont: {
       backgroundColor: colors.background,
       paddingHorizontal: spacing.md,
-      paddingVertical: spacing.sm,
+      paddingTop: spacing.sm,
+      paddingBottom: spacing.nm,
     },
     backButton: {
-      marginRight: 5,
+      marginRight: spacing.md,
       backgroundColor: 'transparent',
       marginLeft: -8,
     },

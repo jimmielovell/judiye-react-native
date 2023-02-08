@@ -1,133 +1,193 @@
 import {
-  forwardRef,
   ReactNode,
   RefObject,
+  useCallback,
   useEffect,
-  useImperativeHandle,
   useMemo,
   useRef,
+  useState,
 } from 'react';
-import {LayoutChangeEvent, ViewProps, ViewStyle} from 'react-native';
+import {FlatList, StyleSheet, useWindowDimensions, View} from 'react-native';
+import {Flex} from 'components/layout';
+import {useTheme} from 'hooks';
+import {Button} from 'components/buttons';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {Flex, FlexProps} from 'components/layout';
-import {
-  ToggleButton,
-  ToggleButtonHandle,
-  ToggleButtons,
-} from 'components/inputs';
-import {useStyles} from 'hooks';
 
-const AnimatedFlex = Animated.createAnimatedComponent(Flex);
-
-export interface TabPanelHandle {
-  __setActive: (thisIndex: number, prevIndex?: number) => void;
-}
-export interface TabPanelsHandle {
-  __setActiveTab: (index: number) => void;
-}
-
-export interface TabPanelsProps {
+export interface TabsProps {
   children?: ReactNode;
-  ref: RefObject<TabPanelHandle>;
+  labels?: ReactNode[];
 }
 
-export interface TabsProps extends FlexProps {
-  withRef: RefObject<TabPanelsHandle>;
+interface ILayout {
+  x: number;
+  width: number;
+  index: number;
+}
+interface TabProps {
+  active: boolean;
+  onPress: (layout: ILayout) => void;
+  index: number;
+  children: ReactNode;
 }
 
-export interface TabHandle {
-  setActive: () => void;
-  setInactive: () => void;
-}
+const Tab = function Tab(props: TabProps) {
+  const {active, onPress, index, children} = props;
+  const theme = useTheme();
+  const _style = createStyle(theme);
+  // @ts-ignore
+  const ref: RefObject<View> = useRef();
 
-export const Tab = forwardRef<ToggleButtonHandle, FlexProps>(function Tab(
-  props,
-  ref,
-) {
-  return <ToggleButton ref={ref} {...props} />;
-});
+  const opacityStyle = {
+    opacity: active ? 1 : 0.5,
+  };
 
-export const Tabs = function Tabs({withRef, ...rest}: TabsProps) {
-  function handleOnValueChange(index: number) {
-    if (withRef && withRef.current) {
-      withRef.current.__setActiveTab(index);
-    }
-  }
-
-  return <ToggleButtons onValueChange={handleOnValueChange} {...rest} />;
+  return (
+    <Button
+      ref={ref}
+      onPress={_e => {
+        ref.current?.measureInWindow((x, _y, _width) => {
+          onPress({x, width: _width, index});
+        });
+      }}
+      style={[_style.button, opacityStyle]}
+      textStyle={_style.buttonText}>
+      {children}
+    </Button>
+  );
 };
 
-const TabPanel = forwardRef<TabPanelHandle, ViewProps>((props, ref) => {
-  const translateX = useSharedValue(0);
-  const panelWidth = useRef(0);
+const Tabs = function Tabs(props: TabsProps) {
+  const {children, labels} = props;
+  const theme = useTheme();
+  const {width} = useWindowDimensions();
+  const _style = createStyle(theme, width);
+  const [activeIndex, setActiveIndex] = useState(0);
+  let scrollRef: RefObject<FlatList> = useRef(null);
+  const indicatorLeft = useSharedValue(0);
+  const indicatorWidth = useSharedValue(0);
 
-  const __setActive = (steps: number) => {
-    const spanX = steps * -1 * panelWidth.current + translateX.value;
-    translateX.value = withTiming(spanX, {duration: 244});
-  };
-  useImperativeHandle(ref, () => ({
-    __setActive,
-  }));
+  useEffect(() => {});
 
-  function setPanelWidth(e: LayoutChangeEvent) {
-    panelWidth.current = e.nativeEvent.layout.width;
-  }
+  const onPress = useCallback(
+    (layout: ILayout) => {
+      const {x, width, index} = layout;
+      indicatorWidth.value = width;
+      indicatorLeft.value = withTiming(x, {
+        duration: 150,
+      });
+      scrollRef.current?.scrollToIndex({index, animated: true});
+    },
+    [indicatorLeft, indicatorWidth],
+  );
 
-  const animCompStyle = useAnimatedStyle(() => {
+  const _labels = useMemo(() => {
+    return labels?.map((label, i) => {
+      return (
+        <Tab
+          key={'tab-' + i}
+          index={i}
+          onPress={onPress}
+          active={activeIndex === i}>
+          {label}
+        </Tab>
+      );
+    });
+  }, [activeIndex, labels, onPress]);
+
+  const [_children, data] = useMemo(() => {
+    const __children = Array.isArray(children) ? children : [children];
+    return [
+      __children,
+      Array.from({length: __children.length}, (_, i) => i).map(i => ({
+        key: `tbp-${i}`,
+        index: i,
+      })),
+    ];
+  }, [children]);
+
+  const animatedIndicatorStyle = useAnimatedStyle(() => {
     return {
-      marginLeft: translateX.value,
+      left: indicatorLeft.value,
+      width: indicatorWidth.value,
     };
   });
 
   return (
-    <AnimatedFlex {...props} onLayout={setPanelWidth} style={animCompStyle} />
-  );
-});
-
-export const TabPanels = forwardRef<TabPanelsHandle, TabPanelsProps>(
-  function TabPanels({children}, ref) {
-    const activeTabIndex = useRef(0);
-    const animatableTabRef = useRef<TabPanelHandle>(null);
-
-    useEffect(() => {
-      if (activeTabIndex.current !== 0) {
-        animatableTabRef.current?.__setActive(activeTabIndex.current);
-      }
-    });
-
-    function __setActiveTab(index: number) {
-      if (index !== activeTabIndex.current) {
-        animatableTabRef.current?.__setActive(index - activeTabIndex.current);
-        activeTabIndex.current = index;
-      }
-    }
-    useImperativeHandle(ref, () => ({__setActiveTab}));
-
-    children = useMemo(() => {
-      const tabPanels = Array.isArray(children) ? children : [children];
-      return tabPanels.map((child: JSX.Element, index: number) => {
-        return (
-          <TabPanel
-            ref={index === 0 ? animatableTabRef : undefined}
-            key={`tbp-${index}`}>
-            {child}
-          </TabPanel>
-        );
-      });
-    }, [children]);
-
-    const compStyle = useStyles<ViewStyle>({
-      overflow: 'hidden',
-    });
-
-    return (
-      <Flex direction="row" style={compStyle}>
-        {children}
+    <Flex>
+      <Flex direction="row" justify="space-between" style={_style.buttons}>
+        {_labels}
+        <Animated.View style={[_style.indicator, animatedIndicatorStyle]} />
       </Flex>
-    );
-  },
-);
+
+      <FlatList
+        ref={scrollRef}
+        data={data}
+        renderItem={({item}) => (
+          <Flex style={_style.panel}>{_children[item.index]}</Flex>
+        )}
+        horizontal
+        initialNumToRender={1}
+        style={_style.cont}
+        showsHorizontalScrollIndicator={false}
+        decelerationRate={0.3}
+        directionalLockEnabled={true}
+        disableIntervalMomentum
+        pagingEnabled
+        onScroll={e => {
+          const {contentOffset} = e.nativeEvent;
+          const index = Math.round(contentOffset.x / width);
+          if (index !== activeIndex) {
+            setActiveIndex(index);
+          }
+        }}
+      />
+    </Flex>
+  );
+};
+
+function createStyle(_theme: Judiye.Theme, screenWidth?: number) {
+  const {colors, sizing, spacing, fonts} = _theme;
+  return StyleSheet.create({
+    cont: {
+      width: '100%',
+      height: '100%',
+    },
+    panel: {
+      height: '100%',
+      width: screenWidth,
+    },
+    button: {
+      backgroundColor: 'transparent',
+      borderRadius: 0,
+      height: '100%',
+      width: 'auto',
+    },
+    buttonText: {
+      color: colors.primary,
+      fontSize: fonts.size.description,
+      fontWeight: 'bold',
+    },
+    buttons: {
+      marginBottom: 13,
+      borderBottomColor: colors.surface.secondary,
+      borderBottomWidth: 1,
+      height: sizing.height.sm,
+      paddingHorizontal: spacing.md,
+      position: 'relative',
+    },
+    indicator: {
+      backgroundColor: colors.primary,
+      borderRadius: 2,
+      height: 3,
+      left: 0,
+      bottom: 0,
+      position: 'absolute',
+    },
+  });
+}
+
+export default Tabs;

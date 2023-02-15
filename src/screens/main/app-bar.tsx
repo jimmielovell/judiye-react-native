@@ -12,6 +12,7 @@ import {HeaderSearch} from 'components/inputs';
 export interface AppBarProps {
   title?: string;
   showBackButton?: boolean;
+  backButtonIconName?: string;
   showAvatar?: boolean;
   search?: string; // Placeholder
   firstPostfixButton?: Omit<IconButtonProps, 'appearance'>;
@@ -22,6 +23,7 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
   const {
     title,
     showBackButton,
+    backButtonIconName,
     showAvatar,
     search,
     firstPostfixButton,
@@ -40,7 +42,7 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
       {showBackButton && (
         <Button
           appearance="icon"
-          name="ArrowLeft"
+          name={backButtonIconName || 'ArrowLeft'}
           size={34}
           self="center"
           style={_style.backButton}
@@ -100,14 +102,13 @@ function createStyle(theme: Judiye.Theme) {
   return StyleSheet.create({
     cont: {
       backgroundColor: colors.background,
-      paddingHorizontal: spacing.md,
+      paddingHorizontal: spacing.sm,
       paddingTop: spacing.sm,
       paddingBottom: spacing.nm,
     },
     backButton: {
-      marginRight: spacing.md,
+      marginRight: spacing.nm,
       backgroundColor: 'transparent',
-      marginLeft: -8,
     },
     avatar: {
       marginRight: spacing.nm,

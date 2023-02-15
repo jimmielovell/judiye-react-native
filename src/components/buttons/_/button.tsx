@@ -42,12 +42,12 @@ function FillButton(
 ) {
   const {style, textStyle, children, icon, forwardedRef, ...rest} = props;
   const {colors, sizing} = useTheme();
-  const iconElement = useMemo(() => {
+  const _Icon = useMemo(() => {
     if (icon) {
       icon.color = icon.color || colors.text.primary;
       return (
         // eslint-disable-next-line react-native/no-inline-styles
-        <Icon {...icon} style={[icon.style, {marginRight: children ? 3 : 0}]} />
+        <Icon {...icon} style={[{marginRight: children ? 3 : 0}, icon.style]} />
       );
     }
 
@@ -84,7 +84,7 @@ function FillButton(
       direction="row"
       style={[_styles, style]}
       {...rest}>
-      {iconElement}
+      {_Icon}
       <>{element}</>
     </Pressable>
   );

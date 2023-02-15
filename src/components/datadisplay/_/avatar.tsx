@@ -14,7 +14,7 @@ export type AvatarProps = AnchorProps & {
 export default function Avatar(props: AvatarProps) {
   // @ts-ignore
   let {imageStyle, source, size, style, ...rest} = props;
-  const {sizing} = useTheme();
+  const {sizing, colors} = useTheme();
 
   // Prevent setting width/height in style prop from affecting dimension of the avatar
   let [dimension, __style] = useMemo(() => {
@@ -40,6 +40,8 @@ export default function Avatar(props: AvatarProps) {
   };
 
   const _style: ViewStyle = {
+    borderColor: colors.border.secondary,
+    borderWidth: 0.2,
     borderRadius,
     height: dimension,
     width: dimension,

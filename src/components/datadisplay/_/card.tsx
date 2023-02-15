@@ -1,8 +1,14 @@
 import React from 'react';
-import {FlatList, StyleProp, StyleSheet, ViewStyle} from 'react-native';
+import {
+  FlatList,
+  GestureResponderEvent,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
 import {Flex} from '../../layout';
 import {Text} from 'components/typography';
-import {Anchor, AnchorProps} from 'components/buttons';
+import {Anchor, AnchorProps, Pressable} from 'components/buttons';
 import Avatar, {AvatarProps} from './avatar';
 import wrapper from 'hoc/wrapper';
 import {useTheme} from 'hooks';
@@ -32,6 +38,7 @@ export interface CardProps {
   tagline?: string;
   button?: AnchorProps;
   style?: StyleProp<ViewStyle>;
+  onPress?: (e: GestureResponderEvent) => void;
 }
 
 const Role = function Role({organization, title}: RoleProps) {
@@ -85,6 +92,7 @@ const Skills = wrapper(function Skills(props: {data: SkillProps[]}) {
       )}
       showsHorizontalScrollIndicator={false}
       horizontal
+      hitSlop={{top: 5, bottom: 5}}
       style={_style.skills}
     />
   );
@@ -96,7 +104,7 @@ const Card = wrapper(function Card(props: CardProps) {
   const _style = createStyle(theme);
 
   return (
-    <Flex direction="row" align="center" style={style} {...rest}>
+    <Pressable direction="row" align="center" style={style} {...rest}>
       <Avatar {...avatar} />
       <Flex align="flex-start" self="center" style={_style.info}>
         <Flex direction="row" justify="space-between">
@@ -115,7 +123,7 @@ const Card = wrapper(function Card(props: CardProps) {
           </Text>
         )}
       </Flex>
-    </Flex>
+    </Pressable>
   );
 });
 
@@ -140,7 +148,6 @@ function createStyle(theme: Judiye.Theme) {
     },
     skills: {
       flexGrow: 0,
-      marginTop: spacing.xxs,
     },
     skill: {
       marginRight: spacing.xs,
@@ -149,6 +156,7 @@ function createStyle(theme: Judiye.Theme) {
       marginTop: spacing.xs,
     },
     postfixButton: {
+      backgroundColor: 'transparent',
       marginLeft: 'auto',
     },
   });

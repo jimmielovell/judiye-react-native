@@ -3,7 +3,6 @@ import {
   NativeStackHeaderProps,
 } from '@react-navigation/native-stack';
 import {useCallback} from 'react';
-import {HomeHeader, HomeScreen} from 'screens/main/home';
 import '@react-navigation/elements';
 import ColleaguesScreen, {
   ColleaguesHeader,
@@ -12,11 +11,7 @@ import ConnectScreen, {ConnectHeader} from 'screens/main/home/screen.connect';
 
 const Stack = createNativeStackNavigator();
 
-export default function HomeNavigator() {
-  const _HomeHeader = useCallback(
-    (props: NativeStackHeaderProps) => <HomeHeader {...props} />,
-    [],
-  );
+export default function HomeStack() {
   const _ColleaguesHeader = useCallback(
     (props: NativeStackHeaderProps) => <ColleaguesHeader {...props} />,
     [],
@@ -27,19 +22,7 @@ export default function HomeNavigator() {
   );
 
   return (
-    <Stack.Navigator
-      initialRouteName="HomeScreen"
-      screenOptions={{
-        gestureEnabled: true,
-      }}>
-      <Stack.Screen
-        name="HomeScreen"
-        component={HomeScreen}
-        options={{
-          header: _HomeHeader,
-          headerShown: true,
-        }}
-      />
+    <>
       <Stack.Screen
         name="ColleaguesScreen"
         component={ColleaguesScreen}
@@ -58,6 +41,6 @@ export default function HomeNavigator() {
           animation: 'slide_from_right',
         }}
       />
-    </Stack.Navigator>
+    </>
   );
 }

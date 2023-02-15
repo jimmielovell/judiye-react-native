@@ -8,7 +8,7 @@ const Frame = wrapper(function Frame(props: FlexProps) {
   const {colors, spacing} = useTheme();
   const computedStyle = {
     backgroundColor: colors.background,
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: spacing.sm,
     selfAlign: 'stretch',
     height: '100%',
   };

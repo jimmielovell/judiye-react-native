@@ -1,21 +1,21 @@
+import {ReactNode, RefObject, useMemo, useRef, useState} from 'react';
 import {
-  ReactNode,
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import {FlatList, StyleSheet, useWindowDimensions, View} from 'react-native';
+  GestureResponderEvent,
+  LayoutChangeEvent,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {Flex} from 'components/layout';
 import {useTheme} from 'hooks';
 import {Button} from 'components/buttons';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import {FlatList} from 'react-native-gesture-handler';
 
 export interface TabsProps {
   children?: ReactNode;
@@ -23,19 +23,18 @@ export interface TabsProps {
 }
 
 interface ILayout {
-  x: number;
   width: number;
-  index: number;
+  left: number;
 }
 interface TabProps {
   active: boolean;
-  onPress: (layout: ILayout) => void;
-  index: number;
   children: ReactNode;
+  onPress: (e: GestureResponderEvent) => void;
+  onLayout: (e: LayoutChangeEvent) => void;
 }
 
 const Tab = function Tab(props: TabProps) {
-  const {active, onPress, index, children} = props;
+  const {active, onPress, onLayout, children} = props;
   const theme = useTheme();
   const _style = createStyle(theme);
   // @ts-ignore
@@ -48,11 +47,8 @@ const Tab = function Tab(props: TabProps) {
   return (
     <Button
       ref={ref}
-      onPress={_e => {
-        ref.current?.measureInWindow((x, _y, _width) => {
-          onPress({x, width: _width, index});
-        });
-      }}
+      onPress={onPress}
+      onLayout={onLayout}
       style={[_style.button, opacityStyle]}
       textStyle={_style.buttonText}>
       {children}
@@ -63,40 +59,50 @@ const Tab = function Tab(props: TabProps) {
 const Tabs = function Tabs(props: TabsProps) {
   const {children, labels} = props;
   const theme = useTheme();
-  const {width} = useWindowDimensions();
-  const _style = createStyle(theme, width);
+  const screenWidth = useWindowDimensions().width;
+  const _style = createStyle(theme, screenWidth);
   const [activeIndex, setActiveIndex] = useState(0);
-  let scrollRef: RefObject<FlatList> = useRef(null);
+  const scrollRef: RefObject<FlatList> = useRef(null);
   const indicatorLeft = useSharedValue(0);
   const indicatorWidth = useSharedValue(0);
+  const tabLayoutRefs = useRef<ILayout[]>([]);
 
-  useEffect(() => {});
-
-  const onPress = useCallback(
-    (layout: ILayout) => {
-      const {x, width, index} = layout;
-      indicatorWidth.value = width;
-      indicatorLeft.value = withTiming(x, {
-        duration: 150,
-      });
-      scrollRef.current?.scrollToIndex({index, animated: true});
-    },
-    [indicatorLeft, indicatorWidth],
-  );
+  const prevContentOffsetX = useRef(0);
+  const tabSpacingRef = useRef(0);
 
   const _labels = useMemo(() => {
     return labels?.map((label, i) => {
       return (
         <Tab
           key={'tab-' + i}
-          index={i}
-          onPress={onPress}
+          onPress={_e =>
+            scrollRef.current?.scrollToIndex({index: i, animated: true})
+          }
+          onLayout={e => {
+            const {x, width} = e.nativeEvent.layout;
+            tabLayoutRefs.current[i] = {left: x, width};
+
+            if (i === 0) {
+              indicatorWidth.value = withSpring(width, {
+                damping: 50,
+                stiffness: 50,
+                // Increase the animation speed
+                velocity: 1,
+                restSpeedThreshold: 0.1,
+              });
+            } else if (i === 1) {
+              tabSpacingRef.current =
+                x -
+                tabLayoutRefs.current[0].left -
+                tabLayoutRefs.current[0].width;
+            }
+          }}
           active={activeIndex === i}>
           {label}
         </Tab>
       );
     });
-  }, [activeIndex, labels, onPress]);
+  }, [activeIndex, indicatorWidth, labels]);
 
   const [_children, data] = useMemo(() => {
     const __children = Array.isArray(children) ? children : [children];
@@ -118,9 +124,14 @@ const Tabs = function Tabs(props: TabsProps) {
 
   return (
     <Flex>
-      <Flex direction="row" justify="space-between" style={_style.buttons}>
-        {_labels}
-        <Animated.View style={[_style.indicator, animatedIndicatorStyle]} />
+      <Flex style={_style.outerWrapper}>
+        <Flex
+          direction="row"
+          justify="space-between"
+          style={_style.innerWrapper}>
+          {_labels}
+          <Animated.View style={[_style.indicator, animatedIndicatorStyle]} />
+        </Flex>
       </Flex>
 
       <FlatList
@@ -133,16 +144,44 @@ const Tabs = function Tabs(props: TabsProps) {
         initialNumToRender={1}
         style={_style.cont}
         showsHorizontalScrollIndicator={false}
-        decelerationRate={0.3}
+        decelerationRate="fast"
         directionalLockEnabled={true}
         disableIntervalMomentum
-        pagingEnabled
+        snapToInterval={screenWidth}
         onScroll={e => {
           const {contentOffset} = e.nativeEvent;
-          const index = Math.round(contentOffset.x / width);
+          if (
+            contentOffset.x === prevContentOffsetX.current ||
+            contentOffset.x < 0
+          ) {
+            return;
+          }
+
+          const multiplier = contentOffset.x / (screenWidth * 2);
+          console.log(tabSpacingRef.current * multiplier);
+
+          if (contentOffset.x > prevContentOffsetX.current) {
+            indicatorWidth.value = withSpring(
+              tabLayoutRefs.current[activeIndex].width +
+                tabSpacingRef.current * multiplier,
+              {
+                damping: 50,
+                stiffness: 50,
+              },
+            );
+          } else {
+            indicatorWidth.value = withTiming(indicatorWidth.value + 1, {
+              duration: 30,
+            });
+          }
+
+          const index = Math.round(contentOffset.x / screenWidth);
           if (index !== activeIndex) {
             setActiveIndex(index);
+            // indicatorWidth.value = tabLayoutRefs.current[index].width;
           }
+
+          prevContentOffsetX.current = contentOffset.x;
         }}
       />
     </Flex>
@@ -164,20 +203,21 @@ function createStyle(_theme: Judiye.Theme, screenWidth?: number) {
       backgroundColor: 'transparent',
       borderRadius: 0,
       height: '100%',
-      width: 'auto',
     },
     buttonText: {
       color: colors.primary,
       fontSize: fonts.size.description,
       fontWeight: 'bold',
     },
-    buttons: {
-      marginBottom: 13,
+    outerWrapper: {
       borderBottomColor: colors.surface.secondary,
       borderBottomWidth: 1,
-      height: sizing.height.sm,
+      height: sizing.height.nm,
       paddingHorizontal: spacing.md,
+    },
+    innerWrapper: {
       position: 'relative',
+      height: '100%',
     },
     indicator: {
       backgroundColor: colors.primary,

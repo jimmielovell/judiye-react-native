@@ -61,7 +61,7 @@ export default function BottomTabBar({
             onLongPress={onLongPress}
             name={isFocused ? `${label}Filled` : label}
             color={theme.colors.text.primary}
-            size={30}
+            size={26}
             style={_styles.tab}
           />
         );
@@ -71,17 +71,17 @@ export default function BottomTabBar({
 }
 
 function createStyle(theme: Judiye.Theme) {
-  const {spacing, colors} = theme;
+  const {spacing, colors, sizing} = theme;
   return StyleSheet.create({
     cont: {
       backgroundColor: colors.background,
       paddingTop: spacing.sm,
       paddingBottom: spacing.sm,
-      paddingHorizontal: spacing.nm,
+      paddingHorizontal: spacing.sm,
     },
     tab: {
       backgroundColor: 'transparent',
-      borderRadius: 0,
+      width: sizing.width.nm,
     },
   });
 }

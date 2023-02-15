@@ -155,14 +155,14 @@ export function CalendarFilled(props: SvgProps) {
     </CSVG>
   );
 }
-export function Chat(props: SvgProps) {
+export function Comment(props: SvgProps) {
   return (
     <CSVG {...props}>
       <Path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
     </CSVG>
   );
 }
-export function ChatFilled(props: SvgProps) {
+export function CommentFilled(props: SvgProps) {
   const {colors} = useTheme();
   return (
     <CSVG {...props}>
@@ -374,10 +374,21 @@ export function List(props: SvgProps) {
     </CSVG>
   );
 }
-export function MessageSquare(props: SvgProps) {
+export function Chat(props: SvgProps) {
   return (
     <CSVG {...props}>
       <Path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </CSVG>
+  );
+}
+export function ChatFilled(props: SvgProps) {
+  const {colors} = useTheme();
+  return (
+    <CSVG {...props}>
+      <Path
+        fill={colors.primary}
+        d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+      />
     </CSVG>
   );
 }

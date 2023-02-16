@@ -4,7 +4,7 @@ import AppBar from '../app-bar';
 import {useTheme} from 'hooks';
 import {Frame} from 'components/layout';
 
-export const NewPostHeader = wrapper(function NewPostHeader() {
+export const ViewPostHeader = wrapper(function ViewPostHeader() {
   return (
     <AppBar
       showBackButton
@@ -15,7 +15,7 @@ export const NewPostHeader = wrapper(function NewPostHeader() {
   );
 });
 
-const NewPostScreen = wrapper(function ViewPostScreen() {
+const ViewPostScreen = wrapper(function ViewPostScreen() {
   const theme = useTheme();
   const _style = createStyle(theme);
 
@@ -35,4 +35,4 @@ function createStyle(theme: Judiye.Theme) {
   });
 }
 
-export default NewPostScreen;
+export default ViewPostScreen;

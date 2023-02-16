@@ -158,7 +158,6 @@ const Tabs = function Tabs(props: TabsProps) {
           }
 
           const multiplier = contentOffset.x / (screenWidth * 2);
-          console.log(tabSpacingRef.current * multiplier);
 
           if (contentOffset.x > prevContentOffsetX.current) {
             indicatorWidth.value = withSpring(
@@ -213,7 +212,7 @@ function createStyle(_theme: Judiye.Theme, screenWidth?: number) {
       borderBottomColor: colors.surface.secondary,
       borderBottomWidth: 1,
       height: sizing.height.nm,
-      paddingHorizontal: spacing.md,
+      paddingHorizontal: spacing.xlg + spacing.sm,
     },
     innerWrapper: {
       position: 'relative',

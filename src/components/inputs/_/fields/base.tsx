@@ -24,6 +24,7 @@ import {Flex} from 'components/layout';
 import Prefix, {PrefixProps} from './prefix';
 import Postfix, {PostfixProps} from './postfix';
 import {ValidationError} from 'domains';
+import Animated from 'react-native-reanimated';
 
 export interface FieldMasks {
   cast?: 'string' | 'number';
@@ -85,6 +86,8 @@ export type InputHandle = {
   blur(): void;
   clear(): void;
 };
+
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
   function Field(
@@ -278,7 +281,7 @@ const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
     return (
       <Flex style={[contStyle]}>
         {_Prefix}
-        <TextInput
+        <AnimatedTextInput
           ref={inputRef}
           style={[inputCompStyles, style]}
           onChangeText={onInputChangeText}

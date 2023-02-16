@@ -23,6 +23,7 @@ export type InputProps<T> = T & {
   contStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
   hidden?: boolean;
+  wrapperStyle?: StyleProp<ViewStyle>;
 };
 
 export type PlainInputProps = InputProps<
@@ -55,7 +56,7 @@ const Input = forwardRef<
   InputHandle,
   PlainInputProps | PasswordInputProps | SearchInputProps
 >(function Input(
-  {hidden, label, description, type = 'text', style, ...props},
+  {hidden, label, description, type = 'text', wrapperStyle, ...props},
   ref,
 ) {
   // @ts-ignore
@@ -82,7 +83,7 @@ const Input = forwardRef<
     [errorRef, labelRef, onValidate],
   );
 
-  const compStyles: ViewStyle = {
+  const _wrapperStyle: ViewStyle = {
     marginBottom: spacing.md,
     position: 'relative',
     display: hidden ? 'none' : 'flex',
@@ -114,7 +115,7 @@ const Input = forwardRef<
   }, [type]);
 
   return (
-    <Flex align="flex-start" style={[compStyles, style]}>
+    <Flex align="flex-start" style={[_wrapperStyle, wrapperStyle]}>
       {label && (
         <Label ref={labelRef} label={label} description={description} />
       )}

@@ -57,7 +57,6 @@ function createStyle(theme: Judiye.Theme) {
     postsCont: {
       width: '100%',
       height: '100%',
-      paddingHorizontal: spacing.sm,
       marginBottom: spacing.lg,
     },
   });

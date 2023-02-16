@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {GestureResponderEvent, StyleSheet} from 'react-native';
 import {Flex} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import {Text} from 'components/typography';
@@ -6,6 +6,8 @@ import {Card, Counter} from 'components/datadisplay';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'hooks';
 import {Button, Pressable} from 'components/buttons';
+import {useCallback} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 const posts = [
   {
@@ -199,6 +201,10 @@ const Reaction = wrapper(function Reaction(props: any) {
   const theme = useTheme();
   const _style = createStyle(theme);
 
+  const _onPress = useCallback((e: GestureResponderEvent) => {
+    e.stopPropagation();
+  }, []);
+
   return (
     <Button
       appearance="fill"
@@ -206,10 +212,11 @@ const Reaction = wrapper(function Reaction(props: any) {
       icon={{
         name,
         color: color || theme.colors.text.secondary,
-        size: 20,
+        size: 22,
         style: _style.reactionIcon,
       }}
-      style={[_style.reaction, style]}>
+      style={[_style.reaction, style]}
+      onPress={_onPress}>
       <Counter style={_style.counter}>{counter}</Counter>
     </Button>
   );
@@ -217,13 +224,18 @@ const Reaction = wrapper(function Reaction(props: any) {
 
 const Post = wrapper(function Post(props: PostProps) {
   const {id} = props;
+  const navigation = useNavigation();
   const theme = useTheme();
   const _style = createStyle(theme);
   const post = posts.find(post => post.id === id);
   const {owner, description, media} = post;
 
+  const _onPress = useCallback(() => {
+    navigation.navigate('ViewPostScreen', {id});
+  }, [id, navigation]);
+
   return (
-    <Pressable align="flex-start" style={_style.post}>
+    <Pressable align="flex-start" style={_style.post} onPress={_onPress} ripple>
       <Card
         {...owner}
         button={{
@@ -252,9 +264,11 @@ function createStyle(theme: Judiye.Theme) {
 
   return StyleSheet.create({
     post: {
+      borderBottomColor: colors.surface.secondary,
+      borderBottomWidth: 0.5,
+      paddingTop: spacing.nm,
+      paddingHorizontal: spacing.sm,
       width: '100%',
-      marginTop: spacing.nm,
-      marginBottom: spacing.sm,
     },
     postDescription: {
       marginVertical: spacing.xs,
@@ -265,31 +279,35 @@ function createStyle(theme: Judiye.Theme) {
       fontWeight: '300',
     },
     mediaCont: {
-      width: '100%',
       borderColor: colors.border.secondary,
       borderWidth: 0.2,
-      borderRadius: shape.radius.nm,
+      borderRadius: shape.radius.sm,
+      width: '100%',
     },
     media: {
       borderRadius: shape.radius.nm - 2,
       width: '100%',
-      height: 200,
+      height: 300,
     },
     reactions: {
       width: '100%',
       height: sizing.height.lg,
+      position: 'relative',
     },
     reaction: {
       borderRadius: 0,
       backgroundColor: 'transparent',
       height: '100%',
       width: sizing.width.nm,
+      overflow: 'visible',
     },
     reactionIcon: {
       marginRight: 0,
     },
     counter: {
       marginTop: spacing.xxs,
+      position: 'absolute',
+      left: sizing.width.nm / 2 + 10,
     },
   });
 }

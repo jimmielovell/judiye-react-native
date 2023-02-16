@@ -12,6 +12,8 @@ import {
   DiscoverScreen,
   NewPostHeader,
   NewPostScreen,
+  ViewPostHeader,
+  ViewPostScreen,
 } from 'screens/main/discover';
 import {
   ChatsHeader,
@@ -106,6 +108,10 @@ export default function HomeNavigator() {
     (props: NativeStackHeaderProps) => <NewPostHeader {...props} />,
     [],
   );
+  const _ViewPostHeader = useCallback(
+    (props: NativeStackHeaderProps) => <ViewPostHeader {...props} />,
+    [],
+  );
   const _NewChatHeader = useCallback(
     (props: NativeStackHeaderProps) => <NewChatHeader {...props} />,
     [],
@@ -158,6 +164,15 @@ export default function HomeNavigator() {
             header: _NewPostHeader,
             headerShown: true,
             animation: 'slide_from_bottom',
+          }}
+        />
+        <Stack.Screen
+          name="ViewPostScreen"
+          component={ViewPostScreen}
+          options={{
+            header: _ViewPostHeader,
+            headerShown: true,
+            presentation: 'modal',
           }}
         />
       </Stack.Group>

@@ -63,6 +63,7 @@ export default function BottomTabBar({
             color={theme.colors.text.primary}
             size={26}
             style={_styles.tab}
+            ripple
           />
         );
       })}

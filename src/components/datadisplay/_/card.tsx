@@ -104,8 +104,8 @@ const Card = wrapper(function Card(props: CardProps) {
   const _style = createStyle(theme);
 
   return (
-    <Pressable direction="row" align="center" style={style} {...rest}>
-      <Avatar {...avatar} />
+    <Pressable direction="row" align="center" style={style} ripple {...rest}>
+      <Avatar {...avatar} ripple />
       <Flex align="flex-start" self="center" style={_style.info}>
         <Flex direction="row" justify="space-between">
           <Flex align="flex-start" justify="center" style={_style.nameCont}>
@@ -113,7 +113,11 @@ const Card = wrapper(function Card(props: CardProps) {
             <Roles data={roles!} />
           </Flex>
           {button && (
-            <Anchor {...button} style={[_style.postfixButton, button.style]} />
+            <Anchor
+              {...button}
+              style={[_style.postfixButton, button.style]}
+              ripple
+            />
           )}
         </Flex>
         <Skills data={skills!} />

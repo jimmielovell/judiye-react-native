@@ -47,10 +47,11 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
           self="center"
           style={_style.backButton}
           onPress={goBack}
+          ripple
         />
       )}
       {showAvatar && (
-        <Avatar self="center" style={_style.avatar}>
+        <Avatar self="center" style={_style.avatar} ripple>
           JL
         </Avatar>
       )}
@@ -79,6 +80,7 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
             size={24}
             self="center"
             style={_style.firstPostfixButton}
+            ripple
           />
         )}
         {secondPostfixButton && (
@@ -89,6 +91,7 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
             self="center"
             style={[_style.secondPostfixButton]}
             color={theme.colors.background}
+            ripple
           />
         )}
       </Flex>

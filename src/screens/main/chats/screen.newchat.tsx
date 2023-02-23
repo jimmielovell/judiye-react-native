@@ -8,7 +8,14 @@ import {Card} from 'components/datadisplay';
 import {useNavigation} from '@react-navigation/native';
 
 export const NewChatHeader = wrapper(function NewPostHeader() {
-  return <AppBar showBackButton backButtonIconName="Clear" title="New chat" />;
+  return (
+    <AppBar
+      showBackButton
+      backButtonIconName="Clear"
+      title="New chat"
+      search="Search contacts"
+    />
+  );
 });
 
 const data = [
@@ -136,7 +143,7 @@ const NewChatScreen = wrapper(function DiscoverScreen() {
   };
 
   return (
-    <Frame>
+    <Frame style={_style.frame}>
       <FlatList
         data={data}
         keyExtractor={item => item.id}
@@ -154,11 +161,15 @@ function createStyle(theme: Judiye.Theme) {
   const {spacing} = theme;
 
   return StyleSheet.create({
+    frame: {
+      paddingHorizontal: 0,
+    },
     cont: {
       width: '100%',
     },
     card: {
-      marginBottom: spacing.md,
+      paddingVertical: spacing.nm,
+      paddingHorizontal: spacing.sm,
     },
   });
 }

@@ -1,5 +1,5 @@
-import {useCallback} from 'react';
-import {StyleSheet} from 'react-native';
+import {useCallback, useEffect, useState} from 'react';
+import {Keyboard, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Flex} from 'components/layout';
 import wrapper from 'hoc/wrapper';
@@ -7,7 +7,7 @@ import {useTheme} from 'hooks';
 import {Avatar} from 'components/datadisplay';
 import {Button, IconButtonProps} from 'components/buttons';
 import {Text} from 'components/typography';
-import {HeaderSearch} from 'components/inputs';
+import {Input} from 'components/inputs';
 
 export interface AppBarProps {
   title?: string;
@@ -32,13 +32,31 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
   const theme = useTheme();
   const _style = createStyle(theme);
   const navigation = useNavigation();
+  const [showSearchInput, setShowSearchInput] = useState(false);
+
+  const toggleSearchInput = useCallback(() => {
+    setShowSearchInput(!showSearchInput);
+  }, [showSearchInput]);
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidHide', _e => toggleSearchInput);
+    () => Keyboard.removeAllListeners('keyboardDidHide');
+  }, [toggleSearchInput]);
 
   const goBack = useCallback(() => {
-    navigation.goBack();
-  }, [navigation]);
+    if (showSearchInput) {
+      setShowSearchInput(false);
+    } else {
+      navigation.goBack();
+    }
+  }, [navigation, showSearchInput]);
 
   return (
-    <Flex direction="row" align="center" style={_style.cont}>
+    <Flex
+      direction="row"
+      align="center"
+      justify="flex-start"
+      style={_style.cont}>
       {showBackButton && (
         <Button
           appearance="icon"
@@ -50,51 +68,72 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
           ripple
         />
       )}
-      {showAvatar && (
-        <Avatar self="center" style={_style.avatar} ripple>
-          JL
-        </Avatar>
+
+      {showSearchInput ? (
+        <Input
+          type="search"
+          placeholder={search}
+          style={_style.input}
+          wrapperStyle={_style.inputWrapper}
+          postfix={{
+            style: _style.searchPostfixButton,
+          }}
+          autoFocus
+        />
+      ) : (
+        <>
+          {showAvatar && (
+            <Avatar self="center" style={_style.avatar} ripple>
+              JL
+            </Avatar>
+          )}
+
+          {title && (
+            <Text size="title" style={_style.title}>
+              {title}
+            </Text>
+          )}
+          <Flex
+            style={_style.postfixCont}
+            direction="row"
+            justify="flex-end"
+            flex={1}
+            align="center">
+            {search && (
+              <Button
+                appearance="icon"
+                name="Search"
+                size={24}
+                self="center"
+                style={_style.firstPostfixButton}
+                onPress={toggleSearchInput}
+                ripple
+              />
+            )}
+            {firstPostfixButton && (
+              <Button
+                {...firstPostfixButton}
+                appearance="icon"
+                size={24}
+                self="center"
+                style={_style.firstPostfixButton}
+                ripple
+              />
+            )}
+            {secondPostfixButton && (
+              <Button
+                {...secondPostfixButton}
+                appearance="icon"
+                size={24}
+                self="center"
+                style={[_style.secondPostfixButton]}
+                color={theme.colors.background}
+                ripple
+              />
+            )}
+          </Flex>
+        </>
       )}
-      {title && (
-        <Text size="title" style={_style.title}>
-          {title}
-        </Text>
-      )}
-      <Flex
-        style={_style.postfixCont}
-        direction="row"
-        justify="flex-end"
-        flex={1}
-        align="center">
-        {search && (
-          <HeaderSearch
-            placeholder={search}
-            minimized
-            contStyle={{alignSelf: 'center'}}
-          />
-        )}
-        {firstPostfixButton && (
-          <Button
-            {...firstPostfixButton}
-            appearance="icon"
-            size={24}
-            self="center"
-            style={_style.firstPostfixButton}
-            ripple
-          />
-        )}
-        {secondPostfixButton && (
-          <Button
-            {...secondPostfixButton}
-            appearance="icon"
-            size={24}
-            self="center"
-            style={[_style.secondPostfixButton]}
-            color={theme.colors.background}
-            ripple
-          />
-        )}
-      </Flex>
     </Flex>
   );
 });
@@ -106,8 +145,7 @@ function createStyle(theme: Judiye.Theme) {
     cont: {
       backgroundColor: colors.background,
       paddingHorizontal: spacing.sm,
-      paddingTop: spacing.sm,
-      paddingBottom: spacing.nm,
+      paddingVertical: spacing.sm,
     },
     backButton: {
       marginRight: spacing.nm,
@@ -124,6 +162,7 @@ function createStyle(theme: Judiye.Theme) {
       height: '100%',
     },
     firstPostfixButton: {
+      backgroundColor: 'transparent',
       marginLeft: spacing.nm,
     },
     secondPostfixButton: {
@@ -131,8 +170,20 @@ function createStyle(theme: Judiye.Theme) {
       width: sizing.width.nm,
       marginLeft: spacing.nm,
     },
-    searchInput: {
+    input: {
+      backgroundColor: colors.surface.secondary,
+      borderRadius: 1000,
+      borderWidth: 0,
+      height: sizing.height.sm,
+    },
+    searchPostfixButton: {
+      height: sizing.height.sm - sizing.border.width * 2 - 2,
+    },
+    inputWrapper: {
       alignSelf: 'center',
+      marginBottom: 0,
+      marginTop: 0,
+      flex: 1,
     },
   });
 }

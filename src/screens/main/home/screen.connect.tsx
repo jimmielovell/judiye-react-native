@@ -7,7 +7,7 @@ import AppBar from '../app-bar';
 import {FlatList} from 'react-native-gesture-handler';
 
 export const ConnectHeader = wrapper(function ConnectHeader() {
-  return <AppBar showBackButton title="Connect" />;
+  return <AppBar showBackButton title="Connect" search="Search people" />;
 });
 
 const data = [
@@ -130,7 +130,7 @@ const ConnectScreen = wrapper(function ConnectScreen() {
   const _style = createStyle(theme);
 
   return (
-    <Frame>
+    <Frame style={_style.frame}>
       <FlatList
         data={data}
         keyExtractor={item => item.id}
@@ -157,11 +157,15 @@ function createStyle(theme: Judiye.Theme) {
   const {spacing} = theme;
 
   return StyleSheet.create({
+    frame: {
+      paddingHorizontal: 0,
+    },
     cont: {
       width: '100%',
     },
     card: {
-      marginBottom: spacing.md,
+      paddingVertical: spacing.nm,
+      paddingHorizontal: spacing.sm,
     },
   });
 }

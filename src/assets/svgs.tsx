@@ -2,7 +2,6 @@ import {ReactNode, useMemo} from 'react';
 import {PixelRatio} from 'react-native';
 import SVG, {
   Circle,
-  G,
   Path,
   Polygon,
   Polyline,
@@ -466,12 +465,13 @@ export function Remove(props: SvgProps) {
   );
 }
 export function Send(props: SvgProps) {
+  const {colors} = useTheme();
   return (
     <CSVG {...props}>
-      <G transform="matrix(1.7142857142857142,0,0,1.7142857142857142,0,0)">
-        <Path d="M5.818,10.992,8,13.171a1.124,1.124,0,0,0,1.861-.439L13.442,1.979A1.123,1.123,0,0,0,12.021.558L1.268,4.142A1.124,1.124,0,0,0,.829,6L3.57,8.744l-.093,3.465Z" />
-        <Path d="M13.121 0.782L3.57 8.744" />
-      </G>
+      <Path
+        fill={colors.background}
+        d="M3.4 20.4l17.45-7.48c.81-.35.81-1.49 0-1.84L3.4 3.6c-.66-.29-1.39.2-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"
+      />
     </CSVG>
   );
 }

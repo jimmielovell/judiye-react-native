@@ -19,20 +19,11 @@ const NewPostScreen = wrapper(function ViewPostScreen() {
   const theme = useTheme();
   const _style = createStyle(theme);
 
-  return <Frame />;
+  return <Frame bottomTab={false} />;
 });
 
-function createStyle(theme: Judiye.Theme) {
-  const {spacing} = theme;
-
-  return StyleSheet.create({
-    postsCont: {
-      width: '100%',
-      height: '100%',
-      paddingHorizontal: spacing.sm,
-      marginBottom: spacing.lg,
-    },
-  });
+function createStyle(_theme: Judiye.Theme) {
+  return StyleSheet.create({});
 }
 
 export default NewPostScreen;

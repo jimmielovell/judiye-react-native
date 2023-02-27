@@ -4,7 +4,11 @@ import AppBar from '../app-bar';
 
 export const CalendarHeader = wrapper(function CalendarHeader() {
   return (
-    <AppBar showAvatar title="Calendar" secondPostfixButton={{name: 'Plus'}} />
+    <AppBar
+      showBackButton
+      title="Calendar"
+      secondPostfixButton={{name: 'Plus'}}
+    />
   );
 });
 

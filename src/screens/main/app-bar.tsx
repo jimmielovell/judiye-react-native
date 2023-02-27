@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
-import {Keyboard, StyleSheet} from 'react-native';
+import {Keyboard, Platform, StyleSheet} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {Flex} from 'components/layout';
 import wrapper from 'hoc/wrapper';
@@ -29,8 +30,9 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
     firstPostfixButton,
     secondPostfixButton,
   } = props;
+  const insets = useSafeAreaInsets();
   const theme = useTheme();
-  const _style = createStyle(theme);
+  const _style = createStyle(theme, insets);
   const navigation = useNavigation();
   const [showSearchInput, setShowSearchInput] = useState(false);
 
@@ -61,7 +63,13 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
         <Button
           appearance="icon"
           name={backButtonIconName || 'ArrowLeft'}
-          size={34}
+          size="30"
+          {...Platform.select({
+            ios: {
+              name: backButtonIconName || 'ArrowBackIos',
+              size: 24,
+            },
+          })}
           self="center"
           style={_style.backButton}
           onPress={goBack}
@@ -138,14 +146,23 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
   );
 });
 
-function createStyle(theme: Judiye.Theme) {
+function createStyle(theme: Judiye.Theme, insets: EdgeInsets) {
   const {colors, spacing, sizing} = theme;
 
   return StyleSheet.create({
     cont: {
       backgroundColor: colors.background,
-      paddingHorizontal: spacing.sm,
-      paddingVertical: spacing.sm,
+      paddingLeft: spacing.sm + insets.left,
+      paddingRight: spacing.sm + insets.right,
+      paddingBottom: spacing.sm,
+      ...Platform.select({
+        ios: {
+          paddingTop: insets.top,
+        },
+        android: {
+          paddingTop: insets.top + spacing.sm,
+        },
+      }),
     },
     backButton: {
       marginRight: spacing.nm,

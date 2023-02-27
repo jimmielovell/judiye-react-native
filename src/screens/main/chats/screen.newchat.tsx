@@ -143,7 +143,7 @@ const NewChatScreen = wrapper(function DiscoverScreen() {
   };
 
   return (
-    <Frame style={_style.frame}>
+    <Frame bottomTab={false} style={_style.frame}>
       <FlatList
         data={data}
         keyExtractor={item => item.id}

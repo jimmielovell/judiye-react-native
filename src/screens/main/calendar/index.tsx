@@ -1,3 +1,3 @@
-import CalendarScreen, {CalendarHeader} from './screen.calendar';
+import CalendarScreen, {CalendarHeader} from '../home/screen.calendar';
 
 export {CalendarHeader, CalendarScreen};

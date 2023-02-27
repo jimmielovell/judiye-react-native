@@ -142,6 +142,7 @@ function createStyle(theme: Judiye.Theme) {
     },
     nameCont: {
       height: sizing.height.nm,
+      flex: 1,
     },
     titles: {
       flexGrow: 0,

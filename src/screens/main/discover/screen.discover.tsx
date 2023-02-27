@@ -2,10 +2,10 @@ import {StyleSheet} from 'react-native';
 import {Tabs} from 'components/navigation';
 import wrapper from 'hoc/wrapper';
 import AppBar from '../app-bar';
-import {FlatList} from 'react-native-gesture-handler';
 import {useTheme} from 'hooks';
 import Post from './_/post';
 import {useNavigation} from '@react-navigation/native';
+import {FramedFlatList} from 'components/layout';
 
 export const DiscoverHeader = wrapper(function DiscoverHeader() {
   const navigation = useNavigation();
@@ -17,6 +17,7 @@ export const DiscoverHeader = wrapper(function DiscoverHeader() {
     <AppBar
       showAvatar
       title="Discover"
+      search="Search..."
       secondPostfixButton={{name: 'Edit', onPress: _onPress}}
     />
   );
@@ -28,14 +29,13 @@ const Posts = wrapper(function Posts(props: {posts: {id: string}[]}) {
   const _style = createStyle(theme);
 
   return (
-    <FlatList
+    <FramedFlatList
       data={posts}
       keyExtractor={item => item.id}
       renderItem={({item}) => {
         return <Post id={item.id} />;
       }}
       showsVerticalScrollIndicator={false}
-      style={_style.postsCont}
     />
   );
 });
@@ -50,16 +50,8 @@ const DiscoverScreen = wrapper(function DiscoverScreen() {
   );
 });
 
-function createStyle(theme: Judiye.Theme) {
-  const {spacing} = theme;
-
-  return StyleSheet.create({
-    postsCont: {
-      width: '100%',
-      height: '100%',
-      marginBottom: spacing.lg,
-    },
-  });
+function createStyle(_theme: Judiye.Theme) {
+  return StyleSheet.create({});
 }
 
 export default DiscoverScreen;

@@ -162,7 +162,7 @@ function createStyle(theme: Judiye.Theme) {
     },
     postfixButton: {
       backgroundColor: 'transparent',
-      marginLeft: 'auto',
+      marginLeft: spacing.xs,
     },
   });
 }

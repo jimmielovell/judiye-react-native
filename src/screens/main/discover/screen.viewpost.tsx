@@ -5,7 +5,7 @@ import {useTheme} from 'hooks';
 import {Frame} from 'components/layout';
 
 export const ViewPostHeader = wrapper(function ViewPostHeader() {
-  return <AppBar showBackButton backButtonIconName="Clear" title="Post" />;
+  return <AppBar showBackButton title="Post" />;
 });
 
 const ViewPostScreen = wrapper(function ViewPostScreen() {

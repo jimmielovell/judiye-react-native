@@ -8,14 +8,7 @@ import {Card} from 'components/datadisplay';
 import {useNavigation} from '@react-navigation/native';
 
 export const NewChatHeader = wrapper(function NewPostHeader() {
-  return (
-    <AppBar
-      showBackButton
-      backButtonIconName="Clear"
-      title="New chat"
-      search="Search contacts"
-    />
-  );
+  return <AppBar showBackButton title="New chat" search="Search contacts" />;
 });
 
 const data = [

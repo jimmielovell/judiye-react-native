@@ -35,10 +35,15 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
   const _style = createStyle(theme, insets);
   const navigation = useNavigation();
   const [showSearchInput, setShowSearchInput] = useState(false);
+  const [_showBackButton, _setShowBackButton] = useState(showBackButton);
 
   const toggleSearchInput = useCallback(() => {
-    setShowSearchInput(!showSearchInput);
-  }, [showSearchInput]);
+    const toggle = !showSearchInput;
+    setShowSearchInput(toggle);
+    if (!showBackButton) {
+      _setShowBackButton(toggle);
+    }
+  }, [showBackButton, showSearchInput]);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidHide', _e => toggleSearchInput);
@@ -47,11 +52,11 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
 
   const goBack = useCallback(() => {
     if (showSearchInput) {
-      setShowSearchInput(false);
+      toggleSearchInput();
     } else {
       navigation.goBack();
     }
-  }, [navigation, showSearchInput]);
+  }, [navigation, showSearchInput, toggleSearchInput]);
 
   return (
     <Flex
@@ -59,7 +64,7 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
       align="center"
       justify="flex-start"
       style={_style.cont}>
-      {showBackButton && (
+      {_showBackButton && (
         <Button
           appearance="icon"
           name={backButtonIconName || 'ArrowLeft'}
@@ -83,6 +88,9 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
           placeholder={search}
           style={_style.input}
           wrapperStyle={_style.inputWrapper}
+          prefix={{
+            style: _style.searchPrefixButton,
+          }}
           postfix={{
             style: _style.searchPostfixButton,
           }}
@@ -189,9 +197,11 @@ function createStyle(theme: Judiye.Theme, insets: EdgeInsets) {
     },
     input: {
       backgroundColor: colors.surface.secondary,
-      borderRadius: 1000,
       borderWidth: 0,
       height: sizing.height.sm,
+    },
+    searchPrefixButton: {
+      height: sizing.height.sm - sizing.border.width * 2 - 2,
     },
     searchPostfixButton: {
       height: sizing.height.sm - sizing.border.width * 2 - 2,

@@ -1,9 +1,8 @@
-import {GestureResponderEvent, StyleSheet} from 'react-native';
+import {GestureResponderEvent, Platform, StyleSheet} from 'react-native';
 import {Flex} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import {Text} from 'components/typography';
-import {Card, Counter} from 'components/datadisplay';
-import FastImage from 'react-native-fast-image';
+import {Card, Counter, Image} from 'components/datadisplay';
 import {useTheme} from 'hooks';
 import {Button, Pressable} from 'components/buttons';
 import {useCallback} from 'react';
@@ -184,7 +183,7 @@ const Media = wrapper(function Media(props: MediaProps) {
 
   if (type === 'image') {
     return (
-      <FastImage
+      <Image
         source={{
           uri: url,
         }}
@@ -212,7 +211,7 @@ const Reaction = wrapper(function Reaction(props: any) {
       icon={{
         name,
         color: color || theme.colors.text.secondary,
-        size: 22,
+        size: 20,
         style: _style.reactionIcon,
       }}
       style={[_style.reaction, style]}
@@ -243,13 +242,17 @@ const Post = wrapper(function Post(props: PostProps) {
           name: 'MoreHorizontal',
           color: theme.colors.text.secondary,
         }}
+        ripple={false}
+        style={_style.card}
       />
-      <Text style={_style.postDescription}>{description}</Text>
+      <Text size="body" style={_style.postDescription}>
+        {description}
+      </Text>
 
       <Flex align="flex-start" style={_style.mediaCont}>
         <Media {...media[0]} />
       </Flex>
-      <Flex direction="row" justify="space-around" style={_style.reactions}>
+      <Flex direction="row" justify="space-between" style={_style.reactions}>
         <Reaction name="ThumbsUp" counter="1,200" />
         <Reaction name="Comment" counter="12" />
         <Reaction name="Share" />
@@ -260,31 +263,38 @@ const Post = wrapper(function Post(props: PostProps) {
 });
 
 function createStyle(theme: Judiye.Theme) {
-  const {colors, spacing, sizing, shape} = theme;
+  const {colors, spacing, sizing} = theme;
 
   return StyleSheet.create({
     post: {
       paddingTop: spacing.nm,
       paddingBottom: spacing.xs,
-      paddingHorizontal: spacing.sm,
       width: '100%',
     },
-    postDescription: {
-      marginVertical: spacing.xs,
-      width: '100%',
+    card: {
       paddingHorizontal: spacing.sm,
-      lineHeight: 24,
+      marginBottom: spacing.xs,
+    },
+    postDescription: {
+      width: '100%',
+      marginBottom: spacing.xs,
+      paddingHorizontal: spacing.sm,
       letterSpacing: 0.2,
-      fontWeight: '300',
+      ...Platform.select({
+        ios: {
+          lineHeight: 20,
+        },
+        android: {
+          lineHeight: 24,
+        },
+      }),
     },
     mediaCont: {
       borderColor: colors.border.secondary,
       borderWidth: 0.2,
-      borderRadius: shape.radius.sm,
       width: '100%',
     },
     media: {
-      borderRadius: shape.radius.nm - 2,
       width: '100%',
       height: 300,
     },
@@ -292,6 +302,7 @@ function createStyle(theme: Judiye.Theme) {
       width: '100%',
       height: sizing.height.lg,
       position: 'relative',
+      paddingHorizontal: spacing.sm,
     },
     reaction: {
       borderRadius: 0,

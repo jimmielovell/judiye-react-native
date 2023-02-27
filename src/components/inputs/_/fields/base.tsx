@@ -269,10 +269,9 @@ const Field = forwardRef<InputHandle, ValidatableField<FieldProps>>(
       ...Platform.select({
         ios: {
           lineHeight: fontSize,
-          paddingBottom: 0.93,
+          paddingTop: 2,
         },
         android: {
-          // lineHeight: fontSize! * 1.2,
           paddingBottom: 9.5,
         },
       }),

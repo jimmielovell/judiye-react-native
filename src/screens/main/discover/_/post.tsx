@@ -240,7 +240,7 @@ const Post = wrapper(function Post(props: PostProps) {
         {...owner}
         button={{
           appearance: 'icon',
-          name: 'MoreVertical',
+          name: 'MoreHorizontal',
           color: theme.colors.text.secondary,
         }}
       />
@@ -264,9 +264,8 @@ function createStyle(theme: Judiye.Theme) {
 
   return StyleSheet.create({
     post: {
-      borderBottomColor: colors.surface.secondary,
-      borderBottomWidth: 0.5,
       paddingTop: spacing.nm,
+      paddingBottom: spacing.xs,
       paddingHorizontal: spacing.sm,
       width: '100%',
     },
@@ -307,7 +306,7 @@ function createStyle(theme: Judiye.Theme) {
     counter: {
       marginTop: spacing.xxs,
       position: 'absolute',
-      left: sizing.width.nm / 2 + 10,
+      left: sizing.width.nm / 2 + spacing.nm,
     },
   });
 }

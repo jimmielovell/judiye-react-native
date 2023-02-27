@@ -85,7 +85,19 @@ export function Google(props: SvgProps) {
     </CSVG>
   );
 }
-
+export function ArrowBackIos(props: SvgProps) {
+  const {colors} = useTheme();
+  return (
+    <CSVG {...props}>
+      <Path
+        fill={colors.primary}
+        stroke={colors.primary}
+        strokeWidth="0.1"
+        d="M16.62 2.99c-.49-.49-1.28-.49-1.77 0L6.54 11.3c-.39.39-.39 1.02 0 1.41l8.31 8.31c.49.49 1.28.49 1.77 0s.49-1.28 0-1.77L9.38 12l7.25-7.25c.48-.48.48-1.28-.01-1.76z"
+      />
+    </CSVG>
+  );
+}
 export function ArrowLeft(props: SvgProps) {
   return (
     <CSVG {...props}>
@@ -106,6 +118,18 @@ export function Bell(props: SvgProps) {
   return (
     <CSVG {...props}>
       <Path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <Path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </CSVG>
+  );
+}
+export function BellFilled(props: SvgProps) {
+  const {colors} = useTheme();
+  return (
+    <CSVG {...props}>
+      <Path
+        fill={colors.primary}
+        d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+      />
       <Path d="M13.73 21a2 2 0 0 1-3.46 0" />
     </CSVG>
   );

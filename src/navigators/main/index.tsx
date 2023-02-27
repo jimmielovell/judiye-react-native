@@ -1,12 +1,26 @@
+import {useCallback} from 'react';
+import {Platform} from 'react-native';
 import {
   BottomTabBarProps,
   BottomTabHeaderProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
+import {
+  createNativeStackNavigator,
+  NativeStackHeaderProps,
+} from '@react-navigation/native-stack';
 import BottomTabBar from 'screens/main/bottom-tab';
-import {useCallback} from 'react';
-import {HomeHeader, HomeScreen} from 'screens/main/home';
-import {CalendarHeader, CalendarScreen} from 'screens/main/calendar';
+
+import {
+  CalendarHeader,
+  CalendarScreen,
+  ColleaguesHeader,
+  ColleaguesScreen,
+  ConnectHeader,
+  ConnectScreen,
+  HomeHeader,
+  HomeScreen,
+} from 'screens/main/home';
 import {
   DiscoverHeader,
   DiscoverScreen,
@@ -24,13 +38,9 @@ import {
   NewChatScreen,
 } from 'screens/main/chats';
 import {
-  createNativeStackNavigator,
-  NativeStackHeaderProps,
-} from '@react-navigation/native-stack';
-import ColleaguesScreen, {
-  ColleaguesHeader,
-} from 'screens/main/home/screen.colleagues';
-import ConnectScreen, {ConnectHeader} from 'screens/main/home/screen.connect';
+  NotificationsHeader,
+  NotificationsScreen,
+} from 'screens/main/notifications';
 
 const Tab = createBottomTabNavigator();
 
@@ -43,8 +53,8 @@ function MainTabs() {
     (props: BottomTabHeaderProps) => <HomeHeader {...props} />,
     [],
   );
-  const _CalendarHeader = useCallback(
-    (props: BottomTabHeaderProps) => <CalendarHeader {...props} />,
+  const _NotificationsHeader = useCallback(
+    (props: BottomTabHeaderProps) => <NotificationsHeader {...props} />,
     [],
   );
   const _DiscoverHeader = useCallback(
@@ -66,18 +76,18 @@ function MainTabs() {
         }}
       />
       <Tab.Screen
-        name="Calendar"
-        component={CalendarScreen}
-        options={{
-          header: _CalendarHeader,
-          headerShown: true,
-        }}
-      />
-      <Tab.Screen
         name="Discover"
         component={DiscoverScreen}
         options={{
           header: _DiscoverHeader,
+          headerShown: true,
+        }}
+      />
+      <Tab.Screen
+        name="Bell"
+        component={NotificationsScreen}
+        options={{
+          header: _NotificationsHeader,
           headerShown: true,
         }}
       />
@@ -96,12 +106,18 @@ function MainTabs() {
 const Stack = createNativeStackNavigator();
 
 export default function HomeNavigator() {
+  const platform = Platform.OS;
+
   const _ColleaguesHeader = useCallback(
     (props: NativeStackHeaderProps) => <ColleaguesHeader {...props} />,
     [],
   );
   const _ConnectHeader = useCallback(
     (props: NativeStackHeaderProps) => <ConnectHeader {...props} />,
+    [],
+  );
+  const _CalendarHeader = useCallback(
+    (props: NativeStackHeaderProps) => <CalendarHeader {...props} />,
     [],
   );
   const _NewPostHeader = useCallback(
@@ -153,6 +169,15 @@ export default function HomeNavigator() {
             animation: 'slide_from_right',
           }}
         />
+        <Stack.Screen
+          name="CalendarScreen"
+          component={CalendarScreen}
+          options={{
+            header: _CalendarHeader,
+            headerShown: true,
+            animation: 'slide_from_right',
+          }}
+        />
       </Stack.Group>
 
       {/* Discover */}
@@ -172,7 +197,7 @@ export default function HomeNavigator() {
           options={{
             header: _ViewPostHeader,
             headerShown: true,
-            presentation: 'modal',
+            presentation: platform === 'ios' ? 'fullScreenModal' : 'modal',
           }}
         />
       </Stack.Group>
@@ -194,7 +219,7 @@ export default function HomeNavigator() {
           options={{
             header: _InboxHeader,
             headerShown: true,
-            presentation: 'modal',
+            presentation: platform === 'ios' ? 'fullScreenModal' : 'modal',
           }}
         />
       </Stack.Group>

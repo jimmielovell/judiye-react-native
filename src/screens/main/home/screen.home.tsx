@@ -9,15 +9,24 @@ import {useNavigation} from '@react-navigation/native';
 export const HomeHeader = wrapper(function HomeScreen() {
   const navigation = useNavigation();
 
-  const navigateToColleaguesScreen = useCallback(() => {
-    navigation.navigate('ColleaguesScreen');
-  }, [navigation]);
+  const navigateToScreen = useCallback(
+    (screenName: String) => {
+      navigation.navigate(screenName);
+    },
+    [navigation],
+  );
 
   return (
     <AppBar
       showAvatar
-      firstPostfixButton={{name: 'Bell'}}
-      secondPostfixButton={{name: 'Users', onPress: navigateToColleaguesScreen}}
+      firstPostfixButton={{
+        name: 'Calendar',
+        onPress: () => navigateToScreen('CalendarScreen'),
+      }}
+      secondPostfixButton={{
+        name: 'Users',
+        onPress: () => navigateToScreen('ColleaguesScreen'),
+      }}
     />
   );
 });

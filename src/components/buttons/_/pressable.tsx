@@ -80,11 +80,11 @@ const Pressable = forwardRef<View, PressableProps>(function Pressable(
       ref={ref}
       style={[computedStyles, _style.button, style]}
       onPressIn={_onPressIn}
-      on
       onPressOut={_onPressOut}
       accessibilityLabel="Pressable"
       accessibilityRole="button"
-      {...rest}>
+      {...rest}
+      android_ripple={undefined}>
       {ripple && <Animated.View style={[_style.ripple, animatedRippleStyle]} />}
       {children}
     </Touchable>

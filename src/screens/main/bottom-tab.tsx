@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import {useTheme} from '@react-navigation/native';
 import {Flex} from 'components/layout';
@@ -9,15 +10,20 @@ export default function BottomTabBar({
   descriptors,
   navigation,
 }: BottomTabBarProps) {
+  const insets = useSafeAreaInsets();
   const theme = useTheme();
   const _styles = createStyle(theme);
+
+  const safeAreaViewStyle = {
+    paddingBottom: insets.bottom,
+  };
 
   return (
     <Flex
       direction="row"
       justify="space-between"
       align="center"
-      style={_styles.cont}>
+      style={[_styles.cont, safeAreaViewStyle]}>
       {state.routes.map((route, index) => {
         const {options} = descriptors[route.key];
         const label =
@@ -76,8 +82,7 @@ function createStyle(theme: Judiye.Theme) {
   return StyleSheet.create({
     cont: {
       backgroundColor: colors.background,
-      paddingTop: spacing.sm,
-      paddingBottom: spacing.sm,
+      paddingTop: spacing.xs,
       paddingHorizontal: spacing.sm,
     },
     tab: {

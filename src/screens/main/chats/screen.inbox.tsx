@@ -1,6 +1,6 @@
 // import {useNavigation} from '@react-navigation/native';
 import {StyleSheet} from 'react-native';
-import {Flex} from 'components/layout';
+import {Flex, Frame} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import AppBar from '../app-bar';
 import {useTheme} from 'hooks';
@@ -29,7 +29,7 @@ const InputArea = wrapper(function InputArea() {
       <Button
         appearance="icon"
         name="EmojiSmile"
-        size={28}
+        size={24}
         color={theme.colors.text.secondary}
         style={_style.emojiSmileButton}
         ripple
@@ -45,7 +45,7 @@ const InputArea = wrapper(function InputArea() {
       <Button
         appearance="icon"
         name="Send"
-        size={24}
+        size={20}
         color={theme.colors.background}
         style={_style.sendButton}
         ripple
@@ -66,10 +66,10 @@ const InboxScreen = wrapper(function ChatsScreen() {
   const _style = createStyle(theme);
 
   return (
-    <Flex direction="column" justify="flex-end" style={_style.inbox}>
+    <Frame bottomTab={false} justify="flex-end" style={_style.inbox}>
       <MessageArea />
       <InputArea />
-    </Flex>
+    </Frame>
   );
 });
 

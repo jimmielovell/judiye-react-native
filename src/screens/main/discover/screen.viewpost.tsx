@@ -5,21 +5,14 @@ import {useTheme} from 'hooks';
 import {Frame} from 'components/layout';
 
 export const ViewPostHeader = wrapper(function ViewPostHeader() {
-  return (
-    <AppBar
-      showBackButton
-      backButtonIconName="Clear"
-      title="New post"
-      secondPostfixButton={{name: 'Edit'}}
-    />
-  );
+  return <AppBar showBackButton backButtonIconName="Clear" title="Post" />;
 });
 
 const ViewPostScreen = wrapper(function ViewPostScreen() {
   const theme = useTheme();
   const _style = createStyle(theme);
 
-  return <Frame />;
+  return <Frame bottomTab={false} />;
 });
 
 function createStyle(theme: Judiye.Theme) {

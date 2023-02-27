@@ -1,4 +1,11 @@
-import {ReactNode, RefObject, useMemo, useRef, useState} from 'react';
+import {
+  ReactNode,
+  RefObject,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   GestureResponderEvent,
   LayoutChangeEvent,
@@ -67,35 +74,51 @@ const Tabs = function Tabs(props: TabsProps) {
   const indicatorLeft = useSharedValue(0);
   const indicatorWidth = useSharedValue(0);
   const tabLayoutRefs = useRef<ILayout[]>([]);
+  const multiplier = useRef(0);
 
   const prevContentOffsetX = useRef(0);
-  const tabSpacingRef = useRef(0);
+
+  const setIndicatorWidth = useCallback(
+    (width: number) => {
+      indicatorWidth.value = withTiming(width);
+    },
+    [indicatorWidth],
+  );
+
+  const animateIndicator = useCallback(
+    (index: number) => {
+      const {left, width} = tabLayoutRefs.current[index];
+      const spacing =
+        left - (tabLayoutRefs.current[0].left + tabLayoutRefs.current[0].width);
+      const offset = spacing / screenWidth;
+      const indicatorOffset = offset * screenWidth;
+
+      indicatorLeft.value = withTiming(indicatorOffset);
+    },
+    [indicatorLeft, screenWidth],
+  );
 
   const _labels = useMemo(() => {
     return labels?.map((label, i) => {
       return (
         <Tab
           key={'tab-' + i}
-          onPress={_e =>
-            scrollRef.current?.scrollToIndex({index: i, animated: true})
-          }
+          onPress={_e => {
+            scrollRef.current?.scrollToIndex({index: i, animated: true});
+            animateIndicator(i);
+          }}
           onLayout={e => {
             const {x, width} = e.nativeEvent.layout;
             tabLayoutRefs.current[i] = {left: x, width};
 
             if (i === 0) {
-              indicatorWidth.value = withSpring(width, {
-                damping: 50,
-                stiffness: 50,
-                // Increase the animation speed
-                velocity: 1,
-                restSpeedThreshold: 0.1,
-              });
+              setIndicatorWidth(width);
             } else if (i === 1) {
-              tabSpacingRef.current =
+              const spacing =
                 x -
-                tabLayoutRefs.current[0].left -
-                tabLayoutRefs.current[0].width;
+                (tabLayoutRefs.current[0].left +
+                  tabLayoutRefs.current[0].width);
+              multiplier.current = spacing / screenWidth;
             }
           }}
           active={activeIndex === i}>
@@ -103,7 +126,7 @@ const Tabs = function Tabs(props: TabsProps) {
         </Tab>
       );
     });
-  }, [activeIndex, indicatorWidth, labels]);
+  }, [activeIndex, animateIndicator, labels, screenWidth, setIndicatorWidth]);
 
   const [_children, data] = useMemo(() => {
     const __children = Array.isArray(children) ? children : [children];
@@ -147,38 +170,30 @@ const Tabs = function Tabs(props: TabsProps) {
         showsHorizontalScrollIndicator={false}
         decelerationRate="fast"
         directionalLockEnabled={true}
-        disableIntervalMomentum
+        disableIntervalMomentum={true}
+        snapToAlignment="start"
         snapToInterval={screenWidth}
         onScroll={e => {
           const {contentOffset} = e.nativeEvent;
-          if (
-            contentOffset.x === prevContentOffsetX.current ||
-            contentOffset.x < 0
-          ) {
-            return;
-          }
+          // if (
+          //   contentOffset.x === prevContentOffsetX.current ||
+          //   contentOffset.x < 0
+          // ) {
+          //   return;
+          // }
 
-          const multiplier = contentOffset.x / (screenWidth * 2);
+          // let delta =
+          //   (contentOffset.x - prevContentOffsetX.current) * multiplier.current;
 
-          if (contentOffset.x > prevContentOffsetX.current) {
-            indicatorWidth.value = withSpring(
-              tabLayoutRefs.current[activeIndex].width +
-                tabSpacingRef.current * multiplier,
-              {
-                damping: 50,
-                stiffness: 50,
-              },
-            );
-          } else {
-            indicatorWidth.value = withTiming(indicatorWidth.value + 1, {
-              duration: 30,
-            });
-          }
+          // if (delta < 0) {
+          //   delta = 0;
+          // }
+
+          // setIndicatorWidth(delta);
 
           const index = Math.round(contentOffset.x / screenWidth);
           if (index !== activeIndex) {
             setActiveIndex(index);
-            // indicatorWidth.value = tabLayoutRefs.current[index].width;
           }
 
           prevContentOffsetX.current = contentOffset.x;
@@ -222,7 +237,7 @@ function createStyle(_theme: Judiye.Theme, screenWidth?: number) {
     indicator: {
       backgroundColor: colors.primary,
       borderRadius: 2,
-      height: 3,
+      height: 2,
       left: 0,
       bottom: 0,
       position: 'absolute',

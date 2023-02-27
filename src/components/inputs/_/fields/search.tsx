@@ -65,7 +65,14 @@ const SearchField = forwardRef<InputHandle, FieldProps>(function SearchField(
       autoCorrect={true}
       onEndEditing={_onEndEditing}
       onChangeText={_onChangeText}
-      prefix={prefix}
+      prefix={{
+        // @ts-ignore
+        appearance: 'icon',
+        name: 'Search',
+        color: theme.colors.text.secondary,
+        ...prefix,
+        style: [_style.searchIcon, prefix?.style],
+      }}
       postfix={{
         ...postfix,
         animated: true,
@@ -89,6 +96,9 @@ function createStyle(theme: Judiye.Theme) {
       width: sizing.height.nm - 2,
       paddingRight: 0,
       paddingLeft: 0,
+    },
+    searchIcon: {
+      zIndex: 10,
     },
   });
 }

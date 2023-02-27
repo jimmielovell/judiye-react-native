@@ -19,11 +19,15 @@ interface State {
   errorInfo: ErrorInfo | null;
 }
 
-class ErrorBoundary extends Component<{children: ReactNode}, State> {
+interface Props {
+  children: ReactNode;
+  fallback?: ReactNode;
+}
+
+class ErrorBoundary extends Component<Props, State> {
   state: State = {error: null, errorInfo: null};
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Catch errors in any components below and re-render with error message
     this.setState({
       error: error,
       errorInfo: errorInfo,
@@ -33,11 +37,13 @@ class ErrorBoundary extends Component<{children: ReactNode}, State> {
 
   render() {
     if (this.state.error && this.state.errorInfo) {
-      return (
+      return this.props.fallback ? (
+        this.props.fallback
+      ) : (
         <FallbackUI error={this.state.error} errorInfo={this.state.errorInfo} />
       );
     }
-    // Normally, just render children
+
     return this.props.children;
   }
 }

@@ -15,7 +15,6 @@ export const DiscoverHeader = wrapper(function DiscoverHeader() {
 
   return (
     <AppBar
-      showAvatar
       title="Discover"
       search="Search..."
       secondPostfixButton={{name: 'Edit', onPress: _onPress}}

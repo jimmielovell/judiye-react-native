@@ -8,7 +8,6 @@ export const NewPostHeader = wrapper(function NewPostHeader() {
   return (
     <AppBar
       showBackButton
-      backButtonIconName="Clear"
       title="New post"
       secondPostfixButton={{name: 'Edit'}}
     />

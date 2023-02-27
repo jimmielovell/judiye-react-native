@@ -3,6 +3,7 @@ import {useTheme} from 'hooks';
 import {useMemo} from 'react';
 import {ViewStyle} from 'react-native';
 import FastImage, {ImageStyle, Source} from 'react-native-fast-image';
+import Image from './image';
 
 export type AvatarProps = AnchorProps & {
   size?: number | string;
@@ -54,7 +55,7 @@ export default function Avatar(props: AvatarProps) {
 
   return source ? (
     <Anchor style={[_style, _bgStyle, style]} {...rest}>
-      <FastImage
+      <Image
         source={source}
         accessible
         accessibilityLabel="Avatar"

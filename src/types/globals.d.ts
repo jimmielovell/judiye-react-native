@@ -80,10 +80,7 @@ declare global {
 
       // The default Watfoe font used across all devices
       interface Fonts {
-        family: {
-          ios: FontFamily;
-          android: FontFamily;
-        };
+        family: FontFamily;
 
         size: {
           title: number;

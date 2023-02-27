@@ -1,4 +1,4 @@
-import {ColorValue, Platform} from 'react-native';
+import {ColorValue} from 'react-native';
 import {
   FontAppearance,
   FontSizeName,
@@ -54,7 +54,6 @@ export function useFontFamily(
   weight?: FontWeight,
   size?: FontVariant | number | string,
 ): [string | undefined, FontWeight | undefined] {
-  const platform = Platform.OS as 'android' | 'ios';
   const {fonts} = useTheme();
   // First try to resolve the fontWeight
   let _weight = weight;
@@ -67,8 +66,8 @@ export function useFontFamily(
       _weight = localWeight;
     }
 
-    if (variant && fonts.family[platform][variant]) {
-      return [fonts.family[platform][variant], localWeight];
+    if (variant && fonts.family[variant]) {
+      return [fonts.family[variant], localWeight];
     }
   }
 
@@ -76,10 +75,7 @@ export function useFontFamily(
     _weight = styleWeight;
   }
 
-  console.log(styleWeight, weight, size);
-  console.log(fonts.family[platform].regular, _weight);
-  console.log('------------------');
-  return [fonts.family[platform].regular, _weight];
+  return [fonts.family.regular, _weight];
 }
 
 export function useFontSize(

@@ -2,6 +2,7 @@ import {ReactNode, RefObject, useMemo, useRef, useState} from 'react';
 import {
   GestureResponderEvent,
   LayoutChangeEvent,
+  Platform,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -206,7 +207,7 @@ function createStyle(_theme: Judiye.Theme, screenWidth?: number) {
     buttonText: {
       color: colors.primary,
       fontSize: fonts.size.description,
-      fontWeight: 'bold',
+      fontWeight: Platform.OS === 'ios' ? '500' : '700',
     },
     outerWrapper: {
       borderBottomColor: colors.surface.secondary,

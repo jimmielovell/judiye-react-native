@@ -189,7 +189,6 @@ function createStyle(theme: Judiye.Theme, insets: EdgeInsets) {
     },
     input: {
       backgroundColor: colors.surface.secondary,
-      borderRadius: 1000,
       borderWidth: 0,
       height: sizing.height.sm,
     },

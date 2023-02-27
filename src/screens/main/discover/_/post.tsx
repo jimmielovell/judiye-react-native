@@ -1,4 +1,4 @@
-import {GestureResponderEvent, StyleSheet} from 'react-native';
+import {GestureResponderEvent, Platform, StyleSheet} from 'react-native';
 import {Flex} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import {Text} from 'components/typography';
@@ -244,7 +244,9 @@ const Post = wrapper(function Post(props: PostProps) {
           color: theme.colors.text.secondary,
         }}
       />
-      <Text style={_style.postDescription}>{description}</Text>
+      <Text size="body" style={_style.postDescription}>
+        {description}
+      </Text>
 
       <Flex align="flex-start" style={_style.mediaCont}>
         <Media {...media[0]} />
@@ -273,9 +275,15 @@ function createStyle(theme: Judiye.Theme) {
       marginVertical: spacing.xs,
       width: '100%',
       paddingHorizontal: spacing.sm,
-      lineHeight: 24,
       letterSpacing: 0.2,
-      fontWeight: '300',
+      ...Platform.select({
+        ios: {
+          lineHeight: 20,
+        },
+        android: {
+          lineHeight: 24,
+        },
+      }),
     },
     mediaCont: {
       borderColor: colors.border.secondary,

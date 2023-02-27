@@ -15,7 +15,7 @@ export const InboxHeader = wrapper(function InboxHeader() {
       showBackButton
       showAvatar
       title="Jimmie Lovell"
-      firstPostfixButton={{name: 'Phone'}}
+      secondPostfixButton={{name: 'Phone'}}
     />
   );
 });
@@ -25,11 +25,12 @@ const InputArea = wrapper(function InputArea() {
   const _style = createStyle(theme);
 
   return (
-    <Flex style={_style.inputArea}>
+    <Flex direction="row" align="center" style={_style.inputArea}>
       <Button
         appearance="icon"
         name="EmojiSmile"
-        size={24}
+        size={28}
+        color={theme.colors.text.secondary}
         style={_style.emojiSmileButton}
         ripple
       />
@@ -44,7 +45,7 @@ const InputArea = wrapper(function InputArea() {
       <Button
         appearance="icon"
         name="Send"
-        size={20}
+        size={24}
         color={theme.colors.background}
         style={_style.sendButton}
         ripple
@@ -73,7 +74,7 @@ const InboxScreen = wrapper(function ChatsScreen() {
 });
 
 function createStyle(theme: Judiye.Theme) {
-  const {colors, sizing, spacing} = theme;
+  const {colors, spacing} = theme;
 
   return StyleSheet.create({
     inbox: {
@@ -81,29 +82,35 @@ function createStyle(theme: Judiye.Theme) {
       height: '100%',
     },
     inputArea: {
-      width: '100%',
       backgroundColor: colors.background,
+      width: '100%',
       position: 'relative',
+      paddingVertical: spacing.xs,
+      paddingHorizontal: spacing.sm,
     },
     input: {
+      backgroundColor: 'transparent',
       borderWidth: 0,
-      paddingLeft: sizing.height.lg + spacing.nm,
+      paddingLeft: 0,
+      paddingRight: 0,
+      paddingTop: 0,
+      paddingBottom: 0,
     },
     inputWrapper: {
-      width: '100%',
+      flex: 1,
       marginBottom: 0,
     },
     emojiSmileButton: {
       backgroundColor: 'transparent',
-      position: 'absolute',
-      bottom: spacing.sm + 1,
-      left: spacing.nm,
+      alignSelf: 'flex-end',
+      marginBottom: 1,
+      zIndex: 1,
     },
     sendButton: {
       backgroundColor: colors.primary,
-      position: 'absolute',
-      bottom: spacing.sm + 1,
-      right: spacing.nm,
+      alignSelf: 'flex-end',
+      marginBottom: 1,
+      paddingLeft: spacing.xxs,
     },
     messageArea: {
       backgroundColor: colors.surface.secondary,

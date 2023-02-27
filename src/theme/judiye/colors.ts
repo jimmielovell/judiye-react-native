@@ -4,7 +4,7 @@ const light: Judiye.Theme.Colors = {
   primary: colors.black.primary,
   background: colors.white.primary,
 
-  ripple: 'rgba(0, 0, 0, 0.06)',
+  ripple: 'rgba(0, 0, 0, 0.03)',
 
   // The scrim background that appears below modals and expanded navigation menus.
   scrim: 'rgba(0, 0, 0, 0.610)',
@@ -46,7 +46,7 @@ const dark: Judiye.Theme.Colors = {
   primary: colors.black.primary,
   background: colors.white.primary,
 
-  ripple: 'rgba(0, 0, 0, 0.06)',
+  ripple: 'rgba(0, 0, 0, 0.03)',
 
   // The scrim background that appears below modals and expanded navigation menus.
   scrim: 'rgba(0, 0, 0, 0.610)',

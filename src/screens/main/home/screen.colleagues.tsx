@@ -19,6 +19,7 @@ export const ColleaguesHeader = wrapper(function ColleaguesHeader() {
     <AppBar
       showBackButton
       title="Colleagues"
+      search="Search colleagues"
       secondPostfixButton={{name: 'UserPlus', onPress: navigateToConnectScreen}}
     />
   );
@@ -144,7 +145,7 @@ const ColleaguesScreen = wrapper(function ColleaguesScreen() {
   const _style = createStyle(theme);
 
   return (
-    <Frame>
+    <Frame style={_style.frame}>
       <FlatList
         data={data}
         keyExtractor={item => item.id}
@@ -162,11 +163,15 @@ function createStyle(theme: Judiye.Theme) {
   const {spacing} = theme;
 
   return StyleSheet.create({
+    frame: {
+      paddingHorizontal: 0,
+    },
     cont: {
       width: '100%',
     },
     card: {
-      marginBottom: spacing.md,
+      paddingVertical: spacing.nm,
+      paddingHorizontal: spacing.sm,
     },
   });
 }

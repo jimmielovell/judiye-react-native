@@ -1,11 +1,17 @@
 // import {useNavigation} from '@react-navigation/native';
-import {StyleSheet} from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+} from 'react-native';
 import {Flex, Frame} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import AppBar from '../app-bar';
 import {useTheme} from 'hooks';
 import {Input} from 'components/inputs';
 import {Button} from 'components/buttons';
+import {useCallback} from 'react';
 
 export const InboxHeader = wrapper(function InboxHeader() {
   // const navigation = useNavigation();
@@ -15,7 +21,7 @@ export const InboxHeader = wrapper(function InboxHeader() {
       showBackButton
       showAvatar
       title="Jimmie Lovell"
-      secondPostfixButton={{name: 'Phone'}}
+      firstPostfixButton={{name: 'Phone'}}
     />
   );
 });
@@ -58,14 +64,30 @@ const MessageArea = wrapper(function MessageArea() {
   const theme = useTheme();
   const _style = createStyle(theme);
 
-  return <Flex style={_style.messageArea} />;
+  const hideKeyboard = useCallback(() => {
+    if (Keyboard.isVisible()) {
+      Keyboard.dismiss();
+    }
+  }, []);
+
+  return <Flex style={_style.messageArea} onTouchEnd={hideKeyboard} />;
 });
 
-const InboxScreen = wrapper(function ChatsScreen() {
+const InboxScreen = wrapper(function InboxScreen() {
   const theme = useTheme();
   const _style = createStyle(theme);
 
-  return (
+  return Platform.OS === 'ios' ? (
+    <KeyboardAvoidingView
+      behavior="height"
+      style={_style.kAView}
+      keyboardVerticalOffset={70}>
+      <Frame bottomTab={false} justify="flex-end" style={_style.inbox}>
+        <MessageArea />
+        <InputArea />
+      </Frame>
+    </KeyboardAvoidingView>
+  ) : (
     <Frame bottomTab={false} justify="flex-end" style={_style.inbox}>
       <MessageArea />
       <InputArea />
@@ -77,16 +99,34 @@ function createStyle(theme: Judiye.Theme) {
   const {colors, spacing} = theme;
 
   return StyleSheet.create({
+    kAView: {
+      flex: 1,
+      width: '100%',
+    },
     inbox: {
       width: '100%',
       height: '100%',
+      ...Platform.select({
+        ios: {
+          backgroundColor: colors.surface.secondary,
+          paddingHorizontal: spacing.sm,
+        },
+      }),
     },
     inputArea: {
-      backgroundColor: colors.background,
       width: '100%',
       position: 'relative',
-      paddingVertical: spacing.xs,
-      paddingHorizontal: spacing.sm,
+      ...Platform.select({
+        ios: {
+          backgroundColor: colors.background,
+          borderRadius: 1000,
+          padding: spacing.xs,
+        },
+        android: {
+          paddingVertical: spacing.xs,
+          paddingHorizontal: spacing.sm,
+        },
+      }),
     },
     input: {
       backgroundColor: 'transparent',
@@ -113,9 +153,14 @@ function createStyle(theme: Judiye.Theme) {
       paddingLeft: spacing.xxs,
     },
     messageArea: {
-      backgroundColor: colors.surface.secondary,
       width: '100%',
       flex: 1,
+      ...Platform.select({
+        android: {
+          backgroundColor: colors.surface.secondary,
+          padding: spacing.xs,
+        },
+      }),
     },
   });
 }

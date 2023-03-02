@@ -4,12 +4,6 @@ import {Platform} from 'react-native';
 const fonts: Watfoe.Theme.Fonts = {
   ...Platform.select({
     ios: {
-      family: {
-        light: 'Helvetica Neue',
-        regular: 'Helvetica Neue',
-        medium: 'Helvetica Neue',
-        bold: 'Helvetica Neue',
-      },
       size: {
         title: 18,
         subtitle: 16,
@@ -21,12 +15,6 @@ const fonts: Watfoe.Theme.Fonts = {
     },
 
     android: {
-      family: {
-        light: 'Roboto',
-        regular: 'Roboto',
-        medium: 'Roboto',
-        bold: 'Roboto',
-      },
       size: {
         title: 21,
         subtitle: 18,
@@ -37,6 +25,7 @@ const fonts: Watfoe.Theme.Fonts = {
       },
     },
   }),
+  family: 'System',
   weight: {
     title: '700',
     subtitle: '600',

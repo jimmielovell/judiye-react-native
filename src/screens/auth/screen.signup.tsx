@@ -1,4 +1,4 @@
-import {Flex, Frame} from 'components/layout';
+import {Flex} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import {Form, Input} from 'components/inputs';
 import {Anchor} from 'components/buttons';
@@ -6,10 +6,10 @@ import {useRef} from 'react';
 import {StyleSheet} from 'react-native';
 import {useTheme} from 'hooks';
 import {BackdropHandle} from 'components/feedback';
-import ScreenTitle from './_/screen-title';
 import {Text} from 'components/typography';
 import AgeRestrictionDialog from './_/age-restriction-dialog';
 import {Icon} from 'components/datadisplay';
+import AuthFrame from './_/auth-frame';
 
 export type SignupScreenParamList = {
   SignupScreen: undefined;
@@ -25,9 +25,7 @@ const SignupScreen = wrapper(function SignupScreen() {
   };
 
   return (
-    <Frame>
-      <ScreenTitle>Create account</ScreenTitle>
-
+    <AuthFrame subTitle="Create account">
       <Form onSubmit={onSubmit}>
         <Input
           type="name"
@@ -73,7 +71,7 @@ const SignupScreen = wrapper(function SignupScreen() {
       <Icon name="Watfoe" size={70} />
 
       <AgeRestrictionDialog ref={ageRestDialogRef} />
-    </Frame>
+    </AuthFrame>
   );
 });
 

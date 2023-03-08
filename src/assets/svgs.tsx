@@ -13,12 +13,12 @@ import {useTheme} from 'hooks';
 export interface SvgProps {
   size?: number | string;
   color?: string;
+  viewBox?: string;
 }
 
 type CSvgProps = SvgProps & {
   stroke?: string;
   children: ReactNode;
-  viewBox?: string;
 };
 
 function CSVG({size = 24, color, viewBox, ...rest}: CSvgProps) {
@@ -178,6 +178,13 @@ export function CalendarFilled(props: SvgProps) {
     </CSVG>
   );
 }
+export function Check(props: SvgProps) {
+  return (
+    <CSVG {...props}>
+      <Polyline points="20 6 9 17 4 12" />
+    </CSVG>
+  );
+}
 export function Comment(props: SvgProps) {
   return (
     <CSVG {...props}>
@@ -238,7 +245,6 @@ export function DiscoverFilled(props: SvgProps) {
 export function Edit(props: SvgProps) {
   return (
     <CSVG {...props}>
-      <Path d="M12 20h9" />
       <Path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
     </CSVG>
   );

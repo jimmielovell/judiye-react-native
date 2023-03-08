@@ -1,4 +1,3 @@
-import {Frame} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import {Form, Input} from 'components/inputs';
 import {Anchor, Button} from 'components/buttons';
@@ -8,7 +7,7 @@ import {useTheme} from 'hooks';
 import {useStore} from 'store';
 import {BackdropHandle} from 'components/feedback';
 import {Email, Phone} from 'domains';
-import ScreenTitle from './_/screen-title';
+import AuthFrame from './_/auth-frame';
 
 export type OnboardScreenParamList = {
   OnboardScreen: undefined;
@@ -35,9 +34,7 @@ const OnboardScreen = wrapper(function OnboardScreen() {
   };
 
   return (
-    <Frame>
-      <ScreenTitle>Create account</ScreenTitle>
-
+    <AuthFrame subTitle="Create account">
       <Form onSubmit={onSubmit}>
         <Input
           type="name"
@@ -85,7 +82,7 @@ const OnboardScreen = wrapper(function OnboardScreen() {
           Create account
         </Anchor>
       </Form>
-    </Frame>
+    </AuthFrame>
   );
 });
 

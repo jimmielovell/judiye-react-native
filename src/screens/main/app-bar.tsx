@@ -2,6 +2,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {Keyboard, Platform, StyleSheet} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
+import {getDrawerStatusFromState} from '@react-navigation/drawer';
 import {Flex} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import {useTheme} from 'hooks';
@@ -31,9 +32,9 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
     secondPostfixButton,
   } = props;
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
   const theme = useTheme();
   const _style = createStyle(theme, insets);
-  const navigation = useNavigation();
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [_showBackButton, _setShowBackButton] = useState(showBackButton);
 
@@ -44,6 +45,16 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
       _setShowBackButton(toggle);
     }
   }, [showBackButton, showSearchInput]);
+
+  const showProfileDrawer = useCallback(() => {
+    const isDrawerClosed =
+      // @ts-ignore
+      getDrawerStatusFromState(navigation.getState()) === 'closed';
+    if (isDrawerClosed) {
+      // @ts-ignore
+      navigation.openDrawer();
+    }
+  }, [navigation]);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidHide', _e => toggleSearchInput);
@@ -99,7 +110,11 @@ const AppBar = wrapper(function AppBar(props: AppBarProps) {
       ) : (
         <>
           {showAvatar && (
-            <Avatar self="center" style={_style.avatar} ripple>
+            <Avatar
+              self="center"
+              style={_style.avatar}
+              onPress={showProfileDrawer}
+              ripple>
               JL
             </Avatar>
           )}

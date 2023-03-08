@@ -1,21 +1,14 @@
 // import {useNavigation} from '@react-navigation/native';
-import {
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-} from 'react-native';
-import {Flex, Frame} from 'components/layout';
+import {KeyboardAvoidingView, Platform, StyleSheet} from 'react-native';
+import {Frame} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import AppBar from '../app-bar';
 import {useTheme} from 'hooks';
-import {Input} from 'components/inputs';
-import {Button} from 'components/buttons';
-import {useCallback} from 'react';
+import InboxMessageArea from './_/inbox-message-area';
+import InboxInputArea from './_/inbox-input-area';
 
 export const InboxHeader = wrapper(function InboxHeader() {
   // const navigation = useNavigation();
-
   return (
     <AppBar
       showBackButton
@@ -24,53 +17,6 @@ export const InboxHeader = wrapper(function InboxHeader() {
       firstPostfixButton={{name: 'Phone'}}
     />
   );
-});
-
-const InputArea = wrapper(function InputArea() {
-  const theme = useTheme();
-  const _style = createStyle(theme);
-
-  return (
-    <Flex direction="row" align="center" style={_style.inputArea}>
-      <Button
-        appearance="icon"
-        name="EmojiSmile"
-        size={24}
-        color={theme.colors.text.secondary}
-        style={_style.emojiSmileButton}
-        ripple
-      />
-      <Input
-        type="multiline"
-        placeholder="Write a message"
-        autoCorrect
-        // hide keyboard on autoFocus
-        style={_style.input}
-        wrapperStyle={_style.inputWrapper}
-      />
-      <Button
-        appearance="icon"
-        name="Send"
-        size={20}
-        color={theme.colors.background}
-        style={_style.sendButton}
-        ripple
-      />
-    </Flex>
-  );
-});
-
-const MessageArea = wrapper(function MessageArea() {
-  const theme = useTheme();
-  const _style = createStyle(theme);
-
-  const hideKeyboard = useCallback(() => {
-    if (Keyboard.isVisible()) {
-      Keyboard.dismiss();
-    }
-  }, []);
-
-  return <Flex style={_style.messageArea} onTouchEnd={hideKeyboard} />;
 });
 
 const InboxScreen = wrapper(function InboxScreen() {
@@ -83,20 +29,20 @@ const InboxScreen = wrapper(function InboxScreen() {
       style={_style.kAView}
       keyboardVerticalOffset={70}>
       <Frame bottomTab={false} justify="flex-end" style={_style.inbox}>
-        <MessageArea />
-        <InputArea />
+        <InboxMessageArea />
+        <InboxInputArea />
       </Frame>
     </KeyboardAvoidingView>
   ) : (
     <Frame bottomTab={false} justify="flex-end" style={_style.inbox}>
-      <MessageArea />
-      <InputArea />
+      <InboxMessageArea />
+      <InboxInputArea />
     </Frame>
   );
 });
 
 function createStyle(theme: Judiye.Theme) {
-  const {colors, spacing} = theme;
+  const {colors} = theme;
 
   return StyleSheet.create({
     kAView: {
@@ -109,56 +55,6 @@ function createStyle(theme: Judiye.Theme) {
       ...Platform.select({
         ios: {
           backgroundColor: colors.surface.secondary,
-          paddingHorizontal: spacing.sm,
-        },
-      }),
-    },
-    inputArea: {
-      width: '100%',
-      position: 'relative',
-      ...Platform.select({
-        ios: {
-          backgroundColor: colors.background,
-          borderRadius: 1000,
-          padding: spacing.xs,
-        },
-        android: {
-          paddingVertical: spacing.xs,
-          paddingHorizontal: spacing.sm,
-        },
-      }),
-    },
-    input: {
-      backgroundColor: 'transparent',
-      borderWidth: 0,
-      paddingLeft: 0,
-      paddingRight: 0,
-      paddingTop: 0,
-      paddingBottom: 0,
-    },
-    inputWrapper: {
-      flex: 1,
-      marginBottom: 0,
-    },
-    emojiSmileButton: {
-      backgroundColor: 'transparent',
-      alignSelf: 'flex-end',
-      marginBottom: 1,
-      zIndex: 1,
-    },
-    sendButton: {
-      backgroundColor: colors.primary,
-      alignSelf: 'flex-end',
-      marginBottom: 1,
-      paddingLeft: spacing.xxs,
-    },
-    messageArea: {
-      width: '100%',
-      flex: 1,
-      ...Platform.select({
-        android: {
-          backgroundColor: colors.surface.secondary,
-          padding: spacing.xs,
         },
       }),
     },

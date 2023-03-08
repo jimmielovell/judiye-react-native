@@ -8,19 +8,19 @@ import {Flex, FlexProps} from 'components/layout';
 
 interface FrameProps extends FlexProps {
   bottomTab?: boolean;
+  topBar?: boolean;
 }
 
-interface FramedFlatListProps<Item> extends FlatListProps<Item> {
-  bottomTab?: boolean;
-}
+interface FramedFlatListProps<Item> extends FlatListProps<Item>, FrameProps {}
 
 const Frame = wrapper(function Frame(props: FrameProps) {
   const insets = useSafeAreaInsets();
-  const {bottomTab = true, style, ...rest} = props;
+  const {bottomTab = true, topBar = true, style, ...rest} = props;
   const theme = useTheme();
   const _style = createStyle(theme);
 
   const safeAreaViewStyle = {
+    paddingTop: topBar ? 0 : insets.top,
     paddingBottom: bottomTab
       ? insets.bottom + theme.sizing.height.lg
       : insets.bottom,
@@ -59,6 +59,7 @@ function createStyle(theme: Judiye.Theme) {
     frame: {
       backgroundColor: colors.background,
       width: '100%',
+      height: '100%',
     },
   });
 }

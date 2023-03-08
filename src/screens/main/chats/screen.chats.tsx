@@ -21,7 +21,7 @@ export const ChatsHeader = wrapper(function ChatsHeader() {
 
 const ChatsScreen = wrapper(function ChatsScreen() {
   return (
-    <Tabs labels={['Chats', 'Groups', 'Calls']}>
+    <Tabs labels={['Inbox', 'Workspace', 'Calls']}>
       <Flex />
       <Flex />
       <Flex />

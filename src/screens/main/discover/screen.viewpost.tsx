@@ -3,16 +3,21 @@ import wrapper from 'hoc/wrapper';
 import AppBar from '../app-bar';
 import {useTheme} from 'hooks';
 import {Frame} from 'components/layout';
+import Post from './_/post';
 
 export const ViewPostHeader = wrapper(function ViewPostHeader() {
-  return <AppBar showBackButton title="Post" />;
+  return <AppBar showBackButton title="Highlight" />;
 });
 
 const ViewPostScreen = wrapper(function ViewPostScreen() {
   const theme = useTheme();
   const _style = createStyle(theme);
 
-  return <Frame bottomTab={false} />;
+  return (
+    <Frame bottomTab={false}>
+      <Post id="1" />
+    </Frame>
+  );
 });
 
 function createStyle(theme: Judiye.Theme) {

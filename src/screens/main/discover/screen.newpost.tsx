@@ -6,11 +6,7 @@ import {Frame} from 'components/layout';
 
 export const NewPostHeader = wrapper(function NewPostHeader() {
   return (
-    <AppBar
-      showBackButton
-      title="New post"
-      secondPostfixButton={{name: 'Edit'}}
-    />
+    <AppBar showBackButton showAvatar secondPostfixButton={{name: 'Check'}} />
   );
 });
 

@@ -1,5 +1,5 @@
 import {Button} from 'components/buttons';
-import {Flex, Frame} from 'components/layout';
+import {Flex} from 'components/layout';
 import {Form, Input} from 'components/inputs';
 import wrapper from 'hoc/wrapper';
 import {StyleSheet} from 'react-native';
@@ -9,10 +9,10 @@ import {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import {useStore} from 'store';
-import ScreenTitle from './_/screen-title';
 import {AuthStackParamList} from '.';
 import {useNavigation} from '@react-navigation/native';
 import {Icon} from 'components/datadisplay';
+import AuthFrame from './_/auth-frame';
 
 export type VerifyOtpScreenParamList = {
   VerifyOtpScreen: undefined;
@@ -37,14 +37,13 @@ const VerifyOtpScreen = wrapper(function VerifyOtp(
   };
 
   return (
-    <Frame>
-      <ScreenTitle>
-        Enter the code sent to {'\n'}{' '}
-        {auth.method === 'email'
+    <AuthFrame
+      subTitle={
+        "Enter the code sent to {'\n'}{' '}" +
+        (auth.method === 'email'
           ? auth.email?.toString()
-          : auth.phone?.international}
-      </ScreenTitle>
-
+          : auth.phone?.international)
+      }>
       <Form onSubmit={onSubmit}>
         <Input
           type="pin"
@@ -79,7 +78,7 @@ const VerifyOtpScreen = wrapper(function VerifyOtp(
       </Form>
 
       <Icon name="Watfoe" size={70} />
-    </Frame>
+    </AuthFrame>
   );
 });
 

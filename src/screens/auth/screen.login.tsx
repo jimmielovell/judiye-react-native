@@ -1,4 +1,3 @@
-import {Frame} from 'components/layout';
 import wrapper from 'hoc/wrapper';
 import {Form, Input} from 'components/inputs';
 import {Anchor, Button} from 'components/buttons';
@@ -7,12 +6,12 @@ import {StyleSheet} from 'react-native';
 import {useTheme} from 'hooks';
 import {useStore} from 'store';
 import {BackdropHandle} from 'components/feedback';
-import ScreenTitle from './_/screen-title';
 import ConfirmInputDialog from './_/confirm-input-dialog';
 import {Text} from 'components/typography';
 import {Icon} from 'components/datadisplay';
 import {Email, Phone, ValidationError} from 'domains';
 import {InputHandle} from 'components/inputs/_/fields/base';
+import AuthFrame from './_/auth-frame';
 
 export type LoginScreenParamList = {
   LoginScreen: undefined;
@@ -25,7 +24,7 @@ const LoginScreen = wrapper(function LoginScreen() {
   const emailOrPhoneRef = useRef<InputHandle>(null);
   const {auth} = useStore();
   const theme = useTheme();
-  const style = createStyle(theme);
+  const _style = createStyle(theme);
 
   const onSubmit = (values: Record<string, string>) => {
     const value = values.emailOrPhone;
@@ -48,9 +47,7 @@ const LoginScreen = wrapper(function LoginScreen() {
   };
 
   return (
-    <Frame>
-      <ScreenTitle>Sign In or create account</ScreenTitle>
-
+    <AuthFrame subTitle="Sign In or create account">
       <Form onSubmit={onSubmit}>
         <Input
           ref={emailOrPhoneRef}
@@ -68,13 +65,13 @@ const LoginScreen = wrapper(function LoginScreen() {
           type="submit"
           appearance="fill"
           withRef={confirmDialogRef}
-          style={style.continueButton}>
+          style={_style.continueButton}>
           Continue
         </Anchor>
         <Button
           appearance="outline"
           direction="row"
-          style={style.continueWithGoogleButton}>
+          style={_style.continueWithGoogleButton}>
           <Text>Continue with </Text>
           <Icon name="Google" size={16} />
           <Text>oogle</Text>
@@ -82,7 +79,7 @@ const LoginScreen = wrapper(function LoginScreen() {
       </Form>
       <Icon name="Watfoe" size={70} />
       <ConfirmInputDialog ref={confirmDialogRef} inputRef={emailOrPhoneRef} />
-    </Frame>
+    </AuthFrame>
   );
 });
 

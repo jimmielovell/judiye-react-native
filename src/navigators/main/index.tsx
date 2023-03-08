@@ -9,6 +9,11 @@ import {
   createNativeStackNavigator,
   NativeStackHeaderProps,
 } from '@react-navigation/native-stack';
+import {
+  createDrawerNavigator,
+  DrawerContentComponentProps,
+} from '@react-navigation/drawer';
+
 import BottomTabBar from 'screens/main/bottom-tab';
 
 import {
@@ -41,8 +46,11 @@ import {
   NotificationsHeader,
   NotificationsScreen,
 } from 'screens/main/notifications';
+import {ProfileDrawer} from 'screens/main/profile';
 
 const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
+const Stack = createNativeStackNavigator();
 
 function MainTabs() {
   const _TabBar = useCallback(
@@ -103,9 +111,36 @@ function MainTabs() {
   );
 }
 
-const Stack = createNativeStackNavigator();
+function MainDrawer() {
+  const _DrawerContent = useCallback(
+    (props: DrawerContentComponentProps) => <ProfileDrawer {...props} />,
+    [],
+  );
 
-export default function HomeNavigator() {
+  return (
+    <Drawer.Navigator
+      defaultStatus="closed"
+      screenOptions={{
+        drawerType: 'front',
+        overlayColor: 'rgba(0,0,0,0.3)',
+        drawerHideStatusBarOnOpen: true,
+        drawerStyle: {
+          width: '80%',
+        },
+        lazy: true,
+      }}
+      initialRouteName="MainTabs"
+      drawerContent={_DrawerContent}>
+      <Drawer.Screen
+        name="MainTabs"
+        component={MainTabs}
+        options={{headerShown: false}}
+      />
+    </Drawer.Navigator>
+  );
+}
+
+export default function MainStack() {
   const platform = Platform.OS;
 
   const _ColleaguesHeader = useCallback(
@@ -145,7 +180,7 @@ export default function HomeNavigator() {
       }}>
       <Stack.Screen
         name="HomeScreen"
-        component={MainTabs}
+        component={MainDrawer}
         options={{headerShown: false}}
       />
 

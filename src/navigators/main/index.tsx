@@ -123,7 +123,7 @@ function MainDrawer() {
       screenOptions={{
         drawerType: 'front',
         overlayColor: 'rgba(0,0,0,0.3)',
-        drawerHideStatusBarOnOpen: true,
+        drawerHideStatusBarOnOpen: Platform.OS === 'ios' ? true : false,
         drawerStyle: {
           width: '80%',
         },

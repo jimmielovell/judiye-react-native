@@ -61,11 +61,7 @@ const LoginScreen = wrapper(function LoginScreen() {
           }}
           name="emailOrPhone"
         />
-        <Anchor
-          type="submit"
-          appearance="fill"
-          withRef={confirmDialogRef}
-          style={_style.continueButton}>
+        <Anchor type="submit" appearance="fill" withRef={confirmDialogRef}>
           Continue
         </Anchor>
         <Button
@@ -87,10 +83,6 @@ function createStyle(theme: Judiye.Theme) {
   const {spacing} = theme;
 
   return StyleSheet.create({
-    continueButton: {
-      marginTop: spacing.nm,
-    },
-
     continueWithGoogleButton: {
       marginTop: spacing.xlg,
     },

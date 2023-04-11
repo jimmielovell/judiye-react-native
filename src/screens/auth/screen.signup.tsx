@@ -80,7 +80,7 @@ function createStyle(theme: Judiye.Theme) {
 
   return StyleSheet.create({
     continueButton: {
-      marginTop: spacing.lg,
+      marginTop: spacing.md,
     },
     buttonContainer: {
       marginTop: spacing.md,

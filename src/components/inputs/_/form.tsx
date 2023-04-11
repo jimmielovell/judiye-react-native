@@ -20,6 +20,62 @@ export interface FormProps extends FlexProps {
   onSubmit: (values: Record<string, any>) => void;
 }
 
+function searchForInputsAndSubmitButton(
+  children: ReactNode,
+  inputRefsHash: RefObject<Record<string, RefObject<InputHandle>>>,
+  onPress: () => void,
+) {
+  const __children: ReactElement[] = Array.isArray(children)
+    ? children
+    : [children];
+
+  return __children.map((child, index: number) => {
+    const _props = child.props;
+
+    if (
+      _props.name &&
+      [
+        'text',
+        'phone',
+        'email',
+        'password',
+        'name',
+        'number',
+        'date',
+        'pin',
+        'multiline',
+      ].includes(_props.type)
+    ) {
+      // @ts-ignore
+      const ref = child.ref ? child.ref : createRef<InputHandle>();
+      child = cloneElement(child, {
+        key: _props.name + index,
+        ref,
+      });
+
+      inputRefsHash.current![_props.name] = ref;
+    } else if (_props.type === 'submit') {
+      // @ts-ignore
+      let buttonRef = child.ref ? child.ref : createRef<View>();
+
+      child = cloneElement(child, {
+        key: 'submit-btn' + index,
+        onPress,
+        ref: buttonRef,
+      });
+      // else if is flex
+    } else if (_props.direction || _props.justify || _props.align) {
+      child.props.children = searchForInputsAndSubmitButton(
+        child.props.children,
+        inputRefsHash,
+        onPress,
+      );
+    }
+
+    return child;
+  });
+}
+
 const Form = wrapper(function Form(props: FormProps) {
   const {children, onSubmit, style, ...rest} = props;
   const theme = useTheme();
@@ -52,52 +108,9 @@ const Form = wrapper(function Form(props: FormProps) {
   }, [onSubmit]);
 
   const _children = useMemo(() => {
-    const __children: ReactElement[] = Array.isArray(children)
-      ? children
-      : [children];
-    let hasInputFields = false;
-
     inputRefsHash.current = {};
-
-    return __children.map((child, index: number) => {
-      const _props = child.props;
-
-      if (
-        _props.name &&
-        [
-          'text',
-          'phone',
-          'email',
-          'password',
-          'name',
-          'number',
-          'date',
-          'pin',
-          'multiline',
-        ].includes(_props.type)
-      ) {
-        // @ts-ignore
-        const ref = child.ref ? child.ref : createRef<InputHandle>();
-        hasInputFields = true;
-        child = cloneElement(child, {
-          key: _props.name + index,
-          ref,
-        });
-
-        inputRefsHash.current[_props.name] = ref;
-      } else if (_props.type === 'submit' && hasInputFields) {
-        // @ts-ignore
-        let buttonRef = child.ref ? child.ref : createRef<View>();
-
-        child = cloneElement(child, {
-          key: 'submit-btn' + index,
-          onPress: _onSubmit,
-          ref: buttonRef,
-        });
-      }
-
-      return child;
-    });
+    // Search for input fields and submit button within the children or their children
+    return searchForInputsAndSubmitButton(children, inputRefsHash, _onSubmit);
   }, [children, _onSubmit]);
 
   return (

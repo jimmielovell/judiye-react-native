@@ -80,7 +80,10 @@ const PinField = forwardRef<InputHandle, ValidatableField<PinFieldProps>>(
         let _value = '';
 
         inputRefs.current.forEach(_ref => {
-          _value += _ref.current?.getValue();
+          const value = _ref.current?.getValue();
+          if (value) {
+            _value += value;
+          }
         });
 
         if (_value.length === length) {

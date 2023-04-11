@@ -11,7 +11,7 @@ export default class Auth {
   email: Email | null = null;
   phone: Phone | null = null;
 
-  loggedIn: boolean = true;
+  loggedIn: boolean = false;
 
   constructor(rootStore: Store) {
     makeAutoObservable(this);

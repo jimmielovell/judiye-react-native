@@ -2,7 +2,13 @@ import {Icon, IconProps} from 'components/datadisplay';
 import {Text} from 'components/typography';
 import {useTheme} from 'hooks';
 import {ForwardedRef, forwardRef, useMemo} from 'react';
-import {StyleProp, TextStyle, View, ViewStyle} from 'react-native';
+import {
+  GestureResponderEvent,
+  StyleProp,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Pressable, PressableProps} from 'components/buttons';
 
 export interface FillButtonProps extends PressableProps {
@@ -40,7 +46,8 @@ function FillButton(
     forwardedRef: ForwardedRef<View>;
   },
 ) {
-  const {style, textStyle, children, icon, forwardedRef, ...rest} = props;
+  const {style, textStyle, children, icon, forwardedRef, onPress, ...rest} =
+    props;
   const {colors, sizing} = useTheme();
   const _Icon = useMemo(() => {
     if (icon) {
@@ -78,11 +85,23 @@ function FillButton(
     return children;
   }, [children, colors.background, textStyle]);
 
+  // This part is to prevent the app from crashing when the onPress handler
+  // throws an error. This is a temporary solution until we find a better
+  // way to handle errors in the app.
+  const _onPress = (e: GestureResponderEvent) => {
+    try {
+      onPress?.(e);
+    } catch (_e) {
+      return;
+    }
+  };
+
   return (
     <Pressable
       ref={forwardedRef}
       direction="row"
       style={[_styles, style]}
+      onPress={_onPress}
       {...rest}>
       {_Icon}
       <>{element}</>

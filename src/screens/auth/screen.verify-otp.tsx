@@ -33,13 +33,14 @@ const VerifyOtpScreen = wrapper(function VerifyOtp(
   const style = createStyle(theme);
 
   const onSubmit = (_values: any) => {
-    navigation.navigate('SignupScreen');
+    console.log('values', _values);
+    // navigation.navigate('SignupScreen');
   };
 
   return (
     <AuthFrame
       subTitle={
-        "Enter the code sent to {'\n'}{' '}" +
+        'Enter the code sent to \n' +
         (auth.method === 'email'
           ? auth.email?.toString()
           : auth.phone?.international)
@@ -71,7 +72,7 @@ const VerifyOtpScreen = wrapper(function VerifyOtp(
             Back
           </Button>
 
-          <Button type="submit" appearance="fill" flex={1} onPress={onSubmit}>
+          <Button type="submit" appearance="fill" flex={1}>
             Continue
           </Button>
         </Flex>

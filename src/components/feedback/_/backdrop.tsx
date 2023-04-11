@@ -86,7 +86,7 @@ function createStyle(theme: Judiye.Theme) {
       height: '100%',
       paddingTop: sizing.height.lg,
       paddingBottom: spacing.nm,
-      paddingHorizontal: spacing.md,
+      paddingHorizontal: spacing.sm,
       position: 'relative',
     },
   });

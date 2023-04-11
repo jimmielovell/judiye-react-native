@@ -1,5 +1,5 @@
 import {forwardRef, ReactNode, useCallback, useMemo} from 'react';
-import {StyleSheet, useWindowDimensions} from 'react-native';
+import {LayoutChangeEvent, StyleSheet, useWindowDimensions} from 'react-native';
 import {useForwardedRef, useTheme} from 'hooks';
 import {Button} from 'components/buttons';
 import {Flex} from 'components/layout';
@@ -10,10 +10,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import {Text} from 'components/typography';
 import Backdrop, {BackdropHandle, InWindowMeasurement} from './backdrop';
+import {platform} from 'utils';
 import SearchField from 'components/inputs/_/fields/search';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-export interface DialogProps {
+export interface MenuProps {
   children?: ReactNode;
   title?: ReactNode | string;
   search?: string;
@@ -23,36 +23,68 @@ export interface DialogProps {
 
 const AnimatedFlex = Animated.createAnimatedComponent(Flex);
 
-const Dialog = forwardRef<BackdropHandle, DialogProps>(function Dialog(
+const Menu = forwardRef<BackdropHandle, MenuProps>(function Menu(
   props,
-  dialogRef,
+  menuRef,
 ) {
   const {children, title, search, onClose, onOpen} = props;
   const theme = useTheme();
   const windowDimension = useWindowDimensions();
-  const insets = useSafeAreaInsets();
-  const indent = theme.spacing.nm * 2 + insets.top + insets.bottom;
-  const screenHeight = windowDimension.height - indent;
+  const indent = theme.spacing.nm;
+  const statusBarHeight = platform.getStatusBarHeight();
+  const screenHeight = windowDimension.height - statusBarHeight - indent * 2;
   const _style = createStyle(theme, screenHeight);
-  const backdropRef = useForwardedRef(dialogRef);
+  const backdropRef = useForwardedRef(menuRef);
   const opacity = useSharedValue(0);
+  const transformY = useSharedValue(0);
+  let anchor = useSharedValue({
+    y: 0,
+    height: 0,
+  });
 
   const _onOpen = useCallback(
-    (_anchorMeasurement: Required<InWindowMeasurement>) => {
+    (anchorMeasurement: Required<InWindowMeasurement>) => {
+      anchor.value = anchorMeasurement;
       onOpen && onOpen();
     },
-    [onOpen],
+    [anchor, onOpen],
   );
 
-  const closeDialog = useCallback(() => {
+  const closeMenu = useCallback(() => {
     if (backdropRef.current) {
       backdropRef.current.close();
     }
   }, [backdropRef]);
 
-  const handleLayoutChange = useCallback(() => {
-    opacity.value = withTiming(1, {duration: 150});
-  }, [opacity]);
+  const handleLayoutChange = useCallback(
+    (e: LayoutChangeEvent) => {
+      const {height} = e.nativeEvent.layout;
+      let {y} = anchor.value;
+
+      // if menu height is bigger than screen height
+      if (height >= screenHeight - indent * 2) {
+        y = statusBarHeight;
+      }
+      // Flip by Y axis if menu hits bottom screen border
+      else if (y + height > windowDimension.height - indent) {
+        y = y - height + anchor.value.height;
+      } else if (y < indent) {
+        y = indent;
+      }
+
+      transformY.value = y;
+      opacity.value = withTiming(1, {duration: 150});
+    },
+    [
+      anchor.value,
+      screenHeight,
+      indent,
+      windowDimension.height,
+      transformY,
+      opacity,
+      statusBarHeight,
+    ],
+  );
 
   const _Title = useMemo(() => {
     if (search) {
@@ -85,6 +117,7 @@ const Dialog = forwardRef<BackdropHandle, DialogProps>(function Dialog(
   const animStyles = useAnimatedStyle(() => {
     return {
       opacity: opacity.value,
+      transform: [{translateY: transformY.value}],
     };
   });
 
@@ -108,7 +141,7 @@ const Dialog = forwardRef<BackdropHandle, DialogProps>(function Dialog(
             appearance="icon"
             name="Clear"
             size={24}
-            onPress={closeDialog}
+            onPress={closeMenu}
             style={_style.clearIcon}
           />
         </Flex>
@@ -124,14 +157,15 @@ function createStyle(theme: Judiye.Theme, screenHeight: number) {
 
   return StyleSheet.create({
     dialog: {
-      alignSelf: 'center',
       backgroundColor: colors.surface.primary,
       borderRadius: shape.radius.nm,
+      left: spacing.md,
       overflow: 'hidden',
       paddingHorizontal: spacing.nm,
       paddingVertical: spacing.nm,
+      position: 'absolute',
+      top: 0,
       maxHeight: screenHeight,
-      height: 'auto',
     },
     header: {
       marginBottom: spacing.nm,
@@ -166,4 +200,4 @@ function createStyle(theme: Judiye.Theme, screenHeight: number) {
   });
 }
 
-export default Dialog;
+export default Menu;

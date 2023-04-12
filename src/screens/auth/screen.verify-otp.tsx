@@ -33,8 +33,8 @@ const VerifyOtpScreen = wrapper(function VerifyOtp(
   const style = createStyle(theme);
 
   const onSubmit = (_values: any) => {
-    console.log('values', _values);
-    // navigation.navigate('SignupScreen');
+    // console.log('values', _values);
+    navigation.navigate('SignupScreen');
   };
 
   return (

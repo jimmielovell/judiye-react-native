@@ -118,7 +118,9 @@ const Form = wrapper(function Form(props: FormProps) {
       behavior="height"
       style={[_style.cont, style]}
       {...rest}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback
+        accessibilityLabel="Form"
+        onPress={Keyboard.dismiss}>
         {_children}
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -130,7 +132,6 @@ function createStyle(_theme: Judiye.Theme) {
     cont: {
       display: 'flex',
       flexDirection: 'column',
-      flex: 1,
       width: '100%',
     },
   });

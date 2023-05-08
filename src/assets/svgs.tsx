@@ -1,5 +1,4 @@
 import {ReactNode, useMemo} from 'react';
-import {PixelRatio} from 'react-native';
 import SVG, {
   Circle,
   Path,
@@ -21,13 +20,15 @@ type CSvgProps = SvgProps & {
   children: ReactNode;
 };
 
+// The smallest font scale in a samsung device is 0.8
+const FONT_SCALE = 0.850000011920929;
+
 function CSVG({size = 24, color, viewBox, ...rest}: CSvgProps) {
   const {colors} = useTheme();
-  const fontScale = PixelRatio.getFontScale();
 
   size = useMemo(() => {
-    return Number(size) * fontScale;
-  }, [size, fontScale]);
+    return Number(size) * FONT_SCALE;
+  }, [size]);
 
   color = color || colors.text.primary;
 

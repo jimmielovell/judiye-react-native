@@ -1,4 +1,4 @@
-import {ColorValue} from 'react-native';
+import {ColorValue, PixelRatio} from 'react-native';
 import {FontAppearance, FontVariant, FontWeight} from 'types/globals';
 import useTheme from './useTheme';
 
@@ -51,17 +51,22 @@ export function useFontSize(
   size?: FontVariant | number | string,
 ): number | undefined {
   const {fonts} = useTheme();
+  const fontScale = PixelRatio.getFontScale();
+  let _size = size;
+
   if (!isNaN(Number(size))) {
-    return Number(size);
+    _size = Number(size);
+  } else if (fonts.size[size as FontVariant] && size !== 'body') {
+    _size = fonts.size[size as FontVariant];
+  } else if (styleSize) {
+    _size = styleSize;
+  } else {
+    _size = fonts.size.body;
   }
 
-  if (fonts.size[size as FontVariant] && size !== 'body') {
-    return fonts.size[size as FontVariant];
+  if (fontScale < 1) {
+    return _size;
   }
 
-  if (styleSize) {
-    return styleSize;
-  }
-
-  return fonts.size.body;
+  return _size! / fontScale;
 }

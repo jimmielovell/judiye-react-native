@@ -10,6 +10,7 @@ import {
   ModalProps,
   StyleProp,
   StyleSheet,
+  useWindowDimensions,
   ViewStyle,
 } from 'react-native';
 import {useTheme} from 'hooks';
@@ -38,9 +39,10 @@ const Backdrop = forwardRef<BackdropHandle, BackdropProps>(function Backdrop(
   {children, visible = false, style, onClose, onOpen, ...rest},
   ref,
 ) {
+  const {height} = useWindowDimensions();
   const [_visible, setVisible] = useState(visible);
   const theme = useTheme();
-  const _style = createStyle(theme);
+  const _style = createStyle(theme, height);
 
   const open = useCallback(
     (measurement?: InWindowMeasurement) => {
@@ -76,18 +78,15 @@ const Backdrop = forwardRef<BackdropHandle, BackdropProps>(function Backdrop(
   );
 });
 
-function createStyle(theme: Judiye.Theme) {
-  const {colors, spacing, sizing} = theme;
+function createStyle(theme: Judiye.Theme, screenHeight: number) {
+  const {colors, spacing} = theme;
 
   return StyleSheet.create({
     cont: {
       backgroundColor: colors.scrim,
       width: '100%',
-      height: '100%',
-      paddingTop: sizing.height.lg,
-      paddingBottom: spacing.nm,
+      height: screenHeight,
       paddingHorizontal: spacing.sm,
-      position: 'relative',
     },
   });
 }

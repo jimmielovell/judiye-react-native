@@ -64,13 +64,13 @@ const VerifyOtpScreen = wrapper(function VerifyOtp(
         </Button>
 
         <Flex direction="row">
-          <Button
+          {/* <Button
             appearance="outline"
             flex={1}
             style={style.button}
             onPress={navigation.goBack}>
             Back
-          </Button>
+          </Button> */}
 
           <Button type="submit" appearance="fill" flex={1}>
             Continue

@@ -36,7 +36,7 @@ function createStyle(theme: Judiye.Theme) {
     },
     title: {
       marginTop: theme.spacing.xlg,
-      marginBottom: theme.spacing.lg,
+      marginBottom: theme.spacing.xlg,
     },
     subTitle: {
       marginBottom: theme.spacing.lg,

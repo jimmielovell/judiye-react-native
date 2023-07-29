@@ -73,7 +73,7 @@ const LoginScreen = wrapper(function LoginScreen() {
           <Text>oogle</Text>
         </Button>
       </Form>
-      <Icon name="Watfoe" size={70} style={_style.icon} />
+
       <ConfirmInputDialog ref={confirmDialogRef} inputRef={emailOrPhoneRef} />
     </AuthFrame>
   );
@@ -85,10 +85,6 @@ function createStyle(theme: Judiye.Theme) {
   return StyleSheet.create({
     continueWithGoogleButton: {
       marginTop: spacing.xlg,
-    },
-    icon: {
-      position: 'absolute',
-      bottom: 0,
     },
   });
 }

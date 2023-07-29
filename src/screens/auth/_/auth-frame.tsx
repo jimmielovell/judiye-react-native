@@ -3,6 +3,7 @@ import wrapper from 'hoc/wrapper';
 import {StyleSheet} from 'react-native';
 import {useTheme} from 'hooks';
 import {Text} from 'components/typography';
+import {Icon} from 'components/datadisplay';
 
 interface AuthFrameProps extends FlexProps {
   subTitle: string;
@@ -22,6 +23,7 @@ const AuthFrame = wrapper(function AuthFrame(props: AuthFrameProps) {
         {subTitle}
       </Text>
       {children}
+      <Icon name="Watfoe" size={70} style={_style.icon} />
     </Frame>
   );
 });
@@ -33,6 +35,7 @@ function createStyle(theme: Judiye.Theme) {
     frame: {
       paddingHorizontal: spacing.md,
       height: '100%',
+      position: 'relative',
     },
     title: {
       marginTop: theme.spacing.xlg,
@@ -40,6 +43,10 @@ function createStyle(theme: Judiye.Theme) {
     },
     subTitle: {
       marginBottom: theme.spacing.lg,
+    },
+    icon: {
+      position: 'absolute',
+      bottom: 0,
     },
   });
 }

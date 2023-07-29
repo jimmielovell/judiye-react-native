@@ -59,7 +59,6 @@ function createStyle(theme: Judiye.Theme) {
     frame: {
       backgroundColor: colors.background,
       width: '100%',
-      height: '100%',
     },
   });
 }

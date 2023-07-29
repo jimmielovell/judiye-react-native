@@ -11,7 +11,6 @@ import {
 import {useStore} from 'store';
 import {AuthStackParamList} from '.';
 import {useNavigation} from '@react-navigation/native';
-import {Icon} from 'components/datadisplay';
 import AuthFrame from './_/auth-frame';
 
 export type VerifyOtpScreenParamList = {
@@ -77,8 +76,6 @@ const VerifyOtpScreen = wrapper(function VerifyOtp(
           </Button>
         </Flex>
       </Form>
-
-      <Icon name="Watfoe" size={70} />
     </AuthFrame>
   );
 });
@@ -99,11 +96,6 @@ function createStyle(theme: Judiye.Theme) {
 
     button: {
       marginRight: spacing.md,
-    },
-
-    watfoeIcon: {
-      marginBottom: spacing.nm,
-      alignSelf: 'center',
     },
   });
 }

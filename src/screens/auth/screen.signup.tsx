@@ -8,7 +8,6 @@ import {useTheme} from 'hooks';
 import {BackdropHandle} from 'components/feedback';
 import {Text} from 'components/typography';
 import AgeRestrictionDialog from './_/age-restriction-dialog';
-import {Icon} from 'components/datadisplay';
 import AuthFrame from './_/auth-frame';
 
 export type SignupScreenParamList = {
@@ -67,8 +66,6 @@ const SignupScreen = wrapper(function SignupScreen() {
           Agree and create
         </Anchor>
       </Form>
-
-      <Icon name="Watfoe" size={70} />
 
       <AgeRestrictionDialog ref={ageRestDialogRef} />
     </AuthFrame>

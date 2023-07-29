@@ -10,10 +10,10 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import {Keyboard, KeyboardAvoidingView, StyleSheet, View} from 'react-native';
+import {Keyboard, StyleSheet, View} from 'react-native';
 import {InputHandle} from './fields/base';
 import {useTheme} from 'hooks';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {Pressable} from 'components/buttons';
 
 export interface FormProps extends FlexProps {
   children: ReactNode;
@@ -114,16 +114,13 @@ const Form = wrapper(function Form(props: FormProps) {
   }, [children, _onSubmit]);
 
   return (
-    <KeyboardAvoidingView
-      behavior="height"
+    <Pressable
+      accessibilityLabel="Form"
+      onPress={Keyboard.dismiss}
       style={[_style.cont, style]}
       {...rest}>
-      <TouchableWithoutFeedback
-        accessibilityLabel="Form"
-        onPress={Keyboard.dismiss}>
-        {_children}
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+      {_children}
+    </Pressable>
   );
 });
 
